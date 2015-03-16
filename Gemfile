@@ -3,7 +3,7 @@ source "http://rubygems.org"
 # Example:
 #   gem "activesupport", ">= 2.3.5"
 
-gem "baza", path: "/home/kaspernj/Dev/Ruby/baza"
+gem "baza"
 gem "string-cases"
 
 # Add dependencies to develop your gem here.
@@ -15,3 +15,5 @@ group :development do
   gem "jeweler", "~> 2.0.1"
   gem "sqlite3"
 end
+
+gem "codeclimate-test-reporter", group: :test, require: nil
