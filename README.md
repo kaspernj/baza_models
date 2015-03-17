@@ -2,9 +2,67 @@
 [![Code Climate](https://codeclimate.com/github/kaspernj/baza_models/badges/gpa.svg)](https://codeclimate.com/github/kaspernj/baza_models)
 [![Test Coverage](https://codeclimate.com/github/kaspernj/baza_models/badges/coverage.svg)](https://codeclimate.com/github/kaspernj/baza_models)
 
-# baza_models
+# BazaModels
 
-Description goes here.
+An attempt to recreate 90% of the ActiveRecord functionality in a very simple way.
+
+The examples in this readme actually work.
+
+## Relationships
+
+### has_many
+```ruby
+class User
+  has_many :roles
+  has_many :admin_roles, -> { where(role: "administrator") }, class_name: "Role"
+end
+```
+
+### belongs_to
+```ruby
+class Role
+  belongs_to :user
+end
+```
+
+## Validations
+
+### Presence
+```ruby
+class User
+  validates :email, presence: true
+end
+```
+
+## Queries
+
+### Where
+```ruby
+users = User.where(email: "myemail@example.com").to_a
+```
+
+### to_sql
+```ruby
+users = User.where(email: "myemail@example.com").to_sql #=> "SELECT `users`.* FROM..."
+```
+
+## Setting and saving attributes
+
+### Setting
+```ruby
+role.assign_attributes(user: user, role: "administrator")
+role.save! #=> true || raising error
+
+role.update_attributes!(user: user, role: "administrator") #=> true || raising error
+role.role = "administrator"
+role.save #=> true || false
+```
+
+### Getting
+```ruby
+role.role #=> "administrator"
+role.user #=> [some user]
+```
 
 ## Contributing to baza_models
 
