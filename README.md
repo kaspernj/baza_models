@@ -43,7 +43,7 @@ users = User.where(email: "myemail@example.com").to_a
 
 ### to_sql
 ```ruby
-users = User.where(email: "myemail@example.com").to_sql #=> "SELECT `users`.* FROM..."
+User.where(email: "myemail@example.com").to_sql #=> "SELECT `users`.* FROM..."
 ```
 
 ## Setting and saving attributes
