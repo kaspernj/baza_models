@@ -3,6 +3,7 @@ source "http://rubygems.org"
 # Example:
 #   gem "activesupport", ">= 2.3.5"
 
+gem "array_enumerator"
 gem "baza", "~> 0.0.15"
 gem "string-cases"
 

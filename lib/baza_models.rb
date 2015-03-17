@@ -3,6 +3,7 @@ class BazaModels
 
   autoload :Errors, "#{path}/errors"
   autoload :Model, "#{path}/model"
+  autoload :Query, "#{path}/query"
 
   class << self
     attr_accessor :primary_db

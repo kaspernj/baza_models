@@ -14,7 +14,7 @@ class BazaModels::Model
     @@callbacks[callback_type] = []
     callbacks = @@callbacks
 
-    (class << self; self; end).send(:define_method, callback_type) do |method_name, *args, &blk|
+    (class << self; self; end).__send__(:define_method, callback_type) do |method_name, *args, &blk|
       callbacks[callback_type] << {
         block: blk,
         method_name: method_name,
@@ -22,6 +22,15 @@ class BazaModels::Model
       }
     end
   end
+
+
+  QUERY_METHODS = [:where]
+  QUERY_METHODS.each do |query_method|
+    (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
+      BazaModels::Query.new(model: self).__send__(query_method, *args, &blk)
+    end
+  end
+
 
   def initialize(data = {})
     self.class.init_model unless self.class.model_initialized?
@@ -47,17 +56,33 @@ class BazaModels::Model
     return self.class.db
   end
 
+  def db=(db)
+    @db = db
+  end
+
   def self.db
     return @db if @db
     return BazaModels.primary_db
+  end
+
+  def self.db=(db)
+    @db = db
   end
 
   def table_name
     @table_name ||= self.class.table_name
   end
 
+  def table_name=(table_name)
+    @table_name = table_name
+  end
+
   def self.table_name
-    @table_name ||= "#{StringCases.camel_to_snake(name)}s"
+    @table_name ||= "#{StringCases.camel_to_snake(name.gsub("::", ""))}s"
+  end
+
+  def self.table_name=(table_name)
+    @table_name = table_name
   end
 
   def self.init_model
@@ -99,6 +124,18 @@ class BazaModels::Model
       @@validators[attribute_name] ||= []
       @@validators[attribute_name] << BazaModels::Validators.const_get(class_name).new(attribute_name, args)
     end
+  end
+
+  def self.find(id)
+    row = db.select(table_name, {id: id}, limit: 1).fetch
+    raise BazaModels::Errors::RecordNotFound, "Record not found by ID: #{id}" unless row
+    return new(row)
+  end
+
+  def self.find_by(where_hash)
+    row = db.select(table_name, where_hash, limit: 1).fetch
+    raise BazaModels::Errors::RecordNotFound, "Record not found by ID: #{id}" unless row
+    return new(row)
   end
 
   def id
@@ -206,6 +243,32 @@ class BazaModels::Model
     return @errors.empty?
   end
 
+  def to_s
+    if new_record?
+      "#<#{self.class.name} new!>"
+    else
+      "#<#{self.class.name} id=#{id}>"
+    end
+  end
+
+  def inspect
+    if new_record?
+      "#<#{self.class.name} new! data=#{@data.merge(@changes)}>"
+    else
+      "#<#{self.class.name} id=#{id} data=#{@data.merge(@changes)}>"
+    end
+  end
+
+  def ==(another_model)
+    return false unless self.class == another_model.class
+
+    if new_record? && another_model.new_record?
+      return merged_data == another_model.__send__(:merged_data)
+    else
+      return id == another_model.id
+    end
+  end
+
 protected
 
   def reset_errors
@@ -224,5 +287,9 @@ protected
         end
       end
     end
+  end
+
+  def merged_data
+    @data.merge(@changes)
   end
 end

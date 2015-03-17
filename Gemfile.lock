@@ -97,6 +97,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  array_enumerator
   baza (~> 0.0.15)
   bundler (~> 1.0)
   codeclimate-test-reporter
