@@ -3,7 +3,7 @@ GEM
   specs:
     addressable (2.3.7)
     array_enumerator (0.0.7)
-    baza (0.0.14)
+    baza (0.0.15)
       array_enumerator
       datet
       knjrbfw
@@ -97,7 +97,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  baza
+  baza (~> 0.0.15)
   bundler (~> 1.0)
   codeclimate-test-reporter
   jeweler (~> 2.0.1)
