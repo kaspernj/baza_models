@@ -2,7 +2,9 @@ require "spec_helper"
 
 describe "BazaModels::Model" do
   let(:db) { @db }
-  let(:user) { UserTest.new(email: "test@example.com") }
+  let(:user) { User.new(email: "test@example.com") }
+  let(:role_user) { Role.new(user: user, role: "user") }
+  let(:role_admin) { Role.new(user: user, role: "administrator") }
 
   before do
     @count ||= 0
@@ -18,7 +20,7 @@ describe "BazaModels::Model" do
     @db = Baza::Db.new(type: :sqlite3, path: path, debug: false)
     BazaModels.primary_db = @db
 
-    @db.tables.create(:user_tests, {
+    @db.tables.create(:users, {
       columns: [
         {name: :id, type: :int, primarykey: true, autoincr: true},
         {name: :email, type: :varchar}
@@ -28,7 +30,19 @@ describe "BazaModels::Model" do
       ]
     })
 
-    require "test_classes/user_test"
+    @db.tables.create(:roles, {
+      columns: [
+        {name: :id, type: :int, primarykey: true, autoincr: true},
+        {name: :user_id, type: :int},
+        {name: :role, type: :varchar}
+      ],
+      indexes: [
+        :user_id
+      ]
+    })
+
+    require "test_classes/user"
+    require "test_classes/role"
   end
 
   after do
@@ -152,20 +166,42 @@ describe "BazaModels::Model" do
 
   it "#find" do
     user.save!
-    user_found = UserTest.find(user.id)
+    user_found = User.find(user.id)
     user_found.email.should eq "test@example.com"
   end
 
   it "#find_by" do
     user.save!
-    user_found = UserTest.find_by(id: 1, email: "test@example.com")
+    user_found = User.find_by(id: 1, email: "test@example.com")
     user_found.email.should eq "test@example.com"
   end
 
   it "#where" do
     user.save!
-    query = UserTest.where(email: "test@example.com")
-    query.to_sql.should eq "SELECT * FROM `user_tests` WHERE `user_tests`.`email` = 'test@example.com'"
+    query = User.where(email: "test@example.com")
+    query.to_sql.should eq "SELECT * FROM `users` WHERE `users`.`email` = 'test@example.com'"
     query.to_a.should eq [user]
+  end
+
+  context "relationships" do
+    before do
+      user.save!
+      role_user.save!
+      role_admin.save!
+    end
+
+    it "#belongs_to" do
+      role_user.user.should eq user
+    end
+
+    describe "#has_many" do
+      it "returns whole collections without arguments" do
+        user.roles.to_a.should eq [role_user, role_admin]
+      end
+
+      it "supports class_name and proc-arguments" do
+        user.admin_roles.to_a.should eq [role_admin]
+      end
+    end
   end
 end

@@ -93,4 +93,12 @@ class BazaModels::Query
 
     return sql.strip
   end
+
+  def to_s
+    "#<BazaModels::Query class=#{@model.name} wheres=#{@wheres}>"
+  end
+
+  def inspect
+    to_s
+  end
 end

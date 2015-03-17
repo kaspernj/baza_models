@@ -1,4 +1,7 @@
-class UserTest < BazaModels::Model
+class User < BazaModels::Model
+  has_many :roles
+  has_many :admin_roles, -> { where(role: "administrator") }, class_name: "Role"
+
   validates :email, presence: true
 
   # Used to test callbacks.
