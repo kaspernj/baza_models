@@ -15,7 +15,7 @@ describe "BazaModels::Model" do
     path = Tempfile.new("baza_test").path
     File.unlink(path) if File.exists?(path)
 
-    @db = Baza::Db.new(type: :sqlite3, path: path)
+    @db = Baza::Db.new(type: :sqlite3, path: path, debug: false)
     BazaModels.primary_db = @db
 
     @db.tables.create(:user_tests, {
@@ -148,5 +148,24 @@ describe "BazaModels::Model" do
 
     user.before_validation_on_update_called.should eq 1
     user.after_validation_on_update_called.should eq 1
+  end
+
+  it "#find" do
+    user.save!
+    user_found = UserTest.find(user.id)
+    user_found.email.should eq "test@example.com"
+  end
+
+  it "#find_by" do
+    user.save!
+    user_found = UserTest.find_by(id: 1, email: "test@example.com")
+    user_found.email.should eq "test@example.com"
+  end
+
+  it "#where" do
+    user.save!
+    query = UserTest.where(email: "test@example.com")
+    query.to_sql.should eq "SELECT * FROM `user_tests` WHERE `user_tests`.`email` = 'test@example.com'"
+    query.to_a.should eq [user]
   end
 end
