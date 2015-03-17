@@ -1,6 +1,13 @@
 require "string-cases"
 
 class BazaModels::Model
+  path = "#{File.dirname(__FILE__)}/model"
+  autoload :BelongsToRelations, "#{path}/belongs_to_relations"
+  autoload :HasManyRelations, "#{path}/has_many_relations"
+
+  include BelongsToRelations
+  include HasManyRelations
+
   attr_accessor :db
   attr_reader :changes, :errors
 
@@ -11,11 +18,12 @@ class BazaModels::Model
 
   CALLBACK_TYPES.each do |callback_type|
     @@callbacks ||= {}
-    @@callbacks[callback_type] = []
+    @@callbacks[callback_type] = {}
     callbacks = @@callbacks
 
     (class << self; self; end).__send__(:define_method, callback_type) do |method_name, *args, &blk|
-      callbacks[callback_type] << {
+      callbacks[callback_type][self.name] ||= []
+      callbacks[callback_type][self.name] << {
         block: blk,
         method_name: method_name,
         args: args
@@ -35,7 +43,7 @@ class BazaModels::Model
   def initialize(data = {})
     self.class.init_model unless self.class.model_initialized?
 
-    @data = data
+    @data = real_attributes(data)
     @changes = {}
 
     reset_errors
@@ -198,7 +206,7 @@ class BazaModels::Model
   end
 
   def assign_attributes(attributes)
-    @changes.merge!(attributes)
+    @changes.merge!(real_attributes(attributes))
   end
 
   def update_attributes(attributes)
@@ -276,8 +284,8 @@ protected
   end
 
   def fire_callbacks(name)
-    if @@callbacks[name]
-      @@callbacks[name].each do |callback_data|
+    if @@callbacks[name] && @@callbacks[name][self.class.name]
+      @@callbacks[name][self.class.name].each do |callback_data|
         if callback_data[:block]
           callback_data[:block].call(*callback_data[:args])
         elsif callback_data[:method_name]
@@ -291,5 +299,27 @@ protected
 
   def merged_data
     @data.merge(@changes)
+  end
+
+  # Converts attributes like "user" to "user_id" and so on.
+  def real_attributes(attributes)
+    new_attributes = {}
+    attributes.each do |attribute_name, attribute_value|
+      set = false
+      belongs_to_relations = self.class.instance_variable_get(:@belongs_to_relations)
+
+      if belongs_to_relations
+        belongs_to_relations.each do |relation|
+          if attribute_name.to_s == relation[:relation_name].to_s
+            new_attributes["#{attribute_name}_id"] = attribute_value.id
+            set = true
+          end
+        end
+      end
+
+      new_attributes[attribute_name] = attribute_value unless set
+    end
+
+    return new_attributes
   end
 end
