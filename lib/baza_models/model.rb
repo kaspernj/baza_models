@@ -32,7 +32,7 @@ class BazaModels::Model
   end
 
 
-  QUERY_METHODS = [:where]
+  QUERY_METHODS = [:includes, :joins, :where]
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
       BazaModels::Query.new(model: self).__send__(query_method, *args, &blk)
@@ -75,6 +75,27 @@ class BazaModels::Model
 
   def self.db=(db)
     @db = db
+  end
+
+  def autoloads
+    @autoloads ||= {}
+    return @autoloads
+  end
+
+  def self.scope(name, blk)
+    @scopes ||= {}
+    name = name.to_sym
+
+    raise 'Such a scope already exists' if @scopes.key?(name)
+    @scopes[name] = true
+
+    (class << self; self; end).__send__(:define_method, name) do
+      blk.call
+    end
+  end
+
+  def self.relationships
+    return @relationships
   end
 
   def table_name

@@ -7,12 +7,20 @@ module BazaModels::Model::HasManyRelations
     def has_many(relation_name, *all_args)
       args = all_args.pop
 
-      @has_many_relations ||= []
-      @has_many_relations << {
+      relation = {
+        type: :has_many,
         relation_name: relation_name,
+        table_name: relation_name,
         args: args,
-        all_args: all_args
+        all_args: all_args,
+        foreign_key: :"#{StringCases.camel_to_snake(self.name)}_id"
       }
+
+      @has_many_relations ||= []
+      @has_many_relations << relation
+
+      @relationships ||= {}
+      @relationships[relation_name] = relation
 
       define_method(relation_name) do
         if args && args[:class_name]
@@ -23,7 +31,7 @@ module BazaModels::Model::HasManyRelations
 
         class_instance = Object.const_get(class_name)
 
-        query = class_instance.where("#{StringCases.camel_to_snake(self.class.name)}_id" => id)
+        query = class_instance.where(relation[:foreign_key] => id)
 
         all_args.each do |arg|
           if arg.is_a?(Proc)
