@@ -257,12 +257,25 @@ describe "BazaModels::Model" do
       role_admin.save!
     end
 
-    it 'autoloads via includes' do
+    it 'autoloads via includes on has_many relations' do
       query = User.includes(:roles).to_a
       user = query.first
 
-      puts "User: #{user.inspect}"
       expect(user.autoloads.fetch(:roles)).to eq [role_admin]
+      expect(user.roles.__send__(:any_mods?)).to eq false
+      expect(user.roles.__send__(:any_wheres_other_then_relation?)).to eq false
+      expect(user.roles.__send__(:autoloaded_on_previous_model?)).to eq true
+      expect(user.roles.to_enum).to eq [role_admin]
+    end
+
+    it 'autoloads via includes on belongs_to relations' do
+      query = Role.includes(:user).to_a
+      role = query.first
+
+      allow(role.autoloads).to receive(:[]).and_call_original
+      expect(role.user).to eq user
+      expect(role.autoloads).to have_received(:[]).with(:user)
+      expect(role.autoloads[:user]).to eq user
     end
   end
 end

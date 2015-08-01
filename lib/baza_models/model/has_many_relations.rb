@@ -16,6 +16,12 @@ module BazaModels::Model::HasManyRelations
         foreign_key: :"#{StringCases.camel_to_snake(self.name)}_id"
       }
 
+      if args && args[:class_name]
+        relation[:class_name] = args[:class_name]
+      else
+        relation[:class_name] = StringCases.snake_to_camel(relation_name.to_s.gsub(/s$/, ""))
+      end
+
       @has_many_relations ||= []
       @has_many_relations << relation
 
@@ -23,15 +29,10 @@ module BazaModels::Model::HasManyRelations
       @relationships[relation_name] = relation
 
       define_method(relation_name) do
-        if args && args[:class_name]
-          class_name = args[:class_name]
-        else
-          class_name = StringCases.snake_to_camel(relation_name.to_s.gsub(/s$/, ""))
-        end
-
-        class_instance = Object.const_get(class_name)
-
-        query = class_instance.where(relation[:foreign_key] => id)
+        class_instance = Object.const_get(relation.fetch(:class_name))
+        query = class_instance.where(relation.fetch(:foreign_key) => id)
+        query._previous_model = self
+        query._relation = relation
 
         all_args.each do |arg|
           if arg.is_a?(Proc)

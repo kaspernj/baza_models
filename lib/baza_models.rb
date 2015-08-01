@@ -1,6 +1,7 @@
 class BazaModels
   path = "#{File.realpath(File.dirname(__FILE__))}/baza_models"
 
+  autoload :Autoloader, "#{path}/autoloader"
   autoload :Errors, "#{path}/errors"
   autoload :Model, "#{path}/model"
   autoload :Query, "#{path}/query"

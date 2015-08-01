@@ -1,6 +1,8 @@
 require "array_enumerator"
 
 class BazaModels::Query
+  attr_accessor :_previous_model, :_relation
+
   def initialize(args)
     @args = args
     @model = @args[:model]
@@ -11,6 +13,10 @@ class BazaModels::Query
     @joins = []
     @groups = []
     @orders = []
+  end
+
+  def all
+    return self
   end
 
   def includes(name)
@@ -55,6 +61,10 @@ class BazaModels::Query
   end
 
   def to_enum
+    if !any_mods? && autoloaded_on_previous_model?
+      return @_previous_model.autoloads.fetch(@_relation.fetch(:relation_name))
+    end
+
     array_enum = ArrayEnumerator.new do |yielder|
       @model.db.query(to_sql).each do |data|
         yielder << @model.new(data)
@@ -65,12 +75,14 @@ class BazaModels::Query
       return array_enum
     else
       array = array_enum.to_a
-      model_ids = array.map { |model| model.id }
 
-      @includes.each do |include_name|
-        relation = @model.relationships.fetch(include_name)
-
-        ids = @db.query("SELECT `#{relation[:table_name]}`.`id` FROM `#{relation[:table_name]}` WHERE `id` IN (#{model_ids.join(',')})").to_a
+      if @includes.any? && array.any?
+        autoloader = BazaModels::Autoloader.new(
+          models: array,
+          autoloads: @includes,
+          db: @db
+        )
+        autoloader.autoload
       end
 
       return array
@@ -150,5 +162,37 @@ class BazaModels::Query
 
   def inspect
     to_s
+  end
+
+private
+
+  def any_mods?
+    if @groups.any? || @includes.any? || @orders.any? || @joins.any? || any_wheres_other_then_relation?
+      return true
+    else
+      return false
+    end
+  end
+
+  def any_wheres_other_then_relation?
+    if @_previous_model && @_relation && @wheres.length == 1
+      looks_like = "`#{@_relation.fetch(:table_name)}`.`#{@_relation.fetch(:foreign_key)}` = '#{@_previous_model.id}'"
+
+      if @wheres.first == looks_like
+        return false
+      end
+    end
+
+    return true
+  end
+
+  def autoloaded_on_previous_model?
+    if @_previous_model && @_relation
+      if @_previous_model.autoloads.include?(@_relation.fetch(:relation_name))
+        return true
+      end
+    end
+
+    return false
   end
 end
