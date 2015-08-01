@@ -41,6 +41,11 @@ end
 users = User.where(email: "myemail@example.com").to_a
 ```
 
+### Includes / autoloading / eager loading
+```ruby
+users = User.includes(:roles)
+```
+
 ### Joins
 ```ruby
 users = User.joins(:roles).where(roles: {role: 'administrator'})
