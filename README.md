@@ -12,7 +12,7 @@ The examples in this readme actually work.
 
 ### has_many
 ```ruby
-class User
+class User < BazaModels::Model
   has_many :roles
   has_many :admin_roles, -> { where(role: "administrator") }, class_name: "Role"
 end
@@ -20,7 +20,7 @@ end
 
 ### belongs_to
 ```ruby
-class Role
+class Role < BazaModels::Model
   belongs_to :user
 end
 ```
@@ -29,7 +29,7 @@ end
 
 ### Presence
 ```ruby
-class User
+class User < BazaModels::Model
   validates :email, presence: true
 end
 ```
