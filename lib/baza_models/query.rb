@@ -167,14 +167,14 @@ class BazaModels::Query
 private
 
   def any_mods?
-    if @groups.any? || @includes.any? || @orders.any? || @joins.any? || any_wheres_other_then_relation?
+    if @groups.any? || @includes.any? || @orders.any? || @joins.any? || any_wheres_other_than_relation?
       return true
     else
       return false
     end
   end
 
-  def any_wheres_other_then_relation?
+  def any_wheres_other_than_relation?
     if @_previous_model && @_relation && @wheres.length == 1
       looks_like = "`#{@_relation.fetch(:table_name)}`.`#{@_relation.fetch(:foreign_key)}` = '#{@_previous_model.id}'"
 

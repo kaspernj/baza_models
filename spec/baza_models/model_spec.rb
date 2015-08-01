@@ -263,7 +263,7 @@ describe "BazaModels::Model" do
 
       expect(user.autoloads.fetch(:roles)).to eq [role_admin]
       expect(user.roles.__send__(:any_mods?)).to eq false
-      expect(user.roles.__send__(:any_wheres_other_then_relation?)).to eq false
+      expect(user.roles.__send__(:any_wheres_other_than_relation?)).to eq false
       expect(user.roles.__send__(:autoloaded_on_previous_model?)).to eq true
       expect(user.roles.to_enum).to eq [role_admin]
     end
