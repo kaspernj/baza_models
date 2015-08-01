@@ -56,131 +56,141 @@ describe "BazaModels::Model" do
   end
 
   it "#email" do
-    user.email.should eq "test@example.com"
+    expect(user.email).to eq "test@example.com"
   end
 
   it "#email=" do
     user.email = "newemail@example.com"
-    user.email.should eq "newemail@example.com"
+    expect(user.email).to eq "newemail@example.com"
   end
 
   it "#email_was" do
     user.email = "newemail@example.com"
-    user.email_was.should eq "test@example.com"
+    expect(user.email_was).to eq "test@example.com"
   end
 
   it "#changes" do
     user.email = "newemail@example.com"
-    user.changes.should eq(email: "newemail@example.com")
+    expect(user.changes).to eq email: "newemail@example.com"
   end
 
   describe "#save" do
     it "inserts a new record when new" do
-      user.new_record?.should eq true
+      expect(user.new_record?).to eq true
       user.save
-      user.id.should eq 1
-      user.new_record?.should eq false
+      expect(user.id).to eq 1
+      expect(user.new_record?).to eq false
     end
   end
 
   describe "#valid?" do
     it "returns true when valid" do
-      user.valid?.should eq true
+      expect(user.valid?).to eq true
     end
 
     it "returns false when invalid" do
       user.email = " "
-      user.valid?.should eq false
+      expect(user.valid?).to eq false
     end
   end
 
   it "#update_attributes" do
     user.save!
-    user.update_attributes(email: "newemail@example.com").should eq true
-    user.email.should eq "newemail@example.com"
-    user.update_attributes(email: " ").should eq false
+    expect(user.update_attributes(email: "newemail@example.com")).to eq true
+    expect(user.email).to eq "newemail@example.com"
   end
 
   it "#before_save, #after_save" do
-    user.before_save_called.should eq nil
-    user.after_save_called.should eq nil
+    expect(user.before_save_called).to eq nil
+    expect(user.after_save_called).to eq nil
     user.save!
-    user.before_save_called.should eq 1
-    user.after_save_called.should eq 1
+    expect(user.before_save_called).to eq 1
+    expect(user.after_save_called).to eq 1
     user.save!
-    user.before_save_called.should eq 2
-    user.after_save_called.should eq 2
+    expect(user.before_save_called).to eq 2
+    expect(user.after_save_called).to eq 2
   end
 
   it "#before_create, #after_create" do
-    user.before_create_called.should eq nil
-    user.after_create_called.should eq nil
+    expect(user.before_create_called).to eq nil
+    expect(user.after_create_called).to eq nil
     user.save!
-    user.before_create_called.should eq 1
-    user.after_create_called.should eq 1
+    expect(user.before_create_called).to eq 1
+    expect(user.after_create_called).to eq 1
     user.save!
-    user.before_create_called.should eq 1
-    user.after_create_called.should eq 1
+    expect(user.before_create_called).to eq 1
+    expect(user.after_create_called).to eq 1
   end
 
   it "#before_destroy, #after_destroy" do
     user.save!
-    user.before_destroy_called.should eq nil
-    user.after_destroy_called.should eq nil
+    expect(user.before_destroy_called).to eq nil
+    expect(user.after_destroy_called).to eq nil
     user.destroy!
-    user.before_destroy_called.should eq 1
-    user.after_destroy_called.should eq 1
+    expect(user.before_destroy_called).to eq 1
+    expect(user.after_destroy_called).to eq 1
   end
 
   it "#before_validation, #after_validation" do
-    user.before_validation_called.should eq nil
-    user.after_validation_called.should eq nil
+    expect(user.before_validation_called).to eq nil
+    expect(user.after_validation_called).to eq nil
     user.valid?
-    user.before_validation_called.should eq 1
-    user.after_validation_called.should eq 1
+    expect(user.before_validation_called).to eq 1
+    expect(user.after_validation_called).to eq 1
   end
 
   it "#before_validation_on_create, #after_validation_on_create, #before_validation_on_update, #after_validation_on_update" do
-    user.before_validation_on_create_called.should eq nil
-    user.after_validation_on_create_called.should eq nil
+    expect(user.before_validation_on_create_called).to eq nil
+    expect(user.after_validation_on_create_called).to eq nil
 
-    user.before_validation_on_update_called.should eq nil
-    user.after_validation_on_update_called.should eq nil
+    expect(user.before_validation_on_update_called).to eq nil
+    expect(user.after_validation_on_update_called).to eq nil
 
     user.save!
 
-    user.before_validation_on_create_called.should eq 1
-    user.after_validation_on_create_called.should eq 1
+    expect(user.before_validation_on_create_called).to eq 1
+    expect(user.after_validation_on_create_called).to eq 1
 
-    user.before_validation_on_update_called.should eq nil
-    user.after_validation_on_update_called.should eq nil
+    expect(user.before_validation_on_update_called).to eq nil
+    expect(user.after_validation_on_update_called).to eq nil
 
     user.update_attributes!(email: "newemail@example.com")
 
-    user.before_validation_on_create_called.should eq 1
-    user.after_validation_on_create_called.should eq 1
+    expect(user.before_validation_on_create_called).to eq 1
+    expect(user.after_validation_on_create_called).to eq 1
 
-    user.before_validation_on_update_called.should eq 1
-    user.after_validation_on_update_called.should eq 1
+    expect(user.before_validation_on_update_called).to eq 1
+    expect(user.after_validation_on_update_called).to eq 1
   end
 
   it "#find" do
     user.save!
     user_found = User.find(user.id)
-    user_found.email.should eq "test@example.com"
+    expect(user_found.email).to eq "test@example.com"
   end
 
   it "#find_by" do
     user.save!
     user_found = User.find_by(id: 1, email: "test@example.com")
-    user_found.email.should eq "test@example.com"
+    expect(user_found.email).to eq "test@example.com"
   end
 
-  it "#where" do
-    user.save!
-    query = User.where(email: "test@example.com")
-    query.to_sql.should eq "SELECT * FROM `users` WHERE `users`.`email` = 'test@example.com'"
-    query.to_a.should eq [user]
+  context "#where" do
+    before do
+      user.save!
+    end
+
+    it 'supports hashes' do
+      query = User.where(email: "test@example.com")
+      expect(query.to_sql).to eq "SELECT `users`.* FROM `users` WHERE `users`.`email` = 'test@example.com'"
+      expect(query.to_a).to eq [user]
+    end
+
+    it 'supports strings' do
+      query = User.where("email = 'test@example.com'")
+      expect(query.to_sql).to eq "SELECT `users`.* FROM `users` WHERE email = 'test@example.com'"
+      expect(query.to_a).to eq [user]
+    end
   end
 
   context "relationships" do
@@ -191,17 +201,81 @@ describe "BazaModels::Model" do
     end
 
     it "#belongs_to" do
-      role_user.user.should eq user
+      expect(role_user.user).to eq user
     end
 
     describe "#has_many" do
       it "returns whole collections without arguments" do
-        user.roles.to_a.should eq [role_user, role_admin]
+        expect(user.roles.to_a).to eq [role_user, role_admin]
       end
 
       it "supports class_name and proc-arguments" do
-        user.admin_roles.to_a.should eq [role_admin]
+        expect(user.admin_roles.to_a).to eq [role_admin]
+        expect(user.admin_roles.to_sql).to eq "SELECT `roles`.* FROM `roles` WHERE `roles`.`user_id` = '#{user.id}' AND `roles`.`role` = 'administrator'"
       end
+    end
+  end
+
+  context 'scopes' do
+    before do
+      user.save!
+      role_user.save!
+      role_admin.save!
+    end
+
+    it 'works with where' do
+      expect(Role.admin_roles.to_a).to eq [role_admin]
+    end
+
+    it 'joins as well' do
+      expect(User.admin_roles.to_a).to eq [user]
+    end
+  end
+
+  context '#joins' do
+    before do
+      user.save!
+      role_admin.save!
+    end
+
+    it 'joins with symbols and relationships' do
+      query = User.joins(:roles).where(roles: {role: 'administrator'})
+      expect(query.to_sql).to eq "SELECT `users`.* FROM `users` INNER JOIN `roles` ON `roles`.`user_id` = `users`.`id` WHERE `roles`.`role` = 'administrator'"
+      expect(query.to_a).to eq [user]
+    end
+
+    it 'joins with strings' do
+      query = User.joins('LEFT JOIN roles ON roles.user_id = users.id').where(roles: {role: 'administrator'})
+      expect(query.to_sql).to eq "SELECT `users`.* FROM `users` LEFT JOIN roles ON roles.user_id = users.id WHERE `roles`.`role` = 'administrator'"
+      expect(query.to_a).to eq [user]
+    end
+  end
+
+  context '#includes' do
+    before do
+      user.save!
+      role_admin.save!
+    end
+
+    it 'autoloads via includes on has_many relations' do
+      query = User.includes(:roles).to_a
+      user = query.first
+
+      expect(user.autoloads.fetch(:roles)).to eq [role_admin]
+      expect(user.roles.__send__(:any_mods?)).to eq false
+      expect(user.roles.__send__(:any_wheres_other_than_relation?)).to eq false
+      expect(user.roles.__send__(:autoloaded_on_previous_model?)).to eq true
+      expect(user.roles.to_enum).to eq [role_admin]
+    end
+
+    it 'autoloads via includes on belongs_to relations' do
+      query = Role.includes(:user).to_a
+      role = query.first
+
+      allow(role.autoloads).to receive(:[]).and_call_original
+      expect(role.user).to eq user
+      expect(role.autoloads).to have_received(:[]).with(:user)
+      expect(role.autoloads[:user]).to eq user
     end
   end
 end

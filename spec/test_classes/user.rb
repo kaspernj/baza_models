@@ -4,6 +4,8 @@ class User < BazaModels::Model
 
   validates :email, presence: true
 
+  scope :admin_roles, -> { joins(:roles).where(roles: {role: 'administrator'}) }
+
   # Used to test callbacks.
   BazaModels::Model::CALLBACK_TYPES.each do |callback_type|
     attr_reader "#{callback_type}_called"
