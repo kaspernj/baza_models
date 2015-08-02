@@ -2,11 +2,18 @@ require "string-cases"
 
 class BazaModels::Model
   path = "#{File.dirname(__FILE__)}/model"
+
   autoload :BelongsToRelations, "#{path}/belongs_to_relations"
+  autoload :CustomValidations, "#{path}/custom_validations"
   autoload :HasManyRelations, "#{path}/has_many_relations"
+  autoload :Queries, "#{path}/queries"
+  autoload :Scopes, "#{path}/scopes"
 
   include BelongsToRelations
+  include CustomValidations
   include HasManyRelations
+  include Queries
+  include Scopes
 
   attr_accessor :data, :db
   attr_reader :changes, :errors
@@ -82,18 +89,6 @@ class BazaModels::Model
     return @autoloads
   end
 
-  def self.scope(name, blk)
-    @scopes ||= {}
-    name = name.to_sym
-
-    raise 'Such a scope already exists' if @scopes.key?(name)
-    @scopes[name] = true
-
-    (class << self; self; end).__send__(:define_method, name) do
-      blk.call
-    end
-  end
-
   def self.relationships
     return @relationships
   end
@@ -153,18 +148,6 @@ class BazaModels::Model
       @@validators[attribute_name] ||= []
       @@validators[attribute_name] << BazaModels::Validators.const_get(class_name).new(attribute_name, args)
     end
-  end
-
-  def self.find(id)
-    row = db.select(table_name, {id: id}, limit: 1).fetch
-    raise BazaModels::Errors::RecordNotFound, "Record not found by ID: #{id}" unless row
-    return new(row)
-  end
-
-  def self.find_by(where_hash)
-    row = db.select(table_name, where_hash, limit: 1).fetch
-    raise BazaModels::Errors::RecordNotFound, "Record not found by ID: #{id}" unless row
-    return new(row)
   end
 
   def id
@@ -266,6 +249,7 @@ class BazaModels::Model
       end
     end
 
+    execute_custom_validations
     fire_callbacks(:after_validation)
 
     if new_record?
