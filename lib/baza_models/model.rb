@@ -32,7 +32,7 @@ class BazaModels::Model
   end
 
 
-  QUERY_METHODS = [:all, :includes, :joins, :where]
+  QUERY_METHODS = [:all, :any?, :includes, :joins, :where]
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
       BazaModels::Query.new(model: self).__send__(query_method, *args, &blk)
@@ -206,6 +206,7 @@ class BazaModels::Model
 
   def reload
     @data = db.select(table_name, {id: id}, limit: 1).fetch
+    raise BazaModels::Errors::RecordNotFound unless @data
     @changes = {}
     return self
   end
@@ -216,6 +217,10 @@ class BazaModels::Model
       return false
     else
       fire_callbacks(:before_destroy)
+
+      return false unless restrict_has_many_relations
+      return false unless destroy_has_many_relations
+
       db.delete(table_name, id: id)
       fire_callbacks(:after_destroy)
       return true

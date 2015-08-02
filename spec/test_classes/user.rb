@@ -1,6 +1,6 @@
 class User < BazaModels::Model
-  has_many :roles
-  has_many :admin_roles, -> { where(role: "administrator") }, class_name: "Role"
+  has_many :roles, dependent: :destroy
+  has_many :admin_roles, -> { where(role: "administrator") }, class_name: "Role", dependent: :restrict_with_error
 
   validates :email, presence: true
 

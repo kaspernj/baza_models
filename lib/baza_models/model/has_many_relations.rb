@@ -16,6 +16,8 @@ module BazaModels::Model::HasManyRelations
         foreign_key: :"#{StringCases.camel_to_snake(self.name)}_id"
       }
 
+      relation[:dependent] = args.fetch(:dependent) if args[:dependent]
+
       if args && args[:class_name]
         relation[:class_name] = args[:class_name]
       else
@@ -43,5 +45,35 @@ module BazaModels::Model::HasManyRelations
         return query
       end
     end
+  end
+
+private
+
+  def restrict_has_many_relations
+    self.class.relationships.each do |relation_name, relation|
+      next if relation.fetch(:type) != :has_many || relation[:dependent] != :restrict_with_error
+
+      if __send__(relation_name).any?
+        errors.add(:base, "can't be destroyed because it contains #{relation_name}")
+        return false
+      end
+    end
+
+    return true
+  end
+
+  def destroy_has_many_relations
+    self.class.relationships.each do |relation_name, relation|
+      next if relation.fetch(:type) != :has_many || relation[:dependent] != :destroy
+
+      __send__(relation_name).each do |model|
+        unless model.destroy
+          errors.add(:base, model.errors.full_messages.join('. '))
+          return false
+        end
+      end
+    end
+
+    return true
   end
 end

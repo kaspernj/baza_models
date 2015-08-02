@@ -14,7 +14,7 @@ The examples in this readme actually work.
 ```ruby
 class User
   has_many :roles
-  has_many :admin_roles, -> { where(role: "administrator") }, class_name: "Role"
+  has_many :admin_roles, -> { where(role: "administrator") }, class_name: "Role", dependent: :restrict_with_error # :destroy-dependent also works
 end
 ```
 
