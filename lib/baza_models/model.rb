@@ -32,7 +32,7 @@ class BazaModels::Model
   end
 
 
-  QUERY_METHODS = [:all, :any?, :includes, :joins, :where]
+  QUERY_METHODS = [:all, :any?, :select, :includes, :joins, :where, :limit]
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
       BazaModels::Query.new(model: self).__send__(query_method, *args, &blk)
