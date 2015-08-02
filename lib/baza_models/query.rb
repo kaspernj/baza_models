@@ -8,14 +8,39 @@ class BazaModels::Query
     @model = @args[:model]
     @db = @model.db
 
-    @wheres = []
-    @includes = []
-    @joins = []
-    @groups = []
-    @orders = []
+    @selects = args[:selects] || []
+    @wheres = args[:wheres] || []
+    @includes = args[:includes] || []
+    @joins = args[:joins] || []
+    @groups = args[:groups] || []
+    @orders = args[:orders] || []
+    @limit = args[:limit]
   end
 
   def all
+    return self
+  end
+
+  def any?
+    if @db.query(clone.select(:id).limit(1).to_sql).fetch
+      return true
+    else
+      return false
+    end
+  end
+
+  def select(select)
+    if select.is_a?(Symbol)
+      @selects << "`#{@model.table_name}`.`#{select}`"
+    else
+      @selects << select
+    end
+
+    return self
+  end
+
+  def limit(limit)
+    @limit = limit
     return self
   end
 
@@ -66,7 +91,7 @@ class BazaModels::Query
     end
 
     array_enum = ArrayEnumerator.new do |yielder|
-      @model.db.query(to_sql).each do |data|
+      @db.query(to_sql).each do |data|
         yielder << @model.new(data)
       end
     end
@@ -100,33 +125,39 @@ class BazaModels::Query
   end
 
   def to_sql
-    sql = "SELECT `#{@model.table_name}`.* FROM `#{@model.table_name}` "
+    sql = "SELECT "
+
+    if @selects.empty?
+      sql << "`#{@model.table_name}`.*"
+    else
+      sql << @selects.join(', ')
+    end
+
+    sql << " FROM `#{@model.table_name}`"
 
     unless @joins.empty?
       @joins.each do |join|
-        sql << join
-        sql << " "
+        sql << " #{join}"
       end
     end
 
     unless @wheres.empty?
-      sql << "WHERE "
+      sql << " WHERE "
 
       first = true
       @wheres.each do |where|
         if first == true
           first = false
         else
-          sql << "AND "
+          sql << " AND "
         end
 
         sql << where
-        sql << " "
       end
     end
 
     unless @orders.empty?
-      sql << "ORDER BY "
+      sql << " ORDER BY "
 
       first = true
       @orders.each do |order|
@@ -141,7 +172,7 @@ class BazaModels::Query
     end
 
     unless @groups.empty?
-      sql << "GROUP BY "
+      sql << " GROUP BY "
 
       first = true
       @groups.each do |group|
@@ -151,6 +182,10 @@ class BazaModels::Query
           sql << ", "
         end
       end
+    end
+
+    unless @limit == nil
+      sql << " LIMIT #{@limit.to_i}"
     end
 
     return sql.strip
@@ -194,5 +229,18 @@ private
     end
 
     return false
+  end
+
+  def clone
+    BazaModels::Query.new(
+      model: @model,
+      selects: @selects.dup,
+      wheres: @wheres.dup,
+      joins: @joins.dup,
+      includes: @includes.dup,
+      groups: @groups.dup,
+      orders: @orders.dup,
+      limit: @limit
+    )
   end
 end
