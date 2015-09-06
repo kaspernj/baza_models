@@ -52,6 +52,7 @@ class BazaModels::Model
 
     @data = real_attributes(data)
     @changes = {}
+    @@validators ||= {}
 
     reset_errors
 
@@ -64,6 +65,10 @@ class BazaModels::Model
 
   def new_record?
     return @new_record
+  end
+
+  def persisted?
+    !new_record?
   end
 
   def db
