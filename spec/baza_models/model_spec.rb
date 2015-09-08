@@ -7,8 +7,23 @@ describe "BazaModels::Model" do
   let(:role_user) { Role.new(user: user, role: "user") }
   let(:role_admin) { Role.new(user: user, role: "administrator") }
 
-  it "#email" do
-    expect(user.email).to eq "test@example.com"
+  describe "#email" do
+    it "returns set attributes" do
+      expect(user.email).to eq "test@example.com"
+    end
+
+    it "returns nil for attributes that hasn't been set" do
+      user = User.new
+      expect(user.email).to eq nil
+    end
+  end
+
+  it "#id #to_param" do
+    expect(user.id).to eq nil
+    expect(user.to_param).to eq nil
+    user.save!
+    expect(user.id).to_not eq nil
+    expect(user.to_param).to_not eq nil
   end
 
   it "#email=" do
@@ -29,20 +44,9 @@ describe "BazaModels::Model" do
   describe "#save" do
     it "inserts a new record when new" do
       expect(user.new_record?).to eq true
-      user.save
+      user.save!
       expect(user.id).to eq 1
       expect(user.new_record?).to eq false
-    end
-  end
-
-  describe "#valid?" do
-    it "returns true when valid" do
-      expect(user.valid?).to eq true
-    end
-
-    it "returns false when invalid" do
-      user.email = " "
-      expect(user.valid?).to eq false
     end
   end
 
@@ -83,35 +87,19 @@ describe "BazaModels::Model" do
     expect(user.after_destroy_called).to eq 1
   end
 
-  it "#before_validation, #after_validation" do
-    expect(user.before_validation_called).to eq nil
-    expect(user.after_validation_called).to eq nil
-    user.valid?
-    expect(user.before_validation_called).to eq 1
-    expect(user.after_validation_called).to eq 1
+  it "#created_at" do
+    expect(user.created_at).to eq nil
+    user.save!
+    expect(user.created_at).to_not eq nil
   end
 
-  it "#before_validation_on_create, #after_validation_on_create, #before_validation_on_update, #after_validation_on_update" do
-    expect(user.before_validation_on_create_called).to eq nil
-    expect(user.after_validation_on_create_called).to eq nil
-
-    expect(user.before_validation_on_update_called).to eq nil
-    expect(user.after_validation_on_update_called).to eq nil
-
+  it "#updated_at" do
+    expect(user.updated_at).to eq nil
     user.save!
-
-    expect(user.before_validation_on_create_called).to eq 1
-    expect(user.after_validation_on_create_called).to eq 1
-
-    expect(user.before_validation_on_update_called).to eq nil
-    expect(user.after_validation_on_update_called).to eq nil
-
-    user.update_attributes!(email: "newemail@example.com")
-
-    expect(user.before_validation_on_create_called).to eq 1
-    expect(user.after_validation_on_create_called).to eq 1
-
-    expect(user.before_validation_on_update_called).to eq 1
-    expect(user.after_validation_on_update_called).to eq 1
+    expect(user.updated_at).to_not eq nil
+    old_updated_at = user.updated_at
+    sleep 1
+    user.save!
+    expect(user.updated_at).to_not eq old_updated_at
   end
 end

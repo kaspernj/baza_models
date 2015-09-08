@@ -12,14 +12,19 @@ module BazaModels::Model::HasManyRelations
         relation_name: relation_name,
         table_name: relation_name,
         args: args,
-        all_args: all_args,
-        foreign_key: :"#{StringCases.camel_to_snake(self.name)}_id"
+        all_args: all_args
       }
+
+      if args[:foreign_key]
+        relation[:foreign_key] = args.fetch(:foreign_key)
+      else
+        relation[:foreign_key] = :"#{StringCases.camel_to_snake(self.name)}_id"
+      end
 
       relation[:dependent] = args.fetch(:dependent) if args[:dependent]
 
       if args && args[:class_name]
-        relation[:class_name] = args[:class_name]
+        relation[:class_name] = args.fetch(:class_name)
       else
         relation[:class_name] = StringCases.snake_to_camel(relation_name.to_s.gsub(/s$/, ""))
       end

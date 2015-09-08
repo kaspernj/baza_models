@@ -15,7 +15,16 @@ class BazaModels::Errors
     messages = []
 
     @errors.each do |attribute_name, errors|
-      messages += errors
+      errors.each do |error|
+        message = ""
+
+        unless attribute_name == :base
+          message << "#{StringCases.snake_to_camel(attribute_name)} "
+        end
+
+        message << error
+        messages << message
+      end
     end
 
     return messages

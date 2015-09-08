@@ -20,7 +20,9 @@ module DatabaseHelper
         @db.tables.create(:users, {
           columns: [
             {name: :id, type: :int, primarykey: true, autoincr: true},
-            {name: :email, type: :varchar}
+            {name: :email, type: :varchar},
+            {name: :created_at, type: :datetime},
+            {name: :updated_at, type: :datetime}
           ],
           indexes: [
             :email
@@ -31,7 +33,9 @@ module DatabaseHelper
           columns: [
             {name: :id, type: :int, primarykey: true, autoincr: true},
             {name: :user_id, type: :int},
-            {name: :role, type: :varchar}
+            {name: :role, type: :varchar},
+            {name: :created_at, type: :datetime},
+            {name: :updated_at, type: :datetime}
           ],
           indexes: [
             :user_id
