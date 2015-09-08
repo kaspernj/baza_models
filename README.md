@@ -41,6 +41,16 @@ end
 users = User.where(email: "myemail@example.com").to_a
 ```
 
+### Group
+```ruby
+users = User.group(:email).to_a
+```
+
+### Order
+```ruby
+ùsers = User.order(:email).to_a
+``
+
 ### Includes / autoloading / eager loading
 ```ruby
 users = User.includes(:roles)
@@ -51,10 +61,16 @@ users = User.includes(:roles)
 users = User.joins(:roles).where(roles: {role: 'administrator'})
 ```
 
-### to_sql
+### Other methods...
 ```ruby
 User.where(email: "myemail@example.com").to_sql #=> "SELECT `users`.* FROM..."
+User.any? #=> true
+User.all #=> BazaModels::Query<...>
+User.select(:email)
+User.limit(5)
+User.to_enum
 ```
+
 
 ## Setting and saving attributes
 

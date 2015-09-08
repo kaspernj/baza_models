@@ -13,7 +13,7 @@ module BazaModels::Model::BelongsToRelations
       }
 
       if args[:class_name]
-        relation[:class_name] = args[:class_name]
+        relation[:class_name] = args.fetch(:class_name)
       else
         relation[:class_name] = StringCases.snake_to_camel(relation_name)
       end
@@ -28,8 +28,13 @@ module BazaModels::Model::BelongsToRelations
         if model = autoloads[relation_name]
           model
         else
-          class_name = StringCases.snake_to_camel(relation_name)
-          Object.const_get(class_name).find(@data.fetch(relation[:foreign_key]))
+          if relation[:class_name]
+            class_name = relation.fetch(:class_name)
+          else
+            class_name = StringCases.snake_to_camel(relation_name)
+          end
+
+          Object.const_get(class_name).find(@data.fetch(relation.fetch(:foreign_key)))
         end
       end
     end

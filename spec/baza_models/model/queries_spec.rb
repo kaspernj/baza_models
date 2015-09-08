@@ -43,5 +43,17 @@ describe BazaModels::Model::Queries do
       expect(user_found.new_record?).to eq true
       expect(user_found.persisted?).to eq false
     end
+
+    it "#find_or_create_by" do
+      user_found = User.find_or_create_by(id: 1, email: "test@example.com")
+      expect(user_found.new_record?).to eq false
+      expect(user_found.persisted?).to eq true
+    end
+
+    it "#find_or_create_by!" do
+      user_found = User.find_or_create_by!(id: 1, email: "test@example.com")
+      expect(user_found.new_record?).to eq false
+      expect(user_found.persisted?).to eq true
+    end
   end
 end

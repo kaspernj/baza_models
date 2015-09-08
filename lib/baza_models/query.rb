@@ -1,12 +1,16 @@
 require "array_enumerator"
 
 class BazaModels::Query
+  autoload :Not, "#{File.dirname(__FILE__)}/query/not"
+
   attr_accessor :_previous_model, :_relation
 
   def initialize(args)
     @args = args
     @model = @args[:model]
     @db = @model.db
+
+    raise "No database?" unless @db
 
     @selects = args[:selects] || []
     @wheres = args[:wheres] || []
@@ -29,6 +33,31 @@ class BazaModels::Query
     end
   end
 
+  def empty?
+    !any?
+  end
+
+  def none?
+    !any?
+  end
+
+  def count
+    query = clone
+
+    query.instance_variable_set(:@selects, [])
+    query = clone.select("COUNT(*) AS count")
+
+    return @db.query(query.to_sql).fetch.fetch(:count)
+  end
+
+  def length
+    count
+  end
+
+  def find(id)
+    return clone.where(id: id).limit(1).to_enum.first
+  end
+
   def select(select)
     if select.is_a?(Symbol)
       @selects << "`#{@model.table_name}`.`#{select}`"
@@ -36,6 +65,11 @@ class BazaModels::Query
       @selects << select
     end
 
+    return self
+  end
+
+  def offset(offset)
+    @offset = offset
     return self
   end
 
@@ -49,9 +83,11 @@ class BazaModels::Query
     return self
   end
 
-  def where(args)
+  def where(args = nil)
     if args.is_a?(String)
-      @wheres << args
+      @wheres << "(#{args})"
+    elsif args == nil
+      return Not.new(query: self)
     else
       args.each do |key, value|
         if value.is_a?(Hash)
@@ -80,6 +116,30 @@ class BazaModels::Query
       orig_table = @model.table_name
 
       @joins << "INNER JOIN `#{table_name}` ON `#{table_name}`.`#{foreign_key}` = `#{orig_table}`.`id`"
+    end
+
+    return self
+  end
+
+  def group(name)
+    if name.is_a?(Symbol)
+      @groups << "`#{@model.table_name}`.`#{name}`"
+    elsif name.is_a?(String)
+      @groups << name
+    else
+      raise "Didn't know how to group by that argument: #{name}"
+    end
+
+    return self
+  end
+
+  def order(name)
+    if name.is_a?(Symbol)
+      @orders << "`#{@model.table_name}`.`#{name}`"
+    elsif name.is_a?(String)
+      @orders << name
+    else
+      raise "Didn't know how to order by that argument: #{name}"
     end
 
     return self
@@ -120,6 +180,28 @@ class BazaModels::Query
     end
   end
 
+  def find_each
+    query = clone
+    query.instance_variable_set(:@order, [])
+    query.instance_variable_set(:@limit, nil)
+    query = query.order(:id)
+
+    offset = 0
+
+    loop do
+      query = query.offset(offset, 1000)
+      offset += 1000
+
+      count = 0
+      query.each do |model|
+        yield model
+        count += 1
+      end
+
+      break if count == 0
+    end
+  end
+
   def to_a
     to_enum.to_a
   end
@@ -156,6 +238,21 @@ class BazaModels::Query
       end
     end
 
+    unless @groups.empty?
+      sql << " GROUP BY "
+
+      first = true
+      @groups.each do |group|
+        if first
+          first = false
+        else
+          sql << ", "
+        end
+
+        sql << group
+      end
+    end
+
     unless @orders.empty?
       sql << " ORDER BY "
 
@@ -167,28 +264,23 @@ class BazaModels::Query
           sql << ", "
         end
 
-        sql << order.to_sql
+        sql << order
       end
     end
 
-    unless @groups.empty?
-      sql << " GROUP BY "
-
-      first = true
-      @groups.each do |group|
-        if first
-          first = false
-        else
-          sql << ", "
-        end
-      end
-    end
-
-    unless @limit == nil
+    if @limit && @offset
+      sql << " LIMIT #{@offset.to_i}, #{@limit.to_i}"
+    elsif @limit
       sql << " LIMIT #{@limit.to_i}"
     end
 
     return sql.strip
+  end
+
+  def destroy_all
+    each do |model|
+      model.destroy!
+    end
   end
 
   def to_s

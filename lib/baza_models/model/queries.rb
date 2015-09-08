@@ -27,5 +27,19 @@ module BazaModels::Model::Queries
       return model if model
       return new(data)
     end
+
+    def find_or_create_by(data)
+      model = find_or_initialize_by(data)
+      model.save if model.new_record?
+      yield model if block_given?
+      return model
+    end
+
+    def find_or_create_by!(data)
+      model = find_or_initialize_by(data)
+      model.save! if model.new_record?
+      yield model if block_given?
+      return model
+    end
   end
 end
