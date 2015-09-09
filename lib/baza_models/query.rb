@@ -58,6 +58,24 @@ class BazaModels::Query
     return clone.where(id: id).limit(1).to_enum.first
   end
 
+  def first
+    query = clone.limit(1)
+
+    orders = query.instance_variable_get(:@orders)
+    query = query.order(:id) if orders.empty?
+
+    return query.to_enum.first
+  end
+
+  def last
+    query = clone.limit(1)
+
+    orders = query.instance_variable_get(:@orders)
+    query = query.order(:id) if orders.empty?
+
+    return query.reverse_order.to_enum.first
+  end
+
   def select(select)
     if select.is_a?(Symbol)
       @selects << "`#{@model.table_name}`.`#{select}`"
@@ -142,6 +160,11 @@ class BazaModels::Query
       raise "Didn't know how to order by that argument: #{name}"
     end
 
+    return self
+  end
+
+  def reverse_order
+    @reverse_order = true
     return self
   end
 
@@ -262,6 +285,16 @@ class BazaModels::Query
           first = false
         else
           sql << ", "
+        end
+
+        if @reverse_order
+          if order.match(/\s+desc/i)
+            order = order.gsub(/\s+desc/i, " ASC")
+          elsif order.match(/\s+asc/i)
+            order = order.gsub(/\s+asc/i, " DESC")
+          else
+            order = "#{order} DESC"
+          end
         end
 
         sql << order

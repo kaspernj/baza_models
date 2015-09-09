@@ -86,20 +86,4 @@ describe "BazaModels::Model" do
     expect(user.before_destroy_called).to eq 1
     expect(user.after_destroy_called).to eq 1
   end
-
-  it "#created_at" do
-    expect(user.created_at).to eq nil
-    user.save!
-    expect(user.created_at).to_not eq nil
-  end
-
-  it "#updated_at" do
-    expect(user.updated_at).to eq nil
-    user.save!
-    expect(user.updated_at).to_not eq nil
-    old_updated_at = user.updated_at
-    sleep 1
-    user.save!
-    expect(user.updated_at).to_not eq old_updated_at
-  end
 end

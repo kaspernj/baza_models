@@ -7,11 +7,11 @@ module BazaModels::Model::Manipulation
     if valid?
       new_record = new_record?
       fire_callbacks(:before_save)
-      self.updated_at = Time.now
+      self.updated_at = Time.now if has_attribute?(:updated_at)
 
       if new_record
         fire_callbacks(:before_create)
-        self.created_at = Time.now unless created_at?
+        self.created_at = Time.now if has_attribute?(:created_at) && !created_at?
         @data[:id] = db.insert(table_name, @data.merge(@changes), return_id: true)
       else
         db.update(table_name, @changes, id: id)
@@ -60,6 +60,7 @@ module BazaModels::Model::Manipulation
     else
       fire_callbacks(:before_destroy)
 
+      return false unless restrict_has_one_relations
       return false unless restrict_has_many_relations
       return false unless destroy_has_many_relations
 
@@ -74,14 +75,14 @@ module BazaModels::Model::Manipulation
   end
 
   module ClassMethods
-    def create(data)
+    def create(data = {})
       model = new(data)
       model.save
 
       return model
     end
 
-    def create!(data)
+    def create!(data = {})
       model = new(data)
       model.save!
 

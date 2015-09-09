@@ -1,6 +1,9 @@
 class User < BazaModels::Model
   attr_accessor :custom_valid
 
+  belongs_to :organization
+  has_one :person, dependent: :restrict_with_error
+
   has_many :roles, dependent: :destroy
   has_many :admin_roles, -> { where(role: "administrator") }, class_name: "Role", dependent: :restrict_with_error
 
