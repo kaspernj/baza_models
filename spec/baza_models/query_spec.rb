@@ -94,4 +94,41 @@ describe BazaModels::Query do
       role_admin.reload
     end
   end
+
+  it "#first" do
+    role_user.save!
+    role_admin.save!
+
+    expect(Role.first).to eq role_user
+    expect(Role.last).to eq role_admin
+  end
+
+  describe "#order" do
+    it "converts symbols to escaped strings" do
+      sql = Role.order(:role).to_sql
+      expect(sql).to end_with "ORDER BY `roles`.`role`"
+    end
+  end
+
+  describe "#reverse_order" do
+    before do
+      role_user.save!
+      role_admin.save!
+    end
+
+    it "reverses ASC strings" do
+      sql = Role.order("roles.role ASC").reverse_order.to_sql
+      expect(sql).to end_with " DESC"
+    end
+
+    it "reverses DESC strings" do
+      sql = Role.order("roles.role DESC").reverse_order.to_sql
+      expect(sql).to end_with " ASC"
+    end
+
+    it "reverses symbols" do
+      sql = Role.order(:role).reverse_order.to_sql
+      expect(sql).to end_with " DESC"
+    end
+  end
 end

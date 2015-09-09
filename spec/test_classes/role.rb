@@ -1,6 +1,8 @@
 class Role < BazaModels::Model
   belongs_to :user
 
+  has_one :organization, through: :user
+
   scope :admin_roles, -> { where(role: 'administrator') }
 
   validates :role, presence: true

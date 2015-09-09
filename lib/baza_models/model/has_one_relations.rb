@@ -69,11 +69,11 @@ module BazaModels::Model::HasOneRelations
 
 private
 
-  def restrict_has_many_relations
+  def restrict_has_one_relations
     self.class.relationships.each do |relation_name, relation|
-      next if relation.fetch(:type) != :has_many || relation[:dependent] != :restrict_with_error
+      next if relation.fetch(:type) != :has_one || relation[:dependent] != :restrict_with_error
 
-      if __send__(relation_name).any?
+      if __send__(relation_name)
         errors.add(:base, "can't be destroyed because it contains #{relation_name}")
         return false
       end
@@ -82,9 +82,9 @@ private
     return true
   end
 
-  def destroy_has_many_relations
+  def destroy_has_one_relations
     self.class.relationships.each do |relation_name, relation|
-      next if relation.fetch(:type) != :has_many || relation[:dependent] != :destroy
+      next if relation.fetch(:type) != :has_one || relation[:dependent] != :destroy
 
       __send__(relation_name).each do |model|
         unless model.destroy

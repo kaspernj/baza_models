@@ -7,6 +7,7 @@ class BazaModels::Model
   autoload :CustomValidations, "#{path}/custom_validations"
   autoload :Delegation, "#{path}/delegation"
   autoload :HasManyRelations, "#{path}/has_many_relations"
+  autoload :HasOneRelations, "#{path}/has_one_relations"
   autoload :Manipulation, "#{path}/manipulation"
   autoload :Queries, "#{path}/queries"
   autoload :Scopes, "#{path}/scopes"
@@ -16,6 +17,7 @@ class BazaModels::Model
   include Delegation
   include CustomValidations
   include HasManyRelations
+  include HasOneRelations
   include Manipulation
   include Queries
   include Scopes
@@ -45,7 +47,7 @@ class BazaModels::Model
   end
 
 
-  QUERY_METHODS = [:all, :any?, :empty?, :none?, :count, :length, :select, :includes, :joins, :group, :where, :order, :limit]
+  QUERY_METHODS = [:all, :any?, :empty?, :none?, :count, :first, :last, :length, :select, :includes, :joins, :group, :where, :order, :limit]
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
       BazaModels::Query.new(model: self).__send__(query_method, *args, &blk)
@@ -56,7 +58,7 @@ class BazaModels::Model
   def initialize(data = {})
     self.class.init_model unless self.class.model_initialized?
 
-    @data = self.class.__blank_attributes[self.class].merge(real_attributes(data))
+    @data = self.class.__blank_attributes.merge(real_attributes(data))
 
     @changes = {}
 
@@ -124,11 +126,10 @@ class BazaModels::Model
     @table = db.tables[table_name]
 
     @__blank_attributes ||= {}
-    @__blank_attributes[self] ||= {}
 
     @table.columns.each do |column_name, column|
       init_attribute_from_column(column)
-      @__blank_attributes[self][column_name] = nil
+      @__blank_attributes[column_name] = nil
     end
 
     @model_initialized = true
@@ -173,6 +174,10 @@ class BazaModels::Model
     else
       return id == another_model.id
     end
+  end
+
+  def has_attribute?(name)
+    self.class.__blank_attributes.keys.map { |key| key.to_s }.include?(name.to_s)
   end
 
 protected
