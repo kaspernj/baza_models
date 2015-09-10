@@ -9,7 +9,13 @@ module DatabaseHelper
 
         require "tempfile"
         require "baza"
-        require "sqlite3"
+
+        if RUBY_PLATFORM == "java"
+          require "jdbc/sqlite3"
+          ::Jdbc::SQLite3.load_driver
+        else
+          require "sqlite3"
+        end
 
         path = Tempfile.new("baza_test").path
         File.unlink(path) if File.exists?(path)

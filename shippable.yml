@@ -2,7 +2,8 @@ language: ruby
 cache: bundler
 archive: true
 rvm:
-  - 2.1.2
+  - ruby-2.1.2
+  - jruby-1.7.13
 script:
   - CODECLIMATE_REPO_TOKEN=b91c00ba044df16a09d7120a2449a43ccad754de9271a7ecf594e3b0cf432eeb bundle exec rspec
 notifications:
