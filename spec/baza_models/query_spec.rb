@@ -42,6 +42,21 @@ describe BazaModels::Query do
       expect(query.to_sql).to eq "SELECT `users`.* FROM `users` LEFT JOIN roles ON roles.user_id = users.id WHERE `roles`.`role` = 'administrator'"
       expect(query.to_a).to eq [user]
     end
+
+    it "does deep joins" do
+      query = Organization.joins(users: :person).to_sql
+
+      expect(query).to include "INNER JOIN `users` ON `users`.`organization_id` = `organizations`.`id`"
+      expect(query).to include "INNER JOIN `persons` ON `persons`.`user_id` = `users`.`id`"
+    end
+
+    it "doesn't double join with symbols" do
+      query = Organization.joins(:users, :users, users: :person).to_sql
+
+      join_sql = "INNER JOIN `users` ON `users`.`organization_id` = `organizations`.`id`"
+      count = query.scan(/#{Regexp.escape(join_sql)}/).length
+      expect(count).to eq 1
+    end
   end
 
   context "#group, #order" do

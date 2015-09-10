@@ -10,7 +10,9 @@ describe BazaModels::Model::HasOneRelations do
   let!(:organization) { Organization.create!(name: "Test") }
 
   it "has one thorugh" do
+    person
     expect(user.organization).to eq organization
+    expect(user.person).to eq person
     expect(role_user.organization).to eq organization
   end
 
