@@ -62,6 +62,7 @@ module BazaModels::Model::Manipulation
 
       return false unless restrict_has_one_relations
       return false unless restrict_has_many_relations
+      return false unless destroy_has_one_relations
       return false unless destroy_has_many_relations
 
       db.delete(table_name, id: id)

@@ -31,6 +31,17 @@ module DatabaseHelper
           ]
         })
 
+        @db.tables.create(:user_passports, {
+          columns: [
+            {name: :id, type: :int, primarykey: true, autoincr: true},
+            {name: :user_id, type: :int},
+            {name: :code, type: :varchar}
+          ],
+          indexes: [
+            :user_id
+          ]
+        })
+
         @db.tables.create(:persons, {
           columns: [
             {name: :id, type: :int, primarykey: true, autoincr: true},
@@ -64,6 +75,7 @@ module DatabaseHelper
         require "test_classes/organization"
         require "test_classes/person"
         require "test_classes/user"
+        require "test_classes/user_passport"
         require "test_classes/role"
       end
 
