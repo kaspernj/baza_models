@@ -86,11 +86,11 @@ private
     self.class.relationships.each do |relation_name, relation|
       next if relation.fetch(:type) != :has_one || relation[:dependent] != :destroy
 
-      __send__(relation_name).each do |model|
-        unless model.destroy
-          errors.add(:base, model.errors.full_messages.join('. '))
-          return false
-        end
+      model = __send__(relation_name)
+
+      if model && !model.destroy
+        errors.add(:base, model.errors.full_messages.join('. '))
+        return false
       end
     end
 

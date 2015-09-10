@@ -18,6 +18,13 @@ class User < BazaModels::Model
 end
 ```
 
+### has_one
+```ruby
+class User < BazaModels::Model
+  has_one :person, dependent: :restrict_with_error # :destroy-dependent also works
+end
+```
+
 ### belongs_to
 ```ruby
 class Role < BazaModels::Model
@@ -69,6 +76,9 @@ User.all #=> BazaModels::Query<...>
 User.select(:email)
 User.limit(5)
 User.to_enum
+User.first
+User.last
+User.order(:id).reverse_order
 ```
 
 
@@ -88,6 +98,7 @@ role.save #=> true || false
 ```ruby
 role.role #=> "administrator"
 role.user #=> [some user]
+role.has_attribute?(:created_at) #=> true
 ```
 
 ## Contributing to baza_models
