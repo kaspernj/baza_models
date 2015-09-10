@@ -1,7 +1,10 @@
 require "array_enumerator"
 
 class BazaModels::Query
-  autoload :Not, "#{File.dirname(__FILE__)}/query/not"
+  path = "#{File.dirname(__FILE__)}/query"
+
+  autoload :Inspector, "#{path}/inspector"
+  autoload :Not, "#{path}/not"
 
   attr_accessor :_previous_model, :_relation
 
@@ -19,6 +22,8 @@ class BazaModels::Query
     @groups = args[:groups] || []
     @orders = args[:orders] || []
     @limit = args[:limit]
+
+    @joins_tracker = {}
   end
 
   def all
@@ -121,20 +126,14 @@ class BazaModels::Query
     return self
   end
 
-  def joins(name)
-    if name.is_a?(String)
-      @joins << name
-    else
-      relationship = @model.relationships.fetch(name)
-      raise "No relationship by that name: #{name}" unless relationship
-
-      table_name = relationship.fetch(:table_name)
-      foreign_key = relationship.fetch(:foreign_key)
-
-      orig_table = @model.table_name
-
-      @joins << "INNER JOIN `#{table_name}` ON `#{table_name}`.`#{foreign_key}` = `#{orig_table}`.`id`"
-    end
+  def joins(*arguments)
+    BazaModels::Query::Inspector.new(
+      query: self,
+      model: @model,
+      argument: arguments,
+      joins: @joins,
+      joins_tracker: @joins_tracker
+    ).execute
 
     return self
   end

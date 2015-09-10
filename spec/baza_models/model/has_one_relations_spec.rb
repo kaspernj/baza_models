@@ -10,6 +10,7 @@ describe BazaModels::Model::HasOneRelations do
 
   it "works" do
     expect(user.organization).to eq organization
+    expect(user.person).to eq person
   end
 
   it "has one through" do

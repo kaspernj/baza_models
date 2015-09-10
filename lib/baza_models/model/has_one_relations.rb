@@ -10,7 +10,7 @@ module BazaModels::Model::HasOneRelations
       relation = {
         type: :has_one,
         relation_name: relation_name,
-        table_name: relation_name,
+        table_name: StringCases.pluralize(relation_name),
         args: args,
         all_args: all_args
       }
