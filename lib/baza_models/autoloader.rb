@@ -102,7 +102,7 @@ private
     result = {models: []}
 
     @db.select(relation.fetch(:table_name), relation.fetch(:foreign_key) => model_ids) do |model_data|
-      model = ::Object.const_get(relation[:class_name]).new(model_data)
+      model = ::Object.const_get(relation.fetch(:class_name)).new(model_data)
 
       orig_model_id = model_data.fetch(relation.fetch(:foreign_key))
       orig_model = @models.detect { |array_model| array_model.id == orig_model_id }
@@ -120,7 +120,7 @@ private
     result = {models: []}
 
     @db.select(relation.fetch(:table_name), relation.fetch(:foreign_key) => model_ids) do |model_data|
-      model = ::Object.const_get(relation[:class_name]).new(model_data)
+      model = ::Object.const_get(relation.fetch(:class_name)).new(model_data)
 
       orig_model_id = model_data.fetch(relation.fetch(:foreign_key))
       orig_model = @models.detect { |array_model| array_model.id == orig_model_id }
