@@ -6,7 +6,7 @@ class BazaModels::Autoloader
     @db = args.fetch(:db)
     @debug = args[:debug]
 
-    debug "Autoloading #{@autoloads} on #{@model_class.name} with ID's: #{@models.map(&:id)}"
+    debug "Autoloading #{@autoloads} on #{@model_class.name} with ID's: #{@models.map(&:id)}" if @debug
   end
 
   def autoload
