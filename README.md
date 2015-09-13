@@ -55,8 +55,8 @@ users = User.group(:email).to_a
 
 ### Order
 ```ruby
-ùsers = User.order(:email).to_a
-``
+users = User.order(:email).to_a
+```
 
 ### Includes / autoloading / eager loading
 ```ruby
