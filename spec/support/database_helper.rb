@@ -17,7 +17,7 @@ module DatabaseHelper
           require "sqlite3"
         end
 
-        path = Tempfile.new("baza_test").path
+        path = Tempfile.new(["baza_test", ".sqlite3"]).path
         File.unlink(path) if File.exists?(path)
 
         @db = Baza::Db.new(type: :sqlite3, path: path, index_append_table_name: true, debug: false)
@@ -90,7 +90,7 @@ module DatabaseHelper
 
         @db.close
         path = db.args[:path]
-        File.unlink(path)
+        File.unlink(path) if File.exists?(path)
         Thread.current[:baza] = nil
         @db = nil
       end

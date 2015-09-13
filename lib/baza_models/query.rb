@@ -64,6 +64,8 @@ class BazaModels::Query
   end
 
   def first
+    return autoloaded_cache.first if should_use_autoload?
+
     query = clone.limit(1)
 
     orders = query.instance_variable_get(:@orders)
@@ -73,6 +75,8 @@ class BazaModels::Query
   end
 
   def last
+    return autoloaded_cache.last if should_use_autoload?
+
     query = clone.limit(1)
 
     orders = query.instance_variable_get(:@orders)
@@ -168,9 +172,7 @@ class BazaModels::Query
   end
 
   def to_enum
-    if !any_mods? && autoloaded_on_previous_model?
-      return @_previous_model.autoloads.fetch(@_relation.fetch(:relation_name))
-    end
+    return autoloaded_cache if should_use_autoload?
 
     array_enum = ArrayEnumerator.new do |yielder|
       @db.query(to_sql).each do |data|
@@ -324,6 +326,14 @@ class BazaModels::Query
   end
 
 private
+
+  def should_use_autoload?
+    !any_mods? && autoloaded_on_previous_model?
+  end
+
+  def autoloaded_cache
+    return @_previous_model.autoloads.fetch(@_relation.fetch(:relation_name))
+  end
 
   def any_mods?
     if @groups.any? || @includes.any? || @orders.any? || @joins.any? || any_wheres_other_than_relation?
