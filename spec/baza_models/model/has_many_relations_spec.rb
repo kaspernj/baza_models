@@ -3,7 +3,8 @@ require 'spec_helper'
 describe BazaModels::Model::HasManyRelations do
   include DatabaseHelper
 
-  let(:user) { User.new(email: "test@example.com") }
+  let(:organization) { Organization.new }
+  let(:user) { User.new(email: "test@example.com", organization: organization) }
   let(:role_user) { Role.new(user: user, role: "user") }
   let(:role_admin) { Role.new(user: user, role: "administrator") }
 
@@ -22,24 +23,6 @@ describe BazaModels::Model::HasManyRelations do
     it 'restricts through has_many' do
       role_admin.save!
       expect { user.destroy! }.to raise_error(BazaModels::Errors::InvalidRecord)
-    end
-  end
-
-  context '#includes' do
-    before do
-      user.save!
-      role_admin.save!
-    end
-
-    it 'autoloads via includes on has_many relations' do
-      query = User.includes(:roles).to_a
-      user = query.first
-
-      expect(user.autoloads.fetch(:roles)).to eq [role_admin]
-      expect(user.roles.__send__(:any_mods?)).to eq false
-      expect(user.roles.__send__(:any_wheres_other_than_relation?)).to eq false
-      expect(user.roles.__send__(:autoloaded_on_previous_model?)).to eq true
-      expect(user.roles.to_enum).to eq [role_admin]
     end
   end
 
