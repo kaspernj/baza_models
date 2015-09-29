@@ -41,14 +41,16 @@ private
     table_name = relationship.fetch(:table_name)
 
     if relationship.fetch(:type) == :belongs_to
-      column_name = :id
+      column_left = :id
+      column_right = relationship.fetch(:foreign_key)
     else
-      column_name = relationship.fetch(:foreign_key)
+      column_left = relationship.fetch(:foreign_key)
+      column_right = :id
     end
 
     orig_table = @model.table_name
 
-    @joins << "INNER JOIN `#{table_name}` ON `#{table_name}`.`#{column_name}` = `#{orig_table}`.`id`"
+    @joins << "INNER JOIN `#{table_name}` ON `#{table_name}`.`#{column_left}` = `#{orig_table}`.`#{column_right}`"
     @joins_tracker[argument] = {}
   end
 
