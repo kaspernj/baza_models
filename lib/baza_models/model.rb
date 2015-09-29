@@ -159,11 +159,19 @@ class BazaModels::Model
   end
 
   def inspect
-    if new_record?
-      "#<#{self.class.name} new! data=#{@data.merge(@changes)}>"
-    else
-      "#<#{self.class.name} id=#{id} data=#{@data.merge(@changes)}>"
+    data_str = ""
+    @data.each do |key, value|
+      if @changes.key?(key)
+        value_to_use = @changes.fetch(key)
+      else
+        value_to_use = value
+      end
+
+      data_str << " " unless data_str.empty?
+      data_str << "#{key}=\"#{value_to_use}\""
     end
+
+    "#<#{self.class.name} #{data_str}>"
   end
 
   def ==(another_model)
