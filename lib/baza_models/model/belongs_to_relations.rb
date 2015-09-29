@@ -8,7 +8,7 @@ module BazaModels::Model::BelongsToRelations
       relation = {
         type: :belongs_to,
         relation_name: relation_name,
-        table_name: StringCases.pluralize(relation_name),
+        table_name: args[:table_name] || StringCases.pluralize(relation_name),
         foreign_key: :"#{relation_name}_id"
       }
 
