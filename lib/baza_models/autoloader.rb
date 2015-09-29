@@ -80,9 +80,14 @@ private
     result = {models: []}
 
     model_id_mappings = {}
+    model_ids = []
+
     @models.each do |model|
-      @model_ids << model.id
-      model_id_mappings[model.data.fetch(relation.fetch(:foreign_key))] = model.id
+      key = model.data.fetch(relation.fetch(:foreign_key))
+      next if model_id_mappings.key?(key)
+
+      model_ids << key
+      model_id_mappings[key] = model.id
     end
 
     @db.select(relation.fetch(:table_name), id: model_ids) do |model_data|
@@ -124,6 +129,7 @@ private
 
       orig_model_id = model_data.fetch(relation.fetch(:foreign_key))
       orig_model = @models.detect { |array_model| array_model.id == orig_model_id }
+
       raise "Already autoloaded?" if orig_model.autoloads.key?(autoload_name)
       orig_model.autoloads[autoload_name] = model
 

@@ -3,22 +3,16 @@ require "spec_helper"
 describe BazaModels::Autoloader do
   include DatabaseHelper
 
-  let(:organization) { Organization.new }
-  let(:user) { User.new(email: "test@example.com", organization: organization) }
-  let(:user_passport) { UserPassport.new(user: user) }
+  let!(:organization) { Organization.create! }
+  let!(:another_user) { User.create!(email: "another@example.com") }
+  let!(:user) { User.create!(email: "test@example.com", organization: organization) }
+  let!(:user_passport) { UserPassport.create!(user: user) }
   let(:role_user) { Role.new(user: user, role: "user") }
-  let(:role_admin) { Role.new(user: user, role: "administrator") }
-
-  before do
-    organization.save!
-    user.save!
-    user_passport.save!
-    role_admin.save!
-  end
+  let!(:role_admin) { Role.create!(user: user, role: "administrator") }
 
   it 'autoloads via includes on has_many relations' do
     query = User.includes(:roles).to_a
-    user_from_query = query.first
+    user_from_query = query.detect { |user| user.email == "test@example.com" }
 
     expect(user_from_query.autoloads.fetch(:roles)).to eq [role_admin]
     expect(user_from_query.roles.__send__(:any_mods?)).to eq false
@@ -39,7 +33,7 @@ describe BazaModels::Autoloader do
 
   it 'autoloads via includes on has_one relations' do
     query = User.includes(:user_passport).to_a
-    user = query.first
+    user = query.detect { |user| user.email == "test@example.com" }
 
     allow(user.autoloads).to receive(:[]).and_call_original
     expect(user.user_passport).to eq user_passport
