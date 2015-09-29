@@ -10,7 +10,7 @@ module BazaModels::Model::HasManyRelations
       relation = {
         type: :has_many,
         relation_name: relation_name,
-        table_name: relation_name,
+        table_name: args[:table_name] || relation_name,
         args: args,
         all_args: all_args
       }
