@@ -4,7 +4,10 @@ module BazaModels::Model::HasManyRelations
   end
 
   module ClassMethods
+    # rubocop:disable Style/PredicateName
     def has_many(relation_name, *all_args)
+      # rubocop:enable Style/PredicateName
+
       args = all_args.pop
 
       relation = {
@@ -18,7 +21,7 @@ module BazaModels::Model::HasManyRelations
       if args[:foreign_key]
         relation[:foreign_key] = args.fetch(:foreign_key)
       else
-        relation[:foreign_key] = :"#{StringCases.camel_to_snake(self.name)}_id"
+        relation[:foreign_key] = :"#{StringCases.camel_to_snake(name)}_id"
       end
 
       relation[:dependent] = args.fetch(:dependent) if args[:dependent]
@@ -42,9 +45,7 @@ module BazaModels::Model::HasManyRelations
         query._relation = relation
 
         all_args.each do |arg|
-          if arg.is_a?(Proc)
-            query = query.instance_exec(&arg)
-          end
+          query = query.instance_exec(&arg) if arg.is_a?(Proc)
         end
 
         return query
@@ -64,7 +65,7 @@ private
       end
     end
 
-    return true
+    true
   end
 
   def destroy_has_many_relations
@@ -73,12 +74,12 @@ private
 
       __send__(relation_name).each do |model|
         unless model.destroy
-          errors.add(:base, model.errors.full_messages.join('. '))
+          errors.add(:base, model.errors.full_messages.join(". "))
           return false
         end
       end
     end
 
-    return true
+    true
   end
 end

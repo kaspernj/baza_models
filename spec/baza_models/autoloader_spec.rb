@@ -10,7 +10,7 @@ describe BazaModels::Autoloader do
   let(:role_user) { Role.new(user: user, role: "user") }
   let!(:role_admin) { Role.create!(user: user, role: "administrator") }
 
-  it 'autoloads via includes on has_many relations' do
+  it "autoloads via includes on has_many relations" do
     query = User.includes(:roles).to_a
     user_from_query = query.detect { |user| user.email == "test@example.com" }
 
@@ -21,7 +21,7 @@ describe BazaModels::Autoloader do
     expect(user_from_query.roles.to_enum).to eq [role_admin]
   end
 
-  it 'autoloads via includes on belongs_to relations' do
+  it "autoloads via includes on belongs_to relations" do
     query = Role.includes(:user).to_a
     role = query.first
 
@@ -31,9 +31,9 @@ describe BazaModels::Autoloader do
     expect(role.autoloads[:user]).to eq user
   end
 
-  it 'autoloads via includes on has_one relations' do
+  it "autoloads via includes on has_one relations" do
     query = User.includes(:user_passport).to_a
-    user = query.detect { |user| user.email == "test@example.com" }
+    user = query.detect { |user_i| user_i.email == "test@example.com" }
 
     allow(user.autoloads).to receive(:[]).and_call_original
     expect(user.user_passport).to eq user_passport
@@ -41,7 +41,7 @@ describe BazaModels::Autoloader do
     expect(user.autoloads[:user_passport]).to eq user_passport
   end
 
-  it 'autoloads sub models' do
+  it "autoloads sub models" do
     organizations = Organization.includes(users: :roles).to_a
     organization = organizations.first
 

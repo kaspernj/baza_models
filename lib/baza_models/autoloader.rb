@@ -46,8 +46,6 @@ private
       result = autoload_symbol(autoload_key)
       next if result.fetch(:models).empty?
 
-      result_user = result.fetch(:models).first
-
       autoloader = BazaModels::Autoloader.new(
         models: result.fetch(:models),
         autoloads: autoload_value,
@@ -60,7 +58,6 @@ private
 
   def autoload_symbol(autoload)
     relation = @model_class.relationships.fetch(autoload)
-    foreign_key = relation.fetch(:foreign_key)
 
     if relation.fetch(:type) == :has_many
       autoload_has_many(autoload, relation)
@@ -74,9 +71,6 @@ private
   end
 
   def autoload_belongs_to(autoload_name, relation)
-    sql = "SELECT `#{@model_class.table_name}`.`#{relation.fetch(:foreign_key)}` FROM `#{@model_class.table_name}` WHERE `id` IN (#{model_ids.join(',')})"
-    ids = @db.query(sql).to_a.map { |data| data.fetch(relation.fetch(:foreign_key)) }
-
     result = {models: []}
 
     model_id_mappings = {}
@@ -100,7 +94,7 @@ private
       result.fetch(:models) << model
     end
 
-    return result
+    result
   end
 
   def autoload_has_many(autoload_name, relation)
@@ -118,7 +112,7 @@ private
       result.fetch(:models) << model
     end
 
-    return result
+    result
   end
 
   def autoload_has_one(autoload_name, relation)
@@ -136,6 +130,6 @@ private
       result.fetch(:models) << model
     end
 
-    return result
+    result
   end
 end

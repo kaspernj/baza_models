@@ -86,4 +86,12 @@ describe "BazaModels::Model" do
     expect(user.before_destroy_called).to eq 1
     expect(user.after_destroy_called).to eq 1
   end
+
+  it "can use callbacks as blocks" do
+    expect(user.before_save_block_called).to eq nil
+    user.save!
+    expect(user.before_save_block_called).to eq 1
+    user.save!
+    expect(user.before_save_block_called).to eq 2
+  end
 end

@@ -40,13 +40,11 @@ module BazaModels::Model::Manipulation
 
   def update_attributes(attributes)
     assign_attributes(attributes)
-    return save
+    save
   end
 
   def update_attributes!(attributes)
-    unless update_attributes(attributes)
-      raise BazaModels::Errors::InvalidRecord, @errors.full_messages.join(". ")
-    end
+    raise BazaModels::Errors::InvalidRecord, @errors.full_messages.join(". ") unless update_attributes(attributes)
   end
 
   def assign_attributes(attributes)
@@ -80,14 +78,14 @@ module BazaModels::Model::Manipulation
       model = new(data)
       model.save
 
-      return model
+      model
     end
 
     def create!(data = {})
       model = new(data)
       model.save!
 
-      return model
+      model
     end
   end
 end

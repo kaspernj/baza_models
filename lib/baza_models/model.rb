@@ -27,18 +27,23 @@ class BazaModels::Model
   attr_reader :changes, :errors
 
   # Define all callback methods.
-  CALLBACK_TYPES = [:before_create, :after_create, :before_save, :after_save, :before_destroy, :after_destroy,
+  CALLBACK_TYPES = [
+    :before_create, :after_create, :before_save, :after_save, :before_destroy, :after_destroy,
     :before_validation, :after_validation, :before_validation_on_create, :after_validation_on_create,
-    :before_validation_on_update, :after_validation_on_update]
+    :before_validation_on_update, :after_validation_on_update
+  ]
 
   CALLBACK_TYPES.each do |callback_type|
+    # rubocop:disable Style/ClassVars
     @@callbacks ||= {}
+    # rubocop:enable Style/ClassVars
+
     @@callbacks[callback_type] = {}
     callbacks = @@callbacks
 
-    (class << self; self; end).__send__(:define_method, callback_type) do |method_name, *args, &blk|
-      callbacks[callback_type][self.name] ||= []
-      callbacks[callback_type][self.name] << {
+    (class << self; self; end).__send__(:define_method, callback_type) do |method_name = nil, *args, &blk|
+      callbacks[callback_type][name] ||= []
+      callbacks[callback_type][name] << {
         block: blk,
         method_name: method_name,
         args: args
@@ -47,7 +52,10 @@ class BazaModels::Model
   end
 
 
-  QUERY_METHODS = [:all, :any?, :empty?, :none?, :count, :first, :last, :length, :select, :includes, :joins, :group, :where, :order, :limit]
+  QUERY_METHODS = [
+    :all, :any?, :empty?, :none?, :count, :first, :last, :length, :select, :includes,
+    :joins, :group, :where, :order, :limit, :to_adapter
+  ]
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
       BazaModels::Query.new(model: self).__send__(query_method, *args, &blk)
@@ -58,11 +66,9 @@ class BazaModels::Model
   def initialize(data = {})
     self.class.init_model unless self.class.model_initialized?
 
-    @data = self.class.__blank_attributes.merge(real_attributes(data))
-
     @changes = {}
-
     reset_errors
+    @data = self.class.__blank_attributes.merge(real_attributes(data))
 
     if @data[:id]
       @new_record = false
@@ -71,8 +77,11 @@ class BazaModels::Model
     end
   end
 
+  # rubocop:disable Style/TrivialAccessors
   def new_record?
-    return @new_record
+    # rubocop:enable Style/TrivialAccessors
+
+    @new_record
   end
 
   def persisted?
@@ -81,45 +90,44 @@ class BazaModels::Model
 
   def db
     return @db if @db
-    return self.class.db
+    @db ||= self.class.db
   end
 
-  def db=(db)
-    @db = db
-  end
+  attr_writer :db
 
   def self.db
+    @db = nil if @db && @db.closed?
     return @db if @db
-    return BazaModels.primary_db
+    @db ||= BazaModels.primary_db
+    raise "No Baza database has been configured" unless @db
+    @db
   end
 
-  def self.db=(db)
-    @db = db
+  class << self
+    attr_writer :db
   end
 
   def autoloads
     @autoloads ||= {}
-    return @autoloads
+    @autoloads
   end
 
-  def self.relationships
-    return @relationships
+  class << self
+    attr_reader :relationships
   end
 
   def table_name
     @table_name ||= self.class.table_name
   end
 
-  def table_name=(table_name)
-    @table_name = table_name
-  end
+  attr_writer :table_name
 
   def self.table_name
     @table_name ||= "#{StringCases.camel_to_snake(name.gsub("::", ""))}s"
   end
 
-  def self.table_name=(table_name)
-    @table_name = table_name
+  class << self
+    attr_writer :table_name
   end
 
   def self.init_model
@@ -136,18 +144,18 @@ class BazaModels::Model
   end
 
   def id
-    return @data.fetch(:id)
+    @data.fetch(:id)
   end
 
   def to_param
-    return id
+    id
   end
 
   def reload
     @data = db.single(table_name, {id: id}, limit: 1)
     raise BazaModels::Errors::RecordNotFound unless @data
     @changes = {}
-    return self
+    self
   end
 
   def to_s
@@ -174,28 +182,33 @@ class BazaModels::Model
     "#<#{self.class.name} #{data_str}>"
   end
 
-  def ==(another_model)
-    return false unless self.class == another_model.class
+  def ==(other)
+    return false unless self.class == other.class
 
-    if new_record? && another_model.new_record?
-      return merged_data == another_model.__send__(:merged_data)
+    if new_record? && other.new_record?
+      return merged_data == other.__send__(:merged_data)
     else
-      return id == another_model.id
+      return id == other.id
     end
   end
 
+  # rubocop:disable Style/PredicateName
   def has_attribute?(name)
-    self.class.__blank_attributes.keys.map { |key| key.to_s }.include?(name.to_s)
+    # rubocop:enable Style/PredicateName
+
+    self.class.__blank_attributes.keys.map(&:to_s).include?(name.to_s)
   end
 
 protected
 
-  def self.__blank_attributes
-    return @__blank_attributes
+  class << self
+    attr_reader :__blank_attributes
   end
 
+  # rubocop:disable Style/TrivialAccessors
   def self.model_initialized?
-    return @model_initialized
+    # rubocop:enable Style/TrivialAccessors
+    @model_initialized
   end
 
   def self.init_attribute_from_column(column)
@@ -224,15 +237,15 @@ protected
   end
 
   def fire_callbacks(name)
-    if @@callbacks[name] && @@callbacks[name][self.class.name]
-      @@callbacks[name][self.class.name].each do |callback_data|
-        if callback_data[:block]
-          callback_data[:block].call(*callback_data.fetch(:args))
-        elsif callback_data[:method_name]
-          __send__(callback_data[:method_name], *callback_data.fetch(:args))
-        else
-          raise "Didn't know how to perform callbacks for #{name}"
-        end
+    return if !@@callbacks[name] || !@@callbacks[name][self.class.name]
+
+    @@callbacks[name][self.class.name].each do |callback_data|
+      if callback_data[:block]
+        callback_data[:block].call(self, *callback_data.fetch(:args))
+      elsif callback_data[:method_name]
+        __send__(callback_data[:method_name], *callback_data.fetch(:args))
+      else
+        raise "Didn't know how to perform callbacks for #{name}"
       end
     end
   end
@@ -245,21 +258,31 @@ protected
   def real_attributes(attributes)
     new_attributes = {}
     attributes.each do |attribute_name, attribute_value|
-      set = false
       belongs_to_relations = self.class.instance_variable_get(:@belongs_to_relations)
 
       if belongs_to_relations
         belongs_to_relations.each do |relation|
           if attribute_name.to_s == relation[:relation_name].to_s
-            new_attributes[:"#{attribute_name}_id"] = attribute_value.id
-            set = true
+            attribute_name = :"#{attribute_name}_id"
+            attribute_value = attribute_value.id
           end
         end
       end
 
-      new_attributes[attribute_name] = attribute_value unless set
+      unless has_attribute?(attribute_name)
+        set_method_name = "#{attribute_name}="
+
+        if respond_to?(set_method_name)
+          __send__(set_method_name, attribute_value)
+          next
+        else
+          raise "Unknown attribute: #{attribute_name}"
+        end
+      end
+
+      new_attributes[attribute_name] = attribute_value
     end
 
-    return new_attributes
+    new_attributes
   end
 end

@@ -27,7 +27,7 @@ class BazaModels::Query
   end
 
   def all
-    return self
+    self
   end
 
   def any?
@@ -52,7 +52,7 @@ class BazaModels::Query
     query.instance_variable_set(:@selects, [])
     query = clone.select("COUNT(*) AS count")
 
-    return @db.query(query.to_sql).fetch.fetch(:count)
+    @db.query(query.to_sql).fetch.fetch(:count)
   end
 
   def length
@@ -60,7 +60,7 @@ class BazaModels::Query
   end
 
   def find(id)
-    return clone.where(id: id).limit(1).to_enum.first
+    clone.where(id: id).limit(1).to_enum.first
   end
 
   def first
@@ -71,7 +71,7 @@ class BazaModels::Query
     orders = query.instance_variable_get(:@orders)
     query = query.order(:id) if orders.empty?
 
-    return query.to_enum.first
+    query.to_enum.first
   end
 
   def last
@@ -82,7 +82,7 @@ class BazaModels::Query
     orders = query.instance_variable_get(:@orders)
     query = query.order(:id) if orders.empty?
 
-    return query.reverse_order.to_enum.first
+    query.reverse_order.to_enum.first
   end
 
   def select(select)
@@ -92,22 +92,22 @@ class BazaModels::Query
       @selects << select
     end
 
-    return self
+    self
   end
 
   def offset(offset)
     @offset = offset
-    return self
+    self
   end
 
   def limit(limit)
     @limit = limit
-    return self
+    self
   end
 
   def includes(name)
     @includes << name
-    return self
+    self
   end
 
   def where(args = nil)
@@ -127,7 +127,7 @@ class BazaModels::Query
       end
     end
 
-    return self
+    self
   end
 
   def joins(*arguments)
@@ -139,7 +139,7 @@ class BazaModels::Query
       joins_tracker: @joins_tracker
     ).execute
 
-    return self
+    self
   end
 
   def group(name)
@@ -151,7 +151,7 @@ class BazaModels::Query
       raise "Didn't know how to group by that argument: #{name}"
     end
 
-    return self
+    self
   end
 
   def order(name)
@@ -163,12 +163,12 @@ class BazaModels::Query
       raise "Didn't know how to order by that argument: #{name}"
     end
 
-    return self
+    self
   end
 
   def reverse_order
     @reverse_order = true
-    return self
+    self
   end
 
   def to_enum
@@ -226,6 +226,10 @@ class BazaModels::Query
     end
   end
 
+  def find_first(args)
+    where(args).first
+  end
+
   def to_a
     to_enum.to_a
   end
@@ -236,7 +240,7 @@ class BazaModels::Query
     if @selects.empty?
       sql << "`#{@model.table_name}`.*"
     else
-      sql << @selects.join(', ')
+      sql << @selects.join(", ")
     end
 
     sql << " FROM `#{@model.table_name}`"
@@ -308,13 +312,15 @@ class BazaModels::Query
       sql << " LIMIT #{@limit.to_i}"
     end
 
-    return sql.strip
+    sql.strip
   end
 
   def destroy_all
-    each do |model|
-      model.destroy!
-    end
+    each(&:destroy!)
+  end
+
+  def to_adapter
+    self
   end
 
   def to_s
@@ -332,7 +338,7 @@ private
   end
 
   def autoloaded_cache
-    return @_previous_model.autoloads.fetch(@_relation.fetch(:relation_name))
+    @_previous_model.autoloads.fetch(@_relation.fetch(:relation_name))
   end
 
   def any_mods?
@@ -347,12 +353,10 @@ private
     if @_previous_model && @_relation && @wheres.length == 1
       looks_like = "`#{@_relation.fetch(:table_name)}`.`#{@_relation.fetch(:foreign_key)}` = '#{@_previous_model.id}'"
 
-      if @wheres.first == looks_like
-        return false
-      end
+      return false if @wheres.first == looks_like
     end
 
-    return true
+    true
   end
 
   def autoloaded_on_previous_model?
@@ -362,7 +366,7 @@ private
       end
     end
 
-    return false
+    false
   end
 
   def clone
