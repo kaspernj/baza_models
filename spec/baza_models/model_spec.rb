@@ -32,6 +32,7 @@ describe "BazaModels::Model" do
   end
 
   it "#email_was" do
+    user.save!
     user.email = "newemail@example.com"
     expect(user.email_was).to eq "test@example.com"
   end
@@ -93,5 +94,30 @@ describe "BazaModels::Model" do
     expect(user.before_save_block_called).to eq 1
     user.save!
     expect(user.before_save_block_called).to eq 2
+  end
+
+  it "has array accessors" do
+    expect(user[:email]).to eq "test@example.com"
+    user[:email] = "new@example.com"
+    expect(user[:email]).to eq "new@example.com"
+
+    user.write_attribute(:email, "new2@example.com")
+    expect(user.read_attribute(:email)).to eq "new2@example.com"
+  end
+
+  it "#to_key" do
+    expect(user.to_key).to eq nil
+    user.save!
+    expect(user.to_key).to eq [1]
+  end
+
+  it "#changed?" do
+    expect(user.changed?).to eq true
+    user.save!
+    expect(user.changed?).to eq false
+    user.email = "new@example.com"
+    expect(user.changed?).to eq true
+    user.save!
+    expect(user.changed?).to eq false
   end
 end

@@ -63,6 +63,11 @@ class BazaModels::Query
     clone.where(id: id).limit(1).to_enum.first
   end
 
+  # OrmAdapter support
+  def get(id)
+    find(id)
+  end
+
   def first
     return autoloaded_cache.first if should_use_autoload?
 
@@ -176,7 +181,7 @@ class BazaModels::Query
 
     array_enum = ArrayEnumerator.new do |yielder|
       @db.query(to_sql).each do |data|
-        yielder << @model.new(data)
+        yielder << @model.new(data, init: true)
       end
     end
 
@@ -319,6 +324,7 @@ class BazaModels::Query
     each(&:destroy!)
   end
 
+  # OrmAdapter support
   def to_adapter
     self
   end

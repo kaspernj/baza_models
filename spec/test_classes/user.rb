@@ -15,9 +15,9 @@ class User < BazaModels::Model
 
   scope :admin_roles_scope, -> { joins(:roles).where(roles: {role: "administrator"}) }
 
-  before_save do |user|
-    user.before_save_block_called ||= 0
-    user.before_save_block_called += 1
+  before_save do
+    self.before_save_block_called ||= 0
+    self.before_save_block_called += 1
   end
 
   # Used to test callbacks.

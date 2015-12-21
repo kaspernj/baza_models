@@ -63,12 +63,18 @@ class BazaModels::Model
   end
 
 
-  def initialize(data = {})
+  def initialize(data = {}, args = {})
     self.class.init_model unless self.class.model_initialized?
 
-    @changes = {}
     reset_errors
-    @data = self.class.__blank_attributes.merge(real_attributes(data))
+    @changes = {}
+
+    if args[:init]
+      @data = self.class.__blank_attributes.merge(real_attributes(data))
+    else
+      @data = self.class.__blank_attributes.clone
+      @changes.merge!(real_attributes(data))
+    end
 
     if @data[:id]
       @new_record = false
@@ -151,6 +157,14 @@ class BazaModels::Model
     id
   end
 
+  def to_key
+    if new_record?
+      nil
+    else
+      [id]
+    end
+  end
+
   def reload
     @data = db.single(table_name, {id: id}, limit: 1)
     raise BazaModels::Errors::RecordNotFound unless @data
@@ -199,6 +213,34 @@ class BazaModels::Model
     self.class.__blank_attributes.keys.map(&:to_s).include?(name.to_s)
   end
 
+  def [](key)
+    read_attribute(key)
+  end
+
+  def []=(key, value)
+    write_attribute(key, value)
+  end
+
+  def read_attribute(attribute_name)
+    return @changes.fetch(attribute_name) if @changes.key?(attribute_name)
+    @data.fetch(attribute_name)
+  end
+
+  def write_attribute(attribute_name, value)
+    @changes[attribute_name] = value
+  end
+
+  def changed?
+    changed = false
+    @changes.each do |key, value|
+      next if @data.fetch(key) == value
+      changed = true
+      break
+    end
+
+    changed
+  end
+
 protected
 
   class << self
@@ -215,8 +257,7 @@ protected
     column_name = column.name.to_sym
 
     define_method(column_name) do
-      return @changes.fetch(column_name) if @changes.key?(column_name)
-      return @data.fetch(column_name)
+      read_attribute(column_name)
     end
 
     define_method("#{column_name}_was") do
@@ -224,11 +265,19 @@ protected
     end
 
     define_method("#{column_name}=") do |new_value|
-      @changes[column_name] = new_value
+      write_attribute(column_name, new_value)
     end
 
     define_method("#{column_name}?") do
       !@data.fetch(column_name).to_s.strip.empty?
+    end
+
+    define_method("#{column_name}_changed?") do
+      if @changes.key?(column_name) && @changes.fetch(column_name) != @data.fetch(column_name)
+        true
+      else
+        false
+      end
     end
   end
 
@@ -241,7 +290,7 @@ protected
 
     @@callbacks[name][self.class.name].each do |callback_data|
       if callback_data[:block]
-        callback_data[:block].call(self, *callback_data.fetch(:args))
+        instance_eval(&callback_data.fetch(:block))
       elsif callback_data[:method_name]
         __send__(callback_data[:method_name], *callback_data.fetch(:args))
       else
