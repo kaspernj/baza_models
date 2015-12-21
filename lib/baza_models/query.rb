@@ -113,6 +113,24 @@ class BazaModels::Query
   def where(args = nil)
     if args.is_a?(String)
       @wheres << "(#{args})"
+    elsif args.is_a?(Array)
+      str = args.shift
+
+      args.each do |arg|
+        if arg.is_a?(Symbol)
+          arg = "`#{@model.table_name}`.`#{@db.esc_col(arg)}`"
+        elsif arg.is_a?(FalseClass)
+          arg = "0"
+        elsif arg.is_a?(TrueClass)
+          arg = "1"
+        else
+          arg = "'#{@db.esc(arg)}'"
+        end
+
+        str.sub!("?", arg)
+      end
+
+      @wheres << "(#{str})"
     elsif args == nil
       return Not.new(query: self)
     else
@@ -332,17 +350,23 @@ class BazaModels::Query
     ability.model_adapter(self, action).database_records
   end
 
-  def <=(other)
-    other == ActiveRecord::Base
+  def <=(_other)
+    false
   end
 
   def sanitize_sql(value)
+    if value.is_a?(Array) || value.is_a?(Integer) || value.is_a?(Integer)
+      return value
+    end
+
     "'#{@db.esc(value)}'"
   end
 
   def page(some_page)
     some_page ||= 1
-    clone.offset(per * some_page - 1).limit(30)
+    offset = (some_page.to_i - 1) * per
+
+    clone.offset(offset).limit(30)
   end
 
   def per
@@ -351,12 +375,9 @@ class BazaModels::Query
 
   def total_pages
     pages_count = (count.to_f / @per.to_f)
-    pages_count = 1 if pages_count.nan?
+    pages_count = 1 if pages_count.nan? || pages_count == Float::INFINITY
     pages_count = pages_count.to_i
     pages_count = 1 if pages_count == 0
-
-    puts "PagesCount: #{pages_count}"
-
     pages_count
   end
 

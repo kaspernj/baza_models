@@ -14,7 +14,10 @@ class BazaModels::ClassTranslation
       count_key = "one"
     end
 
-    keys = ["baza_models.models.#{class_name_snake}.#{count_key}", "activerecord.models.#{class_name_snake}.#{count_key}"]
+    keys = [
+      "baza_models.models.#{class_name_snake}.#{count_key}",
+      "activerecord.models.#{class_name_snake}.#{count_key}"
+    ]
 
     keys.each do |key|
       return I18n.t(key) if I18n.exists?(key)
@@ -29,5 +32,13 @@ class BazaModels::ClassTranslation
 
   def route_key
     "#{param_key}s"
+  end
+
+  def singular_route_key
+    param_key
+  end
+
+  def i18n_key
+    param_key.to_sym
   end
 end

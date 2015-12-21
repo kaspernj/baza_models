@@ -24,6 +24,7 @@ describe "BazaModels::Model" do
     user.save!
     expect(user.id).to_not eq nil
     expect(user.to_param).to_not eq nil
+    expect(user.to_param).to eq user.id.to_s
   end
 
   it "#email=" do
@@ -119,5 +120,10 @@ describe "BazaModels::Model" do
     expect(user.changed?).to eq true
     user.save!
     expect(user.changed?).to eq false
+  end
+
+  it "doesnt care if initialized data has keys as strings" do
+    user = User.new("email" => "test@example.com")
+    expect(user.email).to eq "test@example.com"
   end
 end

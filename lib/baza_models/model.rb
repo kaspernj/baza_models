@@ -156,7 +156,7 @@ class BazaModels::Model
   end
 
   def to_param
-    id
+    id.to_s if id
   end
 
   def to_key
@@ -211,8 +211,7 @@ class BazaModels::Model
   # rubocop:disable Style/PredicateName
   def has_attribute?(name)
     # rubocop:enable Style/PredicateName
-
-    self.class.__blank_attributes.keys.map(&:to_s).include?(name.to_s)
+    self.class.column_names.include?(name.to_s)
   end
 
   def self.column_names
@@ -339,7 +338,7 @@ protected
         end
       end
 
-      new_attributes[attribute_name] = attribute_value
+      new_attributes[attribute_name.to_sym] = attribute_value
     end
 
     new_attributes

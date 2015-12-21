@@ -3,6 +3,7 @@ class BazaModels
 
   autoload :Autoloader, "#{path}/autoloader"
   autoload :BazaOrmAdapter, "#{path}/baza_orm_adapter"
+  autoload :CanCanAdapter, "#{path}/can_can_adapter"
   autoload :ClassTranslation, "#{path}/class_translation"
   autoload :Errors, "#{path}/errors"
   autoload :Model, "#{path}/model"
@@ -11,6 +12,10 @@ class BazaModels
 
   class << self
     attr_accessor :primary_db
+
+    def load_can_can
+      BazaModels::CanCanAdapter # Loading the model will make CanCan aware because of inherited hook CanCan implements
+    end
   end
 
   class Validators

@@ -14,4 +14,12 @@ describe BazaModels::ClassTranslation do
   it "#route_key" do
     expect(User.model_name.route_key).to eq "users"
   end
+
+  it "#singular_route_key" do
+    expect(User.model_name.singular_route_key).to eq "user"
+  end
+
+  it "#i18n_key" do
+    expect(User.model_name.i18n_key).to eq :user
+  end
 end

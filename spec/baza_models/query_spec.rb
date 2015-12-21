@@ -23,6 +23,12 @@ describe BazaModels::Query do
       expect(query.to_sql).to eq "SELECT `users`.* FROM `users` WHERE (email = 'test@example.com')"
       expect(query.to_a).to eq [user]
     end
+
+    it "supports arrays" do
+      query = User.where(["?=?", :email, "test@example.com"])
+      expect(query.to_a).to eq [user]
+      expect(query.to_sql).to eq "SELECT `users`.* FROM `users` WHERE (`users`.`email`='test@example.com')"
+    end
   end
 
   context '#joins' do
