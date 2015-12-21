@@ -2,8 +2,11 @@ class BazaModels
   path = "#{File.realpath(File.dirname(__FILE__))}/baza_models"
 
   autoload :Autoloader, "#{path}/autoloader"
+  autoload :BazaOrmAdapter, "#{path}/baza_orm_adapter"
+  autoload :ClassTranslation, "#{path}/class_translation"
   autoload :Errors, "#{path}/errors"
   autoload :Model, "#{path}/model"
+  autoload :Ransacker, "#{path}/ransacker"
   autoload :Query, "#{path}/query"
 
   class << self

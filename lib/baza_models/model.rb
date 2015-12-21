@@ -11,6 +11,7 @@ class BazaModels::Model
   autoload :Manipulation, "#{path}/manipulation"
   autoload :Queries, "#{path}/queries"
   autoload :Scopes, "#{path}/scopes"
+  autoload :TranslationFunctionality, "#{path}/translation_functionality"
   autoload :Validations, "#{path}/validations"
 
   include BelongsToRelations
@@ -21,6 +22,7 @@ class BazaModels::Model
   include Manipulation
   include Queries
   include Scopes
+  include TranslationFunctionality
   include Validations
 
   attr_accessor :data, :db
@@ -53,15 +55,14 @@ class BazaModels::Model
 
 
   QUERY_METHODS = [
-    :all, :any?, :empty?, :none?, :count, :first, :last, :length, :select, :includes,
-    :joins, :group, :where, :order, :limit, :to_adapter
+    :all, :any?, :empty?, :none?, :count, :first, :find_first, :last, :length, :select, :includes,
+    :joins, :group, :where, :order, :limit, :to_a, :accessible_by
   ]
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
       BazaModels::Query.new(model: self).__send__(query_method, *args, &blk)
     end
   end
-
 
   def initialize(data = {}, args = {})
     self.class.init_model unless self.class.model_initialized?
@@ -109,31 +110,32 @@ class BazaModels::Model
     @db
   end
 
-  class << self
-    attr_writer :db
+  def self.to_adapter
+    BazaModels::BazaOrmAdapter.new(class: self)
   end
+
+  class << self
+    attr_reader :relationships
+    attr_writer :db, :table_name
+  end
+
+  attr_writer :table_name
 
   def autoloads
     @autoloads ||= {}
     @autoloads
   end
 
-  class << self
-    attr_reader :relationships
-  end
-
   def table_name
     @table_name ||= self.class.table_name
   end
-
-  attr_writer :table_name
 
   def self.table_name
     @table_name ||= "#{StringCases.camel_to_snake(name.gsub("::", ""))}s"
   end
 
-  class << self
-    attr_writer :table_name
+  def to_model
+    self
   end
 
   def self.init_model
@@ -211,6 +213,14 @@ class BazaModels::Model
     # rubocop:enable Style/PredicateName
 
     self.class.__blank_attributes.keys.map(&:to_s).include?(name.to_s)
+  end
+
+  def self.column_names
+    @column_names ||= __blank_attributes.keys.map(&:to_s)
+  end
+
+  def self.ransack(params)
+    BazaModels::Ransacker.new(class: self, params: params)
   end
 
   def [](key)

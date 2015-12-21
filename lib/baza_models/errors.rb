@@ -45,4 +45,8 @@ class BazaModels::Errors
   def inspect
     to_s
   end
+
+  def [](key)
+    @errors[key] || []
+  end
 end

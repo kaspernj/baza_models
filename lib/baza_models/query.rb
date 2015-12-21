@@ -63,11 +63,6 @@ class BazaModels::Query
     clone.where(id: id).limit(1).to_enum.first
   end
 
-  # OrmAdapter support
-  def get(id)
-    find(id)
-  end
-
   def first
     return autoloaded_cache.first if should_use_autoload?
 
@@ -324,17 +319,45 @@ class BazaModels::Query
     each(&:destroy!)
   end
 
-  # OrmAdapter support
-  def to_adapter
-    self
-  end
-
   def to_s
     "#<BazaModels::Query class=#{@model.name} wheres=#{@wheres}>"
   end
 
   def inspect
     to_s
+  end
+
+  # CanCan supports
+  def accessible_by(ability, action = :index)
+    ability.model_adapter(self, action).database_records
+  end
+
+  def <=(other)
+    other == ActiveRecord::Base
+  end
+
+  def sanitize_sql(value)
+    "'#{@db.esc(value)}'"
+  end
+
+  def page(some_page)
+    some_page ||= 1
+    clone.offset(per * some_page - 1).limit(30)
+  end
+
+  def per
+    @per ||= 30
+  end
+
+  def total_pages
+    pages_count = (count.to_f / @per.to_f)
+    pages_count = 1 if pages_count.nan?
+    pages_count = pages_count.to_i
+    pages_count = 1 if pages_count == 0
+
+    puts "PagesCount: #{pages_count}"
+
+    pages_count
   end
 
 private

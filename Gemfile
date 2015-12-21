@@ -19,6 +19,7 @@ group :development do
   gem "jdbc-sqlite3", platform: :jruby
   gem "best_practice_project", require: false, path: "/home/kaspernj/Dev/Ruby/best_practice_project" # github: "kaspernj/best_practice_project"
   gem "rubocop", require: false
+  gem "orm_adapter", require: false
 end
 
 gem "codeclimate-test-reporter", group: :test, require: nil
