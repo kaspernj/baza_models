@@ -35,8 +35,7 @@ module BazaModels::Model::HasOneRelations
       @has_one_relations ||= []
       @has_one_relations << relation
 
-      @relationships ||= {}
-      @relationships[relation_name] = relation
+      relationships[relation_name] = relation
 
       define_method(relation_name) do
         if (model = autoloads[relation_name])

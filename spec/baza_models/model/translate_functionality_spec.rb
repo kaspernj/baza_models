@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe BazaModels::Model::TranslateFunctionality do
+describe BazaModels::Model::TranslationFunctionality do
   include DatabaseHelper
 
   it "#model_name" do

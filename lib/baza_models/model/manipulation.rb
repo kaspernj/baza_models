@@ -77,14 +77,12 @@ module BazaModels::Model::Manipulation
     def create(data = {})
       model = new(data)
       model.save
-
       model
     end
 
     def create!(data = {})
       model = new(data)
       model.save!
-
       model
     end
   end

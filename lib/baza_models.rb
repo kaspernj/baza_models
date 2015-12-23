@@ -9,6 +9,7 @@ class BazaModels
   autoload :Model, "#{path}/model"
   autoload :Ransacker, "#{path}/ransacker"
   autoload :Query, "#{path}/query"
+  autoload :TestDatabaseCleaner, "#{path}/test_database_cleaner"
 
   class << self
     attr_accessor :primary_db

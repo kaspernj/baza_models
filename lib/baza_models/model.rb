@@ -115,7 +115,6 @@ class BazaModels::Model
   end
 
   class << self
-    attr_reader :relationships
     attr_writer :db, :table_name
   end
 
@@ -134,6 +133,10 @@ class BazaModels::Model
     @table_name ||= "#{StringCases.camel_to_snake(name.gsub("::", ""))}s"
   end
 
+  def self.relationships
+    @relationships ||= {}
+  end
+
   def to_model
     self
   end
@@ -143,9 +146,9 @@ class BazaModels::Model
 
     @__blank_attributes ||= {}
 
-    @table.columns.each do |column_name, column|
+    @table.columns do |column|
       init_attribute_from_column(column)
-      @__blank_attributes[column_name] = nil
+      @__blank_attributes[column.name.to_sym] = nil
     end
 
     @model_initialized = true

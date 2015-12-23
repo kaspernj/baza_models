@@ -8,7 +8,7 @@ class BazaModels::Validators::UniquenessValidator < BazaModels::Validators::Base
       end
     end
 
-    model.errors.add(attribute_name, "isn't unique") if query_same.count > 0
+    model.errors.add(attribute_name, "isn't unique") if query_same.any?
   end
 
 private
