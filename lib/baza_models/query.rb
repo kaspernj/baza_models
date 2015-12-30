@@ -118,7 +118,7 @@ class BazaModels::Query
 
       args.each do |arg|
         if arg.is_a?(Symbol)
-          arg = "`#{@model.table_name}`.`#{@db.esc_col(arg)}`"
+          arg = "`#{@model.table_name}`.`#{@db.escape_column(arg)}`"
         elsif arg.is_a?(FalseClass)
           arg = "0"
         elsif arg.is_a?(TrueClass)
