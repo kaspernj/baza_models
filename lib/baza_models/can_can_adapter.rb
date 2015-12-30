@@ -4,8 +4,6 @@ class BazaModels::CanCanAdapter < CanCan::ModelAdapters::AbstractAdapter
   end
 
   def database_records
-    puts "Rules: #{@rules}"
-
     @model_class.all
   end
 end

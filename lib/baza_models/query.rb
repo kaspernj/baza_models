@@ -355,10 +355,7 @@ class BazaModels::Query
   end
 
   def sanitize_sql(value)
-    if value.is_a?(Array) || value.is_a?(Integer) || value.is_a?(Integer)
-      return value
-    end
-
+    return value if value.is_a?(Array) || value.is_a?(Integer) || value.is_a?(Integer)
     "'#{@db.esc(value)}'"
   end
 
@@ -392,11 +389,7 @@ private
   end
 
   def any_mods?
-    if @groups.any? || @includes.any? || @orders.any? || @joins.any? || any_wheres_other_than_relation?
-      return true
-    else
-      return false
-    end
+    @groups.any? || @includes.any? || @orders.any? || @joins.any? || any_wheres_other_than_relation?
   end
 
   def any_wheres_other_than_relation?
@@ -411,9 +404,7 @@ private
 
   def autoloaded_on_previous_model?
     if @_previous_model && @_relation
-      if @_previous_model.autoloads.include?(@_relation.fetch(:relation_name))
-        return true
-      end
+      return true if @_previous_model.autoloads.include?(@_relation.fetch(:relation_name))
     end
 
     false
