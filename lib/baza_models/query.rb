@@ -403,7 +403,7 @@ private
 
   def autoloaded_cache_or_create
     @_previous_model.autoloads[@_relation.fetch(:relation_name)] ||= []
-    return autoloaded_cache
+    autoloaded_cache
   end
 
   def autoloaded_cache
