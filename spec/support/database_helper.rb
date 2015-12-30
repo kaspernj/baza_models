@@ -18,26 +18,25 @@ module DatabaseHelper
         end
 
         path = Tempfile.new(["baza_test", ".sqlite3"]).path
-        File.unlink(path) if File.exists?(path)
+        File.unlink(path) if File.exist?(path)
 
         @db = Baza::Db.new(type: :sqlite3, path: path, index_append_table_name: true, debug: false)
         BazaModels.primary_db = @db
 
-        @db.tables.create(:users, {
+        @db.tables.create(
+          :users,
           columns: [
             {name: :id, type: :int, primarykey: true, autoincr: true},
             {name: :organization_id, type: :int},
             {name: :email, type: :varchar},
+            {name: :email_confirmation, type: :varchar},
             {name: :created_at, type: :datetime},
             {name: :updated_at, type: :datetime}
           ],
-          indexes: [
-            :organization_id,
-            :email
-          ]
-        })
+          indexes: [:organization_id, :email])
 
-        @db.tables.create(:user_passports, {
+        @db.tables.create(
+          :user_passports,
           columns: [
             {name: :id, type: :int, primarykey: true, autoincr: true},
             {name: :user_id, type: :int},
@@ -45,20 +44,18 @@ module DatabaseHelper
           ],
           indexes: [
             :user_id
-          ]
-        })
+          ])
 
-        @db.tables.create(:persons, {
+        @db.tables.create(
+          :persons,
           columns: [
             {name: :id, type: :int, primarykey: true, autoincr: true},
             {name: :user_id, type: :int}
           ],
-          indexes: [
-            :user_id
-          ]
-        })
+          indexes: [:user_id])
 
-        @db.tables.create(:roles, {
+        @db.tables.create(
+          :roles,
           columns: [
             {name: :id, type: :int, primarykey: true, autoincr: true},
             {name: :user_id, type: :int},
@@ -66,17 +63,13 @@ module DatabaseHelper
             {name: :created_at, type: :datetime},
             {name: :updated_at, type: :datetime}
           ],
-          indexes: [
-            :user_id
-          ]
-        })
+          indexes: [:user_id]
+        )
 
-        @db.tables.create(:organizations, {
-          columns: [
-            {name: :id, type: :int, primarykey: true, autoincr: true},
-            {name: :name, type: :varchar}
-          ]
-        })
+        @db.tables.create(:organizations, columns: [
+          {name: :id, type: :int, primarykey: true, autoincr: true},
+          {name: :name, type: :varchar}
+        ])
       end
 
       after do
@@ -84,7 +77,7 @@ module DatabaseHelper
 
         @db.close
         path = db.args[:path]
-        File.unlink(path) if File.exists?(path)
+        File.unlink(path) if File.exist?(path)
         Thread.current[:baza] = nil
         @db = nil
       end

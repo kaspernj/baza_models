@@ -6,5 +6,6 @@ rvm:
   - jruby-1.7.13
 script:
   - CODECLIMATE_REPO_TOKEN=b91c00ba044df16a09d7120a2449a43ccad754de9271a7ecf594e3b0cf432eeb bundle exec rspec
+  - bundle exec rake best_practice_project:run
 notifications:
    email: false

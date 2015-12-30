@@ -11,7 +11,7 @@ class BazaModels::Query::Not
       if value.is_a?(Hash)
         value.each do |hash_key, hash_value|
           if hash_value.is_a?(Array)
-            values = hash_value.map { |hash_value_i| "'#{@db.esc(hash_value_i)}'" }.join(',')
+            values = hash_value.map { |hash_value_i| "'#{@db.esc(hash_value_i)}'" }.join(",")
 
             @wheres << "`#{key}`.`#{hash_key}` NOT IN (#{values})"
           else
@@ -20,7 +20,7 @@ class BazaModels::Query::Not
         end
       else
         if value.is_a?(Array)
-          values = value.map { |value_i| "'#{@db.esc(value_i)}'" }.join(',')
+          values = value.map { |value_i| "'#{@db.esc(value_i)}'" }.join(",")
 
           @wheres << "`#{@model.table_name}`.`#{key}` NOT IN (#{values})"
         else
@@ -29,6 +29,6 @@ class BazaModels::Query::Not
       end
     end
 
-    return @query
+    @query
   end
 end

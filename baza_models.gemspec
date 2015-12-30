@@ -43,34 +43,33 @@ Gem::Specification.new do |s|
   s.rubygems_version = "2.4.0"
   s.summary = "ActiveRecord like models for the Baza database framework"
 
-  if s.respond_to? :specification_version then
+  if s.respond_to? :specification_version
     s.specification_version = 4
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<baza>, ["~> 0.0.15"])
-      s.add_runtime_dependency(%q<string-cases>, [">= 0"])
-      s.add_development_dependency(%q<rspec>, ["~> 2.8.0"])
-      s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 2.0.1"])
-      s.add_development_dependency(%q<sqlite3>, [">= 0"])
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new("1.2.0")
+      s.add_runtime_dependency("baza", ["~> 0.0.15"])
+      s.add_runtime_dependency("string-cases", [">= 0"])
+      s.add_development_dependency("rspec", ["~> 2.8.0"])
+      s.add_development_dependency("rdoc", ["~> 3.12"])
+      s.add_development_dependency("bundler", ["~> 1.0"])
+      s.add_development_dependency("jeweler", ["~> 2.0.1"])
+      s.add_development_dependency("sqlite3", [">= 0"])
     else
-      s.add_dependency(%q<baza>, ["~> 0.0.15"])
-      s.add_dependency(%q<string-cases>, [">= 0"])
-      s.add_dependency(%q<rspec>, ["~> 2.8.0"])
-      s.add_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_dependency(%q<bundler>, ["~> 1.0"])
-      s.add_dependency(%q<jeweler>, ["~> 2.0.1"])
-      s.add_dependency(%q<sqlite3>, [">= 0"])
+      s.add_dependency("baza", ["~> 0.0.15"])
+      s.add_dependency("string-cases", [">= 0"])
+      s.add_dependency("rspec", ["~> 2.8.0"])
+      s.add_dependency("rdoc", ["~> 3.12"])
+      s.add_dependency("bundler", ["~> 1.0"])
+      s.add_dependency("jeweler", ["~> 2.0.1"])
+      s.add_dependency("sqlite3", [">= 0"])
     end
   else
-    s.add_dependency(%q<baza>, ["~> 0.0.15"])
-    s.add_dependency(%q<string-cases>, [">= 0"])
-    s.add_dependency(%q<rspec>, ["~> 2.8.0"])
-    s.add_dependency(%q<rdoc>, ["~> 3.12"])
-    s.add_dependency(%q<bundler>, ["~> 1.0"])
-    s.add_dependency(%q<jeweler>, ["~> 2.0.1"])
-    s.add_dependency(%q<sqlite3>, [">= 0"])
+    s.add_dependency("baza", ["~> 0.0.15"])
+    s.add_dependency("string-cases", [">= 0"])
+    s.add_dependency("rspec", ["~> 2.8.0"])
+    s.add_dependency("rdoc", ["~> 3.12"])
+    s.add_dependency("bundler", ["~> 1.0"])
+    s.add_dependency("jeweler", ["~> 2.0.1"])
+    s.add_dependency("sqlite3", [">= 0"])
   end
 end
-

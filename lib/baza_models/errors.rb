@@ -27,7 +27,7 @@ class BazaModels::Errors
       end
     end
 
-    return messages
+    messages
   end
 
   def empty?
@@ -36,5 +36,17 @@ class BazaModels::Errors
 
   def any?
     full_messages.any?
+  end
+
+  def to_s
+    "#<BazaModels::Errors full_messages=\"#{full_messages}\">"
+  end
+
+  def inspect
+    to_s
+  end
+
+  def [](key)
+    @errors[key] || []
   end
 end
