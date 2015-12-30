@@ -47,12 +47,16 @@ class BazaModels::Query
   end
 
   def count
-    query = clone
+    if @_previous_model && @_previous_model.new_record?
+      return autoloaded_cache_or_create.length
+    else
+      query = clone
 
-    query.instance_variable_set(:@selects, [])
-    query = clone.select("COUNT(*) AS count")
+      query.instance_variable_set(:@selects, [])
+      query = clone.select("COUNT(*) AS count")
 
-    @db.query(query.to_sql).fetch.fetch(:count)
+      @db.query(query.to_sql).fetch.fetch(:count)
+    end
   end
 
   def length
@@ -345,6 +349,19 @@ class BazaModels::Query
     to_s
   end
 
+  def <<(model)
+    raise "No previous model set" unless @_previous_model
+    raise "No relation" unless @_relation
+
+    if model.persisted?
+      model.update_attributes!(@_relation.fetch(:foreign_key) => @_previous_model.id)
+    else
+      autoloaded_cache_or_create << model
+    end
+
+    self
+  end
+
   # CanCan supports
   def accessible_by(ability, action = :index)
     ability.model_adapter(self, action).database_records
@@ -382,6 +399,11 @@ private
 
   def should_use_autoload?
     !any_mods? && autoloaded_on_previous_model?
+  end
+
+  def autoloaded_cache_or_create
+    @_previous_model.autoloads[@_relation.fetch(:relation_name)] ||= []
+    autoloaded_cache
   end
 
   def autoloaded_cache

@@ -10,12 +10,13 @@ module BazaModels::Model::Manipulation
       self.updated_at = Time.now if has_attribute?(:updated_at)
 
       if new_record
-        fire_callbacks(:before_create)
-        self.created_at = Time.now if has_attribute?(:created_at) && !created_at?
-        @data[:id] = db.insert(table_name, @changes, return_id: true)
+        status = create
       else
         db.update(table_name, @changes, id: id)
+        status = true
       end
+
+      return false unless status
 
       @changes = {}
       @new_record = false
@@ -27,6 +28,39 @@ module BazaModels::Model::Manipulation
       return true
     else
       return false
+    end
+  end
+
+  def create
+    unless new_record?
+      errors.add(:base, "cannot create unless new record")
+      return false
+    end
+
+    fire_callbacks(:before_create)
+    self.created_at = Time.now if has_attribute?(:created_at) && !created_at?
+
+    @data[:id] = db.insert(table_name, @changes, return_id: true)
+
+    if @autoloads
+      @autoloads.each do |relation_name, collection|
+        relation = self.class.relationships.fetch(relation_name)
+
+        collection.each do |model|
+          model.assign_attributes(relation.fetch(:foreign_key) => id)
+          model.create! if model.new_record?
+        end
+      end
+    end
+
+    true
+  end
+
+  def create!
+    if create
+      return true
+    else
+      raise BazaModels::Errors::InvalidRecord, errors.full_messages.join(". ")
     end
   end
 

@@ -44,4 +44,25 @@ describe BazaModels::Model::HasManyRelations do
       end
     end
   end
+
+  context "#<<" do
+    it "adds models to persisted parent" do
+      organization.save!
+      organization.users << User.create!(email: "test@example.com")
+
+      expect(organization.users.count).to eq 1
+      expect(organization.users.first.email).to eq "test@example.com"
+    end
+
+    it "adds models to new parent" do
+      organization.users << User.new(email: "test1@example.com")
+      organization.users << User.new(email: "test2@example.com")
+
+      expect(organization.users.count).to eq 2
+
+      organization.save!
+
+      expect(organization.users.count).to eq 2
+    end
+  end
 end
