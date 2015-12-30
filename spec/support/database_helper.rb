@@ -78,12 +78,6 @@ module DatabaseHelper
             {name: :name, type: :varchar}
           ]
         })
-
-        require "test_classes/organization"
-        require "test_classes/person"
-        require "test_classes/user"
-        require "test_classes/user_passport"
-        require "test_classes/role"
       end
 
       after do

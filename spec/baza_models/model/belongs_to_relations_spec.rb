@@ -17,5 +17,10 @@ describe BazaModels::Model::BelongsToRelations do
     it "#belongs_to" do
       expect(role_user.user).to eq user
     end
+
+    it "joins correctly" do
+      roles = Role.joins(:user).where(role: "administrator", users: {email: "test@example.com"})
+      expect(roles.to_a).to eq [role_admin]
+    end
   end
 end
