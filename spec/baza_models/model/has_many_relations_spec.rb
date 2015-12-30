@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe BazaModels::Model::HasManyRelations do
   include DatabaseHelper
@@ -8,19 +8,19 @@ describe BazaModels::Model::HasManyRelations do
   let(:role_user) { Role.new(user: user, role: "user") }
   let(:role_admin) { Role.new(user: user, role: "administrator") }
 
-  context 'destroy' do
+  context "destroy" do
     before do
       user.save!
     end
 
-    it 'destroyes through has_many' do
+    it "destroyes through has_many" do
       role_user.save!
       user.destroy!
       expect { user.reload }.to raise_error(BazaModels::Errors::RecordNotFound)
       expect { role_user.reload }.to raise_error(BazaModels::Errors::RecordNotFound)
     end
 
-    it 'restricts through has_many' do
+    it "restricts through has_many" do
       role_admin.save!
       expect { user.destroy! }.to raise_error(BazaModels::Errors::InvalidRecord)
     end

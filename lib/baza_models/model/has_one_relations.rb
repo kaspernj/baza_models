@@ -4,13 +4,16 @@ module BazaModels::Model::HasOneRelations
   end
 
   module ClassMethods
+    # rubocop:disable Style/PredicateName
     def has_one(relation_name, *all_args)
+      # rubocop:enable Style/PredicateName
+
       args = all_args.pop
 
       relation = {
         type: :has_one,
         relation_name: relation_name,
-        table_name: StringCases.pluralize(relation_name),
+        table_name: args[:table_name] || StringCases.pluralize(relation_name),
         args: args,
         all_args: all_args
       }
@@ -18,7 +21,7 @@ module BazaModels::Model::HasOneRelations
       if args[:foreign_key]
         relation[:foreign_key] = args.fetch(:foreign_key)
       else
-        relation[:foreign_key] = :"#{StringCases.camel_to_snake(self.name)}_id"
+        relation[:foreign_key] = :"#{StringCases.camel_to_snake(name)}_id"
       end
 
       relation[:dependent] = args.fetch(:dependent) if args[:dependent]
@@ -32,22 +35,15 @@ module BazaModels::Model::HasOneRelations
       @has_one_relations ||= []
       @has_one_relations << relation
 
-      @relationships ||= {}
-      @relationships[relation_name] = relation
+      relationships[relation_name] = relation
 
       define_method(relation_name) do
-        if model = autoloads[relation_name]
+        if (model = autoloads[relation_name])
           model
         else
           if relation[:args][:through]
             __send__(relation[:args][:through]).__send__(relation_name)
           else
-            if relation[:class_name]
-              class_name = relation.fetch(:class_name)
-            else
-              class_name = StringCases.snake_to_camel(relation_name)
-            end
-
             class_instance = Object.const_get(relation.fetch(:class_name))
 
             query = class_instance.where(relation.fetch(:foreign_key) => id)
@@ -55,9 +51,7 @@ module BazaModels::Model::HasOneRelations
             query._relation = relation
 
             all_args.each do |arg|
-              if arg.is_a?(Proc)
-                query = query.instance_exec(&arg)
-              end
+              query = query.instance_exec(&arg) if arg.is_a?(Proc)
             end
 
             query.first
@@ -79,7 +73,7 @@ private
       end
     end
 
-    return true
+    true
   end
 
   def destroy_has_one_relations
@@ -89,11 +83,11 @@ private
       model = __send__(relation_name)
 
       if model && !model.destroy
-        errors.add(:base, model.errors.full_messages.join('. '))
+        errors.add(:base, model.errors.full_messages.join(". "))
         return false
       end
     end
 
-    return true
+    true
   end
 end

@@ -1,4 +1,4 @@
-[![Build Status](https://api.shippable.com/projects/5506810c5ab6cc13529b84bf/badge?branchName=master)](https://app.shippable.com/projects/5506810c5ab6cc13529b84bf/builds/latest)
+[![Build Status](https://img.shields.io/shippable/5506810c5ab6cc13529b84bf.svg)](https://app.shippable.com/projects/5506810c5ab6cc13529b84bf/builds/latest)
 [![Code Climate](https://codeclimate.com/github/kaspernj/baza_models/badges/gpa.svg)](https://codeclimate.com/github/kaspernj/baza_models)
 [![Test Coverage](https://codeclimate.com/github/kaspernj/baza_models/badges/coverage.svg)](https://codeclimate.com/github/kaspernj/baza_models)
 

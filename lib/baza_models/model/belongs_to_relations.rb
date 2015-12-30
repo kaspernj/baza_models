@@ -25,9 +25,9 @@ module BazaModels::Model::BelongsToRelations
       @relationships[relation_name] = relation
 
       define_method(relation_name) do
-        if model = @changes[relation_name]
+        if (model = @changes[relation_name])
           model
-        elsif model = autoloads[relation_name]
+        elsif (model = autoloads[relation_name])
           model
         else
           if relation[:class_name]

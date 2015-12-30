@@ -46,8 +46,6 @@ private
       result = autoload_symbol(autoload_key)
       next if result.fetch(:models).empty?
 
-      result_user = result.fetch(:models).first
-
       autoloader = BazaModels::Autoloader.new(
         models: result.fetch(:models),
         autoloads: autoload_value,
@@ -60,7 +58,6 @@ private
 
   def autoload_symbol(autoload)
     relation = @model_class.relationships.fetch(autoload)
-    foreign_key = relation.fetch(:foreign_key)
 
     if relation.fetch(:type) == :has_many
       autoload_has_many(autoload, relation)
@@ -74,15 +71,17 @@ private
   end
 
   def autoload_belongs_to(autoload_name, relation)
-    sql = "SELECT `#{@model_class.table_name}`.`#{relation.fetch(:foreign_key)}` FROM `#{@model_class.table_name}` WHERE `id` IN (#{model_ids.join(',')})"
-    ids = @db.query(sql).to_a.map { |data| data.fetch(relation.fetch(:foreign_key)) }
-
     result = {models: []}
 
     model_id_mappings = {}
+    model_ids = []
+
     @models.each do |model|
-      @model_ids << model.id
-      model_id_mappings[model.data.fetch(relation.fetch(:foreign_key))] = model.id
+      key = model.data.fetch(relation.fetch(:foreign_key))
+      next if model_id_mappings.key?(key)
+
+      model_ids << key
+      model_id_mappings[key] = model.id
     end
 
     @db.select(relation.fetch(:table_name), id: model_ids) do |model_data|
@@ -95,7 +94,7 @@ private
       result.fetch(:models) << model
     end
 
-    return result
+    result
   end
 
   def autoload_has_many(autoload_name, relation)
@@ -113,7 +112,7 @@ private
       result.fetch(:models) << model
     end
 
-    return result
+    result
   end
 
   def autoload_has_one(autoload_name, relation)
@@ -124,12 +123,13 @@ private
 
       orig_model_id = model_data.fetch(relation.fetch(:foreign_key))
       orig_model = @models.detect { |array_model| array_model.id == orig_model_id }
+
       raise "Already autoloaded?" if orig_model.autoloads.key?(autoload_name)
       orig_model.autoloads[autoload_name] = model
 
       result.fetch(:models) << model
     end
 
-    return result
+    result
   end
 end

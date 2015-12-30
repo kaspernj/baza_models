@@ -16,17 +16,17 @@ describe BazaModels::Model::HasOneRelations do
     expect(role_user.organization).to eq organization
   end
 
-  context 'destroy' do
+  context "destroy" do
     before do
       user.save!
     end
 
-    it 'restricts through has_one' do
+    it "restricts through has_one" do
       person
       expect { user.destroy! }.to raise_error(BazaModels::Errors::InvalidRecord)
     end
 
-    it 'destroys through has_one' do
+    it "destroys through has_one" do
       user_passport
       user.destroy!
       expect { user_passport.reload }.to raise_error(BazaModels::Errors::RecordNotFound)

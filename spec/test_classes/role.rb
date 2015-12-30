@@ -3,7 +3,7 @@ class Role < BazaModels::Model
 
   has_one :organization, through: :user
 
-  scope :admin_roles, -> { where(role: 'administrator') }
+  scope :admin_roles, -> { where(role: "administrator") }
 
   validates :role, presence: true
 
