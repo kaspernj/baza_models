@@ -359,7 +359,7 @@ class BazaModels::Query
       autoloaded_cache_or_create << model
     end
 
-    return self
+    self
   end
 
   # CanCan supports
