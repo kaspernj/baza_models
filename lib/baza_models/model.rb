@@ -27,7 +27,7 @@ class BazaModels::Model
   attr_reader :changes, :errors
 
   # Define all callback methods.
-  CALLBACK_TYPES = [:before_create, :after_create, :before_save, :after_save, :before_destroy, :after_destroy,
+  CALLBACK_TYPES = [:after_initialize, :after_find, :before_create, :after_create, :before_save, :after_save, :before_destroy, :after_destroy,
     :before_validation, :after_validation, :before_validation_on_create, :after_validation_on_create,
     :before_validation_on_update, :after_validation_on_update]
 
@@ -36,7 +36,9 @@ class BazaModels::Model
     @@callbacks[callback_type] = {}
     callbacks = @@callbacks
 
-    (class << self; self; end).__send__(:define_method, callback_type) do |method_name, *args, &blk|
+    (class << self; self; end).__send__(:define_method, callback_type) do |*args, &blk|
+      method_name = args.shift if args.first.is_a?(Symbol)
+
       callbacks[callback_type][self.name] ||= []
       callbacks[callback_type][self.name] << {
         block: blk,
@@ -47,7 +49,7 @@ class BazaModels::Model
   end
 
 
-  QUERY_METHODS = [:all, :any?, :empty?, :none?, :count, :first, :last, :length, :select, :includes, :joins, :group, :where, :order, :limit]
+  QUERY_METHODS = [:all, :any?, :empty?, :none?, :count, :find, :first, :last, :length, :select, :includes, :joins, :group, :where, :order, :limit]
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
       BazaModels::Query.new(model: self).__send__(query_method, *args, &blk)
@@ -68,11 +70,12 @@ class BazaModels::Model
       @new_record = false
     else
       @new_record = true
+      fire_callbacks(:after_initialize)
     end
   end
 
   def new_record?
-    return @new_record
+    @new_record
   end
 
   def persisted?
@@ -219,11 +222,11 @@ protected
     if @@callbacks[name] && @@callbacks[name][self.class.name]
       @@callbacks[name][self.class.name].each do |callback_data|
         if callback_data[:block]
-          callback_data[:block].call(*callback_data.fetch(:args))
+          callback_data[:block].call(self, *callback_data.fetch(:args))
         elsif callback_data[:method_name]
           __send__(callback_data[:method_name], *callback_data.fetch(:args))
         else
-          raise "Didn't know how to perform callbacks for #{name}"
+          raise "Didn't know how to perform callbacks for #{name} from: #{callback_data}"
         end
       end
     end

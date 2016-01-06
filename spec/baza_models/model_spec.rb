@@ -86,4 +86,16 @@ describe "BazaModels::Model" do
     expect(user.before_destroy_called).to eq 1
     expect(user.after_destroy_called).to eq 1
   end
+
+  it "#after_initialize" do
+    expect(user.instance_variable_get(:@after_initialize_called)).to eq 1
+  end
+
+  it "#after_find" do
+    user.save!
+
+    user_found = User.find(user.id)
+    expect(user_found.instance_variable_get(:@after_find_called)).to eq 1
+    expect(user.instance_variable_get(:@after_find_called)).to eq nil
+  end
 end

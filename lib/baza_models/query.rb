@@ -60,7 +60,10 @@ class BazaModels::Query
   end
 
   def find(id)
-    return clone.where(id: id).limit(1).to_enum.first
+    model = clone.where(id: id).limit(1).to_enum.first
+    model.__send__(:fire_callbacks, :after_find) if model
+
+    return model
   end
 
   def first
