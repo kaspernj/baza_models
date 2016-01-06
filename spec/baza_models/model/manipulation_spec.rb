@@ -19,6 +19,7 @@ describe BazaModels::Model::Manipulation do
     expect(user.updated_at).to_not eq nil
     old_updated_at = user.updated_at
     sleep 1
+    user.email = "test2@example.com"
     user.save!
     expect(user.updated_at).to_not eq old_updated_at
   end
