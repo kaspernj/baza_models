@@ -3,19 +3,20 @@ module BazaModels::Model::Manipulation
     base.extend(ClassMethods)
   end
 
-  def save
-    if valid?
+  def save(args = {})
+    if args[:validate] == false || valid?
       new_record = new_record?
       fire_callbacks(:before_save)
       self.updated_at = Time.now if has_attribute?(:updated_at)
 
       if new_record
-        fire_callbacks(:before_create)
-        self.created_at = Time.now if has_attribute?(:created_at) && !created_at?
-        @data[:id] = db.insert(table_name, @data.merge(@changes), return_id: true)
+        status = create
       else
         db.update(table_name, @changes, id: id)
+        status = true
       end
+
+      return false unless status
 
       @changes = {}
       @new_record = false
@@ -30,8 +31,41 @@ module BazaModels::Model::Manipulation
     end
   end
 
-  def save!
-    if save
+  def create
+    unless new_record?
+      errors.add(:base, "cannot create unless new record")
+      return false
+    end
+
+    fire_callbacks(:before_create)
+    self.created_at = Time.now if has_attribute?(:created_at) && !created_at?
+
+    @data[:id] = db.insert(table_name, @changes, return_id: true)
+
+    if @autoloads
+      @autoloads.each do |relation_name, collection|
+        relation = self.class.relationships.fetch(relation_name)
+
+        collection.each do |model|
+          model.assign_attributes(relation.fetch(:foreign_key) => id)
+          model.create! if model.new_record?
+        end
+      end
+    end
+
+    true
+  end
+
+  def create!
+    if create
+      return true
+    else
+      raise BazaModels::Errors::InvalidRecord, errors.full_messages.join(". ")
+    end
+  end
+
+  def save!(args = {})
+    if save(args)
       return true
     else
       raise BazaModels::Errors::InvalidRecord, errors.full_messages.join(". ")
@@ -40,13 +74,11 @@ module BazaModels::Model::Manipulation
 
   def update_attributes(attributes)
     assign_attributes(attributes)
-    return save
+    save
   end
 
   def update_attributes!(attributes)
-    unless update_attributes(attributes)
-      raise BazaModels::Errors::InvalidRecord, @errors.full_messages.join(". ")
-    end
+    raise BazaModels::Errors::InvalidRecord, @errors.full_messages.join(". ") unless update_attributes(attributes)
   end
 
   def assign_attributes(attributes)
@@ -79,15 +111,13 @@ module BazaModels::Model::Manipulation
     def create(data = {})
       model = new(data)
       model.save
-
-      return model
+      model
     end
 
     def create!(data = {})
       model = new(data)
       model.save!
-
-      return model
+      model
     end
   end
 end

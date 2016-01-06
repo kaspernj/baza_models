@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe BazaModels::Model::Scopes do
   include DatabaseHelper
@@ -13,11 +13,11 @@ describe BazaModels::Model::Scopes do
     role_admin.save!
   end
 
-  it 'works with where' do
+  it "works with where" do
     expect(Role.admin_roles.to_a).to eq [role_admin]
   end
 
-  it 'joins as well' do
+  it "joins as well" do
     expect(User.admin_roles_scope.to_a).to eq [user]
   end
 end

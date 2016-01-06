@@ -34,16 +34,23 @@ private
   def inspect_symbol(argument)
     return if @joins_tracker.include?(argument)
 
-    relationship_pair = @model.relationships.detect { |key, value| key == argument }
+    relationship_pair = @model.relationships.detect { |key, _value| key == argument }
     raise "Could not find a relationship on #{@model.name} by that name: #{argument}" unless relationship_pair
     relationship = relationship_pair[1]
 
     table_name = relationship.fetch(:table_name)
-    foreign_key = relationship.fetch(:foreign_key)
+
+    if relationship.fetch(:type) == :belongs_to
+      column_left = :id
+      column_right = relationship.fetch(:foreign_key)
+    else
+      column_left = relationship.fetch(:foreign_key)
+      column_right = :id
+    end
 
     orig_table = @model.table_name
 
-    @joins << "INNER JOIN `#{table_name}` ON `#{table_name}`.`#{foreign_key}` = `#{orig_table}`.`id`"
+    @joins << "INNER JOIN `#{table_name}` ON `#{table_name}`.`#{column_left}` = `#{orig_table}`.`#{column_right}`"
     @joins_tracker[argument] = {}
   end
 
@@ -51,7 +58,7 @@ private
     argument.each do |key, value|
       inspect_symbol(key)
 
-      relationship_pair = @model.relationships.detect { |relationship_name, relationship| relationship_name == key }
+      relationship_pair = @model.relationships.detect { |relationship_name, _relationship| relationship_name == key }
       raise "Could not find a relationship on #{@model.name} by that name: #{value}" unless relationship_pair
       relationship = relationship_pair[1]
 

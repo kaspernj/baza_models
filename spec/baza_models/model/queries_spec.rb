@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe BazaModels::Model::Queries do
   include DatabaseHelper

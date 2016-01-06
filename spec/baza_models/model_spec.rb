@@ -24,6 +24,7 @@ describe "BazaModels::Model" do
     user.save!
     expect(user.id).to_not eq nil
     expect(user.to_param).to_not eq nil
+    expect(user.to_param).to eq user.id.to_s
   end
 
   it "#email=" do
@@ -32,6 +33,7 @@ describe "BazaModels::Model" do
   end
 
   it "#email_was" do
+    user.save!
     user.email = "newemail@example.com"
     expect(user.email_was).to eq "test@example.com"
   end
@@ -97,5 +99,43 @@ describe "BazaModels::Model" do
     user_found = User.find(user.id)
     expect(user_found.instance_variable_get(:@after_find_called)).to eq 1
     expect(user.instance_variable_get(:@after_find_called)).to eq nil
+  end
+
+  it "can use callbacks as blocks" do
+    expect(user.before_save_block_called).to eq nil
+    user.save!
+    expect(user.before_save_block_called).to eq 1
+    user.save!
+    expect(user.before_save_block_called).to eq 2
+  end
+
+  it "has array accessors" do
+    expect(user[:email]).to eq "test@example.com"
+    user[:email] = "new@example.com"
+    expect(user[:email]).to eq "new@example.com"
+
+    user.write_attribute(:email, "new2@example.com")
+    expect(user.read_attribute(:email)).to eq "new2@example.com"
+  end
+
+  it "#to_key" do
+    expect(user.to_key).to eq nil
+    user.save!
+    expect(user.to_key).to eq [1]
+  end
+
+  it "#changed?" do
+    expect(user.changed?).to eq true
+    user.save!
+    expect(user.changed?).to eq false
+    user.email = "new@example.com"
+    expect(user.changed?).to eq true
+    user.save!
+    expect(user.changed?).to eq false
+  end
+
+  it "doesnt care if initialized data has keys as strings" do
+    user = User.new("email" => "test@example.com")
+    expect(user.email).to eq "test@example.com"
   end
 end

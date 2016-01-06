@@ -4,7 +4,7 @@ source "http://rubygems.org"
 #   gem "activesupport", ">= 2.3.5"
 
 gem "array_enumerator"
-gem "baza", "~> 0.0.19"
+gem "baza", "~> 0.0.20"
 gem "string-cases"
 
 # Add dependencies to develop your gem here.
@@ -14,8 +14,12 @@ group :development do
   gem "rdoc", "~> 3.12"
   gem "bundler", "~> 1.0"
   gem "jeweler", "~> 2.0.1"
+  gem "factory_girl"
   gem "sqlite3", platform: :ruby
   gem "jdbc-sqlite3", platform: :jruby
+  gem "best_practice_project", require: false, github: "kaspernj/best_practice_project"
+  gem "rubocop", require: false
+  gem "orm_adapter", require: false
 end
 
 gem "codeclimate-test-reporter", group: :test, require: nil

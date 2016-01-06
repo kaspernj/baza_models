@@ -27,7 +27,7 @@ class BazaModels::Query
   end
 
   def all
-    return self
+    self
   end
 
   def any?
@@ -47,12 +47,16 @@ class BazaModels::Query
   end
 
   def count
-    query = clone
+    if @_previous_model && @_previous_model.new_record?
+      return autoloaded_cache_or_create.length
+    else
+      query = clone
 
-    query.instance_variable_set(:@selects, [])
-    query = clone.select("COUNT(*) AS count")
+      query.instance_variable_set(:@selects, [])
+      query = clone.select("COUNT(*) AS count")
 
-    return @db.query(query.to_sql).fetch.fetch(:count)
+      @db.query(query.to_sql).fetch.fetch(:count)
+    end
   end
 
   def length
@@ -61,9 +65,14 @@ class BazaModels::Query
 
   def find(id)
     model = clone.where(id: id).limit(1).to_enum.first
-    model.__send__(:fire_callbacks, :after_find) if model
 
-    return model
+    if model
+      model.__send__(:fire_callbacks, :after_find)
+    else
+      raise BazaModels::Errors::RecordNotFound
+    end
+
+    model
   end
 
   def first
@@ -74,7 +83,7 @@ class BazaModels::Query
     orders = query.instance_variable_get(:@orders)
     query = query.order(:id) if orders.empty?
 
-    return query.to_enum.first
+    query.to_enum.first
   end
 
   def last
@@ -85,7 +94,7 @@ class BazaModels::Query
     orders = query.instance_variable_get(:@orders)
     query = query.order(:id) if orders.empty?
 
-    return query.reverse_order.to_enum.first
+    query.reverse_order.to_enum.first
   end
 
   def select(select)
@@ -95,27 +104,45 @@ class BazaModels::Query
       @selects << select
     end
 
-    return self
+    self
   end
 
   def offset(offset)
     @offset = offset
-    return self
+    self
   end
 
   def limit(limit)
     @limit = limit
-    return self
+    self
   end
 
   def includes(name)
     @includes << name
-    return self
+    self
   end
 
   def where(args = nil)
     if args.is_a?(String)
       @wheres << "(#{args})"
+    elsif args.is_a?(Array)
+      str = args.shift
+
+      args.each do |arg|
+        if arg.is_a?(Symbol)
+          arg = "`#{@model.table_name}`.`#{@db.escape_column(arg)}`"
+        elsif arg.is_a?(FalseClass)
+          arg = "0"
+        elsif arg.is_a?(TrueClass)
+          arg = "1"
+        else
+          arg = "'#{@db.esc(arg)}'"
+        end
+
+        str.sub!("?", arg)
+      end
+
+      @wheres << "(#{str})"
     elsif args == nil
       return Not.new(query: self)
     else
@@ -130,7 +157,7 @@ class BazaModels::Query
       end
     end
 
-    return self
+    self
   end
 
   def joins(*arguments)
@@ -142,7 +169,7 @@ class BazaModels::Query
       joins_tracker: @joins_tracker
     ).execute
 
-    return self
+    self
   end
 
   def group(name)
@@ -154,7 +181,7 @@ class BazaModels::Query
       raise "Didn't know how to group by that argument: #{name}"
     end
 
-    return self
+    self
   end
 
   def order(name)
@@ -166,12 +193,12 @@ class BazaModels::Query
       raise "Didn't know how to order by that argument: #{name}"
     end
 
-    return self
+    self
   end
 
   def reverse_order
     @reverse_order = true
-    return self
+    self
   end
 
   def to_enum
@@ -179,7 +206,7 @@ class BazaModels::Query
 
     array_enum = ArrayEnumerator.new do |yielder|
       @db.query(to_sql).each do |data|
-        yielder << @model.new(data)
+        yielder << @model.new(data, init: true)
       end
     end
 
@@ -229,6 +256,10 @@ class BazaModels::Query
     end
   end
 
+  def find_first(args)
+    where(args).first
+  end
+
   def to_a
     to_enum.to_a
   end
@@ -239,7 +270,7 @@ class BazaModels::Query
     if @selects.empty?
       sql << "`#{@model.table_name}`.*"
     else
-      sql << @selects.join(', ')
+      sql << @selects.join(", ")
     end
 
     sql << " FROM `#{@model.table_name}`"
@@ -311,13 +342,11 @@ class BazaModels::Query
       sql << " LIMIT #{@limit.to_i}"
     end
 
-    return sql.strip
+    sql.strip
   end
 
   def destroy_all
-    each do |model|
-      model.destroy!
-    end
+    each(&:destroy!)
   end
 
   def to_s
@@ -328,44 +357,87 @@ class BazaModels::Query
     to_s
   end
 
+  def <<(model)
+    raise "No previous model set" unless @_previous_model
+    raise "No relation" unless @_relation
+
+    if model.persisted?
+      model.update_attributes!(@_relation.fetch(:foreign_key) => @_previous_model.id)
+    else
+      autoloaded_cache_or_create << model
+    end
+
+    self
+  end
+
+  # CanCan supports
+  def accessible_by(ability, action = :index)
+    ability.model_adapter(self, action).database_records
+  end
+
+  def <=(_other)
+    false
+  end
+
+  def sanitize_sql(value)
+    return value if value.is_a?(Array) || value.is_a?(Integer) || value.is_a?(Integer)
+    "'#{@db.esc(value)}'"
+  end
+
+  def page(some_page)
+    some_page ||= 1
+    offset = (some_page.to_i - 1) * per
+
+    clone.offset(offset).limit(30)
+  end
+
+  def per
+    @per ||= 30
+  end
+
+  def total_pages
+    pages_count = (count.to_f / @per.to_f)
+    pages_count = 1 if pages_count.nan? || pages_count == Float::INFINITY
+    pages_count = pages_count.to_i
+    pages_count = 1 if pages_count == 0
+    pages_count
+  end
+
 private
 
   def should_use_autoload?
     !any_mods? && autoloaded_on_previous_model?
   end
 
+  def autoloaded_cache_or_create
+    @_previous_model.autoloads[@_relation.fetch(:relation_name)] ||= []
+    autoloaded_cache
+  end
+
   def autoloaded_cache
-    return @_previous_model.autoloads.fetch(@_relation.fetch(:relation_name))
+    @_previous_model.autoloads.fetch(@_relation.fetch(:relation_name))
   end
 
   def any_mods?
-    if @groups.any? || @includes.any? || @orders.any? || @joins.any? || any_wheres_other_than_relation?
-      return true
-    else
-      return false
-    end
+    @groups.any? || @includes.any? || @orders.any? || @joins.any? || any_wheres_other_than_relation?
   end
 
   def any_wheres_other_than_relation?
     if @_previous_model && @_relation && @wheres.length == 1
       looks_like = "`#{@_relation.fetch(:table_name)}`.`#{@_relation.fetch(:foreign_key)}` = '#{@_previous_model.id}'"
 
-      if @wheres.first == looks_like
-        return false
-      end
+      return false if @wheres.first == looks_like
     end
 
-    return true
+    true
   end
 
   def autoloaded_on_previous_model?
     if @_previous_model && @_relation
-      if @_previous_model.autoloads.include?(@_relation.fetch(:relation_name))
-        return true
-      end
+      return true if @_previous_model.autoloads.include?(@_relation.fetch(:relation_name))
     end
 
-    return false
+    false
   end
 
   def clone

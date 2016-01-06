@@ -8,7 +8,7 @@ module BazaModels::Model::BelongsToRelations
       relation = {
         type: :belongs_to,
         relation_name: relation_name,
-        table_name: StringCases.pluralize(relation_name),
+        table_name: args[:table_name] || StringCases.pluralize(relation_name),
         foreign_key: :"#{relation_name}_id"
       }
 
@@ -25,7 +25,9 @@ module BazaModels::Model::BelongsToRelations
       @relationships[relation_name] = relation
 
       define_method(relation_name) do
-        if model = autoloads[relation_name]
+        if (model = @changes[relation_name])
+          model
+        elsif (model = autoloads[relation_name])
           model
         else
           if relation[:class_name]
@@ -36,6 +38,11 @@ module BazaModels::Model::BelongsToRelations
 
           Object.const_get(class_name).find(@data.fetch(relation.fetch(:foreign_key)))
         end
+      end
+
+      define_method("#{relation_name}=") do |new_model|
+        @changes[relation.fetch(:foreign_key)] = new_model.id
+        autoloads.delete(relation_name)
       end
     end
   end
