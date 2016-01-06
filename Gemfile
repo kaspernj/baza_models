@@ -5,7 +5,7 @@ source "http://rubygems.org"
 
 gem "array_enumerator"
 gem "baza", "~> 0.0.20"
-gem "string-cases"
+gem "string-cases", ">= 0.0.2"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

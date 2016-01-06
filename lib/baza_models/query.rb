@@ -75,6 +75,10 @@ class BazaModels::Query
     model
   end
 
+  def find_by(args)
+    clone.where(args).limit(1).to_enum.first
+  end
+
   def first
     return autoloaded_cache.first if should_use_autoload?
 
