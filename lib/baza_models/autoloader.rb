@@ -85,7 +85,7 @@ private
     end
 
     @db.select(relation.fetch(:table_name), id: model_ids) do |model_data|
-      model = ::Object.const_get(relation.fetch(:class_name)).new(model_data)
+      model = ::Object.const_get(relation.fetch(:class_name)).new(model_data, init: true)
 
       orig_model_id = model_id_mappings.fetch(model_data.fetch(:id))
       orig_model = @models.detect { |array_model| array_model.id == orig_model_id }
@@ -101,9 +101,9 @@ private
     result = {models: []}
 
     @db.select(relation.fetch(:table_name), relation.fetch(:foreign_key) => model_ids) do |model_data|
-      model = ::Object.const_get(relation.fetch(:class_name)).new(model_data)
+      model = ::Object.const_get(relation.fetch(:class_name)).new(model_data, init: true)
 
-      orig_model_id = model_data.fetch(relation.fetch(:foreign_key))
+      orig_model_id = model_data.fetch(relation.fetch(:foreign_key).to_sym)
       orig_model = @models.detect { |array_model| array_model.id == orig_model_id }
 
       orig_model.autoloads[autoload_name] ||= []
@@ -119,7 +119,7 @@ private
     result = {models: []}
 
     @db.select(relation.fetch(:table_name), relation.fetch(:foreign_key) => model_ids) do |model_data|
-      model = ::Object.const_get(relation.fetch(:class_name)).new(model_data)
+      model = ::Object.const_get(relation.fetch(:class_name)).new(model_data, init: true)
 
       orig_model_id = model_data.fetch(relation.fetch(:foreign_key))
       orig_model = @models.detect { |array_model| array_model.id == orig_model_id }

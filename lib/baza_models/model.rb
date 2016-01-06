@@ -114,6 +114,10 @@ class BazaModels::Model
     BazaModels::BazaOrmAdapter.new(class: self)
   end
 
+  def self.transaction(&blk)
+    @db.transaction(&blk)
+  end
+
   class << self
     attr_writer :db, :table_name
   end

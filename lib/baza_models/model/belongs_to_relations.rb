@@ -36,7 +36,8 @@ module BazaModels::Model::BelongsToRelations
             class_name = StringCases.snake_to_camel(relation_name)
           end
 
-          Object.const_get(class_name).find(@data.fetch(relation.fetch(:foreign_key)))
+          foreign_id = @data.fetch(relation.fetch(:foreign_key))
+          Object.const_get(class_name).find(foreign_id) if foreign_id
         end
       end
 

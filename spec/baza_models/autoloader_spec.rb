@@ -29,6 +29,7 @@ describe BazaModels::Autoloader do
     expect(role.user).to eq user
     expect(role.autoloads).to have_received(:[]).with(:user)
     expect(role.autoloads[:user]).to eq user
+    expect(role.autoloads[:user].id).to eq user.id
   end
 
   it "autoloads via includes on has_one relations" do

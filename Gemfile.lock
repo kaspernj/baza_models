@@ -140,7 +140,7 @@ DEPENDENCIES
   rspec (~> 3.3.0)
   rubocop
   sqlite3
-  string-cases (= 0.0.2)
+  string-cases (>= 0.0.2)
 
 BUNDLED WITH
    1.11.2

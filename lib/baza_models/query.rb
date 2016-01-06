@@ -101,14 +101,18 @@ class BazaModels::Query
     query.reverse_order.to_enum.first
   end
 
-  def select(select)
-    if select.is_a?(Symbol)
-      @selects << "`#{@model.table_name}`.`#{select}`"
+  def select(select = nil, &blk)
+    if !select && blk
+      to_enum.select(&blk)
     else
-      @selects << select
-    end
+      if select.is_a?(Symbol)
+        @selects << "`#{@model.table_name}`.`#{select}`"
+      else
+        @selects << select
+      end
 
-    self
+      self
+    end
   end
 
   def offset(offset)
@@ -203,6 +207,10 @@ class BazaModels::Query
   def reverse_order
     @reverse_order = true
     self
+  end
+
+  def map(&blk)
+    to_enum.map(&blk)
   end
 
   def to_enum

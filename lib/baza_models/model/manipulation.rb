@@ -7,12 +7,12 @@ module BazaModels::Model::Manipulation
     if args[:validate] == false || valid?
       new_record = new_record?
       fire_callbacks(:before_save)
-      self.updated_at = Time.now if has_attribute?(:updated_at)
+      self.updated_at = Time.now if changed? && has_attribute?(:updated_at)
 
       if new_record
         status = create
       else
-        db.update(table_name, @changes, id: id)
+        db.update(table_name, @changes, id: id) if changed?
         status = true
       end
 
