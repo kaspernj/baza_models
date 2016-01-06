@@ -22,7 +22,7 @@ describe BazaModels::Model::Queries do
 
     it "returns false when nothing is found" do
       user_found = User.find_by(id: 1, email: "test@example.com")
-      expect(user_found).to eq false
+      expect(user_found).to eq nil
     end
 
     it "#find_by!" do

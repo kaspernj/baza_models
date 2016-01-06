@@ -40,7 +40,7 @@ describe BazaModels::Model::HasManyRelations do
 
       it "supports class_name and proc-arguments" do
         expect(user.admin_roles.to_a).to eq [role_admin]
-        expect(user.admin_roles.to_sql).to eq "SELECT `roles`.* FROM `roles` WHERE `roles`.`user_id` = '#{user.id}' AND `roles`.`role` = 'administrator'"
+        expect(user.admin_roles.to_sql).to eq "SELECT `roles`.* FROM `roles` WHERE `roles`.`user_id` = #{user.id} AND `roles`.`role` = 'administrator'"
       end
     end
   end

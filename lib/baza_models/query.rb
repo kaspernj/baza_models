@@ -144,7 +144,7 @@ class BazaModels::Query
         elsif arg.is_a?(TrueClass)
           arg = "1"
         else
-          arg = "'#{@db.esc(arg)}'"
+          arg = @db.sqlval(arg)
         end
 
         str.sub!("?", arg)
@@ -157,10 +157,10 @@ class BazaModels::Query
       args.each do |key, value|
         if value.is_a?(Hash)
           value.each do |hash_key, hash_value|
-            @wheres << "`#{key}`.`#{hash_key}` = '#{@db.esc(hash_value)}'"
+            @wheres << "`#{key}`.`#{key_convert(hash_key, hash_value)}` = #{@db.sqlval(value_convert(hash_value))}"
           end
         else
-          @wheres << "`#{@model.table_name}`.`#{key}` = '#{@db.esc(value)}'"
+          @wheres << "`#{@model.table_name}`.`#{key_convert(key, value)}` = #{@db.sqlval(value_convert(value))}"
         end
       end
     end
@@ -269,7 +269,7 @@ class BazaModels::Query
   end
 
   def find_first(args)
-    where(args).first
+    clone.where(args).first
   end
 
   def to_a
@@ -436,7 +436,7 @@ private
 
   def any_wheres_other_than_relation?
     if @_previous_model && @_relation && @wheres.length == 1
-      looks_like = "`#{@_relation.fetch(:table_name)}`.`#{@_relation.fetch(:foreign_key)}` = '#{@_previous_model.id}'"
+      looks_like = "`#{@_relation.fetch(:table_name)}`.`#{@_relation.fetch(:foreign_key)}` = #{@_previous_model.id}"
 
       return false if @wheres.first == looks_like
     end
@@ -463,5 +463,15 @@ private
       orders: @orders.dup,
       limit: @limit
     )
+  end
+
+  def key_convert(key, value)
+    return "#{key}_id" if value.is_a?(BazaModels::Model)
+    key
+  end
+
+  def value_convert(value)
+    return value.id if value.is_a?(BazaModels::Model)
+    value
   end
 end

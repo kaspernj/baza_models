@@ -11,9 +11,7 @@ module BazaModels::Model::Queries
     end
 
     def find_by(where_hash)
-      row = db.select(table_name, where_hash, limit: 1).fetch
-      return new(row, init: true) if row
-      false
+      where(where_hash).first
     end
 
     def find_by!(where_hash)
