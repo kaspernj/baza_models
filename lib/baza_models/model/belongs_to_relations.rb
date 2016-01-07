@@ -37,7 +37,7 @@ module BazaModels::Model::BelongsToRelations
           end
 
           foreign_id = @data.fetch(relation.fetch(:foreign_key))
-          Object.const_get(class_name).find(foreign_id) if foreign_id
+          StringCases.constantize(class_name).find(foreign_id) if foreign_id
         end
       end
 

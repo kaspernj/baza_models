@@ -44,7 +44,7 @@ module BazaModels::Model::HasOneRelations
           if relation[:args][:through]
             __send__(relation[:args][:through]).__send__(relation_name)
           else
-            class_instance = Object.const_get(relation.fetch(:class_name))
+            class_instance = StringCases.constantize(relation.fetch(:class_name))
 
             query = class_instance.where(relation.fetch(:foreign_key) => id)
             query._previous_model = self

@@ -65,7 +65,7 @@ private
       BazaModels::Query::Inspector.new(
         query: @query,
         argument: value,
-        model: Object.const_get(relationship.fetch(:class_name)),
+        model: StringCases.constantize(relationship.fetch(:class_name)),
         joins: @joins,
         joins_tracker: @joins_tracker[key]
       ).execute
