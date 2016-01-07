@@ -12,7 +12,9 @@ module BazaModels::Model::Manipulation
       if new_record
         status = create
       else
+        fire_callbacks(:before_update)
         db.update(table_name, @changes, id: id) if changed?
+        fire_callbacks(:after_update)
         status = true
       end
 

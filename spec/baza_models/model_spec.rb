@@ -61,12 +61,18 @@ describe "BazaModels::Model" do
   it "#before_save, #after_save" do
     expect(user.before_save_called).to eq nil
     expect(user.after_save_called).to eq nil
+    expect(user.before_update_called).to eq nil
+    expect(user.after_update_called).to eq nil
     user.save!
     expect(user.before_save_called).to eq 1
     expect(user.after_save_called).to eq 1
+    expect(user.before_update_called).to eq nil
+    expect(user.after_update_called).to eq nil
     user.save!
     expect(user.before_save_called).to eq 2
     expect(user.after_save_called).to eq 2
+    expect(user.before_update_called).to eq 1
+    expect(user.after_update_called).to eq 1
   end
 
   it "#before_create, #after_create" do
