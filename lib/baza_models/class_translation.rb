@@ -4,7 +4,20 @@ class BazaModels::ClassTranslation
   end
 
   def class_name_snake
-    @class_name_snake ||= StringCases.camel_to_snake(@klass.name)
+    @class_name_snake ||= StringCases.camel_to_snake(@klass.name.split("::").last)
+  end
+
+  def class_name_snake_with_parents
+    unless @class_name_snake_with_parents
+      name = @klass.name
+        .split("::")
+        .map { |name_part| StringCases.camel_to_snake(name_part) }
+        .join("\\")
+
+      @class_name_snake_with_parents = name
+    end
+
+    @class_name_snake_with_parents
   end
 
   def human(args = {})
@@ -15,15 +28,15 @@ class BazaModels::ClassTranslation
     end
 
     keys = [
-      "baza_models.models.#{class_name_snake}.#{count_key}",
-      "activerecord.models.#{class_name_snake}.#{count_key}"
+      "baza_models.models.#{class_name_snake_with_parents}.#{count_key}",
+      "activerecord.models.#{class_name_snake_with_parents}.#{count_key}"
     ]
 
     keys.each do |key|
       return I18n.t(key) if I18n.exists?(key)
     end
 
-    @klass.name
+    @klass.name.split("::").last
   end
 
   def param_key
