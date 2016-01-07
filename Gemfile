@@ -3,10 +3,10 @@ source "http://rubygems.org"
 # Example:
 #   gem "activesupport", ">= 2.3.5"
 
-gem "array_enumerator"
+gem "array_enumerator", ">= 0.0.10"
 gem "baza", "~> 0.0.20"
-gem "string-cases", github: "kaspernj/string-cases", branch: "kj/rubocop_and_constantize" # ">= 0.0.2"
-gem "auto_autoloader"
+gem "string-cases", ">= 0.0.3"
+gem "auto_autoloader", ">= 0.0.1"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
