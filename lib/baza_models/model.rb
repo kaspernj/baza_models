@@ -1,18 +1,7 @@
 require "string-cases"
 
 class BazaModels::Model
-  path = "#{File.dirname(__FILE__)}/model"
-
-  autoload :BelongsToRelations, "#{path}/belongs_to_relations"
-  autoload :CustomValidations, "#{path}/custom_validations"
-  autoload :Delegation, "#{path}/delegation"
-  autoload :HasManyRelations, "#{path}/has_many_relations"
-  autoload :HasOneRelations, "#{path}/has_one_relations"
-  autoload :Manipulation, "#{path}/manipulation"
-  autoload :Queries, "#{path}/queries"
-  autoload :Scopes, "#{path}/scopes"
-  autoload :TranslationFunctionality, "#{path}/translation_functionality"
-  autoload :Validations, "#{path}/validations"
+  AutoAutoloader.autoload_sub_classes(self, __FILE__)
 
   include BelongsToRelations
   include Delegation

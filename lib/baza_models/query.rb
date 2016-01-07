@@ -1,10 +1,7 @@
 require "array_enumerator"
 
 class BazaModels::Query
-  path = "#{File.dirname(__FILE__)}/query"
-
-  autoload :Inspector, "#{path}/inspector"
-  autoload :Not, "#{path}/not"
+  AutoAutoloader.autoload_sub_classes(self, __FILE__)
 
   attr_accessor :_previous_model, :_relation
 
