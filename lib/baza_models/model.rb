@@ -297,7 +297,12 @@ protected
       if callback_data[:block]
         instance_eval(&callback_data.fetch(:block))
       elsif callback_data[:method_name]
-        __send__(callback_data[:method_name], *callback_data.fetch(:args))
+        method_obj = method(callback_data.fetch(:method_name))
+
+        pass_args = callback_data.fetch(:args)
+        pass_args = [] if method_obj.arity == 0
+
+        __send__(callback_data[:method_name], *pass_args)
       else
         raise "Didn't know how to perform callbacks for #{name}"
       end

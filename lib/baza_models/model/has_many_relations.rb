@@ -39,7 +39,7 @@ module BazaModels::Model::HasManyRelations
       @relationships[relation_name] = relation
 
       define_method(relation_name) do
-        class_instance = Object.const_get(relation.fetch(:class_name))
+        class_instance = StringCases.constantize(relation.fetch(:class_name))
         query = class_instance.where(relation.fetch(:foreign_key) => id)
         query._previous_model = self
         query._relation = relation

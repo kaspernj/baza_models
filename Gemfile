@@ -5,7 +5,7 @@ source "http://rubygems.org"
 
 gem "array_enumerator"
 gem "baza", "~> 0.0.20"
-gem "string-cases", ">= 0.0.2"
+gem "string-cases", github: "kaspernj/string-cases", branch: "kj/rubocop_and_constantize" # ">= 0.0.2"
 gem "auto_autoloader"
 
 # Add dependencies to develop your gem here.
