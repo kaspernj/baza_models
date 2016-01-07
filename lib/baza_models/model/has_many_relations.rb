@@ -29,7 +29,7 @@ module BazaModels::Model::HasManyRelations
       if args && args[:class_name]
         relation[:class_name] = args.fetch(:class_name)
       else
-        relation[:class_name] = StringCases.snake_to_camel(relation_name.to_s.gsub(/s$/, ""))
+        relation[:class_name] = StringCases.snake_to_camel(StringCases.singularize(relation_name))
       end
 
       @has_many_relations ||= []
@@ -48,7 +48,7 @@ module BazaModels::Model::HasManyRelations
           query = query.instance_exec(&arg) if arg.is_a?(Proc)
         end
 
-        return query
+        query
       end
     end
   end
