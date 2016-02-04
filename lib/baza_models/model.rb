@@ -44,8 +44,8 @@ class BazaModels::Model
   end
 
   QUERY_METHODS = [
-    :all, :any?, :empty?, :none?, :count, :find, :first, :find_first, :last, :length, :select, :includes,
-    :joins, :group, :where, :order, :limit, :to_a, :accessible_by
+    :all, :any?, :each, :empty?, :none?, :count, :find, :first, :find_first, :last, :length, :select, :includes,
+    :joins, :group, :where, :order, :limit, :to_a, :accessible_by, :ransack
   ]
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
@@ -212,10 +212,6 @@ class BazaModels::Model
 
   def self.column_names
     @column_names ||= __blank_attributes.keys.map(&:to_s)
-  end
-
-  def self.ransack(params)
-    BazaModels::Ransacker.new(class: self, params: params)
   end
 
   def [](key)

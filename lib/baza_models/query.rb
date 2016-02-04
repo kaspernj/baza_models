@@ -427,6 +427,10 @@ class BazaModels::Query
     pages_count
   end
 
+  def ransack(params)
+    BazaModels::Ransacker.new(class: @model, params: params, query: self)
+  end
+
 private
 
   def should_use_autoload?

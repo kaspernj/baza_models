@@ -140,6 +140,17 @@ describe "BazaModels::Model" do
     expect(user.changed?).to eq false
   end
 
+  it "#each" do
+    user.save!
+    count = 0
+    User.each do |user|
+      expect(user).to eq user
+      count += 1
+    end
+
+    expect(count).to eq 1
+  end
+
   it "doesnt care if initialized data has keys as strings" do
     user = User.new("email" => "test@example.com")
     expect(user.email).to eq "test@example.com"

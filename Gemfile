@@ -7,6 +7,7 @@ gem "array_enumerator", ">= 0.0.10"
 gem "baza", "~> 0.0.20"
 gem "string-cases", ">= 0.0.3"
 gem "auto_autoloader", ">= 0.0.1"
+gem "html_gen", ">= 0.0.11", require: false
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
