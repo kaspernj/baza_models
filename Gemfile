@@ -20,7 +20,7 @@ group :development do
   gem "sqlite3", platform: :ruby
   gem "jdbc-sqlite3", platform: :jruby
   gem "best_practice_project", require: false, github: "kaspernj/best_practice_project"
-  gem "rubocop", require: false
+  gem "rubocop", "0.37.0", require: false
   gem "orm_adapter", require: false
 end
 

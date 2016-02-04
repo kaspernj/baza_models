@@ -40,22 +40,20 @@ module BazaModels::Model::HasOneRelations
       define_method(relation_name) do
         if (model = autoloads[relation_name])
           model
+        elsif relation[:args][:through]
+          __send__(relation[:args][:through]).__send__(relation_name)
         else
-          if relation[:args][:through]
-            __send__(relation[:args][:through]).__send__(relation_name)
-          else
-            class_instance = StringCases.constantize(relation.fetch(:class_name))
+          class_instance = StringCases.constantize(relation.fetch(:class_name))
 
-            query = class_instance.where(relation.fetch(:foreign_key) => id)
-            query._previous_model = self
-            query._relation = relation
+          query = class_instance.where(relation.fetch(:foreign_key) => id)
+          query._previous_model = self
+          query._relation = relation
 
-            all_args.each do |arg|
-              query = query.instance_exec(&arg) if arg.is_a?(Proc)
-            end
-
-            query.first
+          all_args.each do |arg|
+            query = query.instance_exec(&arg) if arg.is_a?(Proc)
           end
+
+          query.first
         end
       end
     end

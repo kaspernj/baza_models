@@ -23,7 +23,7 @@ class BazaModels::Model
     :before_create, :after_create, :before_save, :after_save, :before_destroy, :after_destroy,
     :before_validation, :after_validation, :before_validation_on_create, :after_validation_on_create,
     :before_validation_on_update, :after_validation_on_update
-  ]
+  ].freeze
 
   CALLBACK_TYPES.each do |callback_type|
     # rubocop:disable Style/ClassVars
@@ -46,7 +46,7 @@ class BazaModels::Model
   QUERY_METHODS = [
     :all, :any?, :each, :empty?, :none?, :count, :find, :first, :find_first, :last, :length, :select, :includes,
     :joins, :group, :where, :order, :limit, :to_a, :accessible_by, :ransack
-  ]
+  ].freeze
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
       BazaModels::Query.new(model: self).__send__(query_method, *args, &blk)

@@ -67,10 +67,13 @@ module DatabaseHelper
           indexes: [:user_id]
         )
 
-        @db.tables.create(:organizations, columns: [
-          {name: :id, type: :int, primarykey: true, autoincr: true},
-          {name: :name, type: :varchar}
-        ])
+        @db.tables.create(
+          :organizations,
+          columns: [
+            {name: :id, type: :int, primarykey: true, autoincr: true},
+            {name: :name, type: :varchar}
+          ]
+        )
       end
 
       after do

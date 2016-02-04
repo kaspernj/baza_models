@@ -347,9 +347,9 @@ class BazaModels::Query
         end
 
         if @reverse_order
-          if order.match(/\s+desc/i)
+          if order =~ /\s+desc/i
             order = order.gsub(/\s+desc/i, " ASC")
-          elsif order.match(/\s+asc/i)
+          elsif order =~ /\s+asc/i
             order = order.gsub(/\s+asc/i, " DESC")
           else
             order = "#{order} DESC"

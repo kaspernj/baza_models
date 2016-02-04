@@ -18,14 +18,12 @@ class BazaModels::Query::Not
             @wheres << "`#{key}`.`#{hash_key}` != '#{@db.esc(hash_value)}'"
           end
         end
-      else
-        if value.is_a?(Array)
-          values = value.map { |value_i| "'#{@db.esc(value_i)}'" }.join(",")
+      elsif value.is_a?(Array)
+        values = value.map { |value_i| "'#{@db.esc(value_i)}'" }.join(",")
 
-          @wheres << "`#{@model.table_name}`.`#{key}` NOT IN (#{values})"
-        else
-          @wheres << "`#{@model.table_name}`.`#{key}` != '#{@db.esc(value)}'"
-        end
+        @wheres << "`#{@model.table_name}`.`#{key}` NOT IN (#{values})"
+      else
+        @wheres << "`#{@model.table_name}`.`#{key}` != '#{@db.esc(value)}'"
       end
     end
 

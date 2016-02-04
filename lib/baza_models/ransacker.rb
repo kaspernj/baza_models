@@ -19,13 +19,17 @@ private
     @add_filters_to_query_executed = true
     return unless @params
 
+    table_query = "#{@db.sep_table}#{@db.escape_table(@klass.table_name)}#{@db.sep_table}"
+
     @params.each do |key, value|
       if (match = key.to_s.match(/\A(.+?)_eq\Z/))
         column_name = match[1]
-        @query = @query.where("#{@db.sep_table}#{@db.escape_table(@klass.table_name)}#{@db.sep_table}.#{@db.sep_col}#{@klass.db.escape_column(column_name)}#{@db.sep_col} = #{@db.sep_val}#{@klass.db.esc(value)}#{@db.sep_val}")
+        column_query = "#{@db.sep_col}#{@klass.db.escape_column(column_name)}#{@db.sep_col}"
+        @query = @query.where("#{table_query}.#{column_query} = #{@db.sep_val}#{@klass.db.esc(value)}#{@db.sep_val}")
       elsif (match = key.to_s.match(/\A(.+?)_cont\Z/))
         column_name = match[1]
-        @query = @query.where("#{@db.sep_table}#{@db.escape_table(@klass.table_name)}#{@db.sep_table}.#{@db.sep_col}#{@klass.db.escape_column(column_name)}#{@db.sep_col} LIKE #{@db.sep_val}%#{@klass.db.esc(value)}%#{@db.sep_val}")
+        column_query = "#{@db.sep_col}#{@klass.db.escape_column(column_name)}#{@db.sep_col}"
+        @query = @query.where("#{table_query}.#{column_query} LIKE #{@db.sep_val}%#{@klass.db.esc(value)}%#{@db.sep_val}")
       elsif key.to_s == "s"
         match = value.to_s.match(/\A([A-z_\d]+)\s+(asc|desc)\Z/)
         raise "Couldn't sort-match: #{value}" unless match
