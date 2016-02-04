@@ -31,7 +31,7 @@ describe BazaModels::Query do
     end
   end
 
-  context '#joins' do
+  context "#joins" do
     before do
       user.save!
       role_admin.save!
@@ -151,5 +151,22 @@ describe BazaModels::Query do
       sql = Role.order(:role).reverse_order.to_sql
       expect(sql).to end_with " DESC"
     end
+  end
+
+  it "#new" do
+    user.save!
+    expect(user.roles.length).to eq 0
+    expect(user.roles.count).to eq 0
+
+    role = user.roles.new(role: "admin")
+    expect(role.new_record?).to eq true
+    expect(user.roles.length).to eq 1
+    expect(user.roles.count).to eq 0
+
+    role.save!
+
+    expect(user.roles.length).to eq 1
+    expect(user.roles.count).to eq 1
+    expect(user.roles.to_a).to eq [role]
   end
 end

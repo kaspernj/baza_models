@@ -57,7 +57,22 @@ class BazaModels::Query
   end
 
   def length
-    count
+    if @_previous_model && !any_wheres_other_than_relation? && @_previous_model.autoloads[@_relation.fetch(:relation_name)]
+      @_previous_model.autoloads[@_relation.fetch(:relation_name)].length
+    else
+      count
+    end
+  end
+
+  def new(attributes)
+    raise "No previous model" unless @_previous_model
+    raise "No relation" unless @_relation
+
+    new_sub_model = @model.new(@_relation.fetch(:foreign_key) => @_previous_model.id)
+    new_sub_model.assign_attributes(attributes)
+    autoloaded_cache_or_create << new_sub_model
+
+    new_sub_model
   end
 
   def find(id)
