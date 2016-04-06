@@ -319,7 +319,7 @@ protected
         belongs_to_relations.each do |relation|
           if attribute_name.to_s == relation[:relation_name].to_s
             attribute_name = :"#{attribute_name}_id"
-            attribute_value = attribute_value.id
+            attribute_value = attribute_value.id if attribute_value
           end
         end
       end
