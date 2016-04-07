@@ -169,10 +169,10 @@ class BazaModels::Query
       args.each do |key, value|
         if value.is_a?(Hash)
           value.each do |hash_key, hash_value|
-            @wheres << "`#{key}`.`#{key_convert(hash_key, hash_value)}` = #{@db.sqlval(value_convert(hash_value))}"
+            @wheres << "`#{key}`.`#{key_convert(hash_key, hash_value)}` #{value_with_mode(value_convert(hash_value))}"
           end
         else
-          @wheres << "`#{@model.table_name}`.`#{key_convert(key, value)}` = #{@db.sqlval(value_convert(value))}"
+          @wheres << "`#{@model.table_name}`.`#{key_convert(key, value)}` #{value_with_mode(value_convert(value))}"
         end
       end
     end
@@ -489,5 +489,27 @@ private
   def value_convert(value)
     return value.id if value.is_a?(BazaModels::Model)
     value
+  end
+
+  def value_with_mode(value)
+    if value.is_a?(Array)
+      sql = "IN ("
+
+      first = true
+      value.each do |val_i|
+        if first
+          first = false
+        else
+          sql << ", " unless first
+        end
+
+        sql << @db.sqlval(val_i)
+      end
+
+      sql << ")"
+      sql
+    else
+      "= #{@db.sqlval(value)}"
+    end
   end
 end
