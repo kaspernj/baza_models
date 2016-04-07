@@ -88,11 +88,13 @@ private
   def add_filter_to_query(args)
     @ransacker.query = @ransacker.query.joins(join_parts_as_hash) if @join_parts.any?
 
-    column_query = "#{@db.sep_col}#{@klass.db.escape_column(args.fetch(:column_name))}#{@db.sep_col}"
+    column_query = "#{@db.sep_col}#{@db.escape_column(args.fetch(:column_name))}#{@db.sep_col}"
     table_query = "#{@db.sep_table}#{@db.escape_table(@klass.table_name)}#{@db.sep_table}"
 
     if @mode == :cont
       @ransacker.query = @ransacker.query.where("#{table_query}.#{column_query} LIKE #{@db.sep_val}%#{@klass.db.esc(@value)}%#{@db.sep_val}")
+    elsif @mode == :eq
+      @ransacker.query = @ransacker.query.where("#{table_query}.#{column_query} = #{@db.sep_val}#{@klass.db.esc(@value)}#{@db.sep_val}")
     else
       raise "Unknown mode: #{@mode}"
     end

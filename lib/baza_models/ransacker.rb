@@ -22,18 +22,17 @@ private
     @add_filters_to_query_executed = true
     return unless @params
 
-    table_query = "#{@db.sep_table}#{@db.escape_table(@klass.table_name)}#{@db.sep_table}"
-
     @params.each do |key, value|
       if (match = key.to_s.match(/\A(.+?)_eq\Z/))
-        column_name = match[1]
-        column_query = "#{@db.sep_col}#{@klass.db.escape_column(column_name)}#{@db.sep_col}"
-        @query = @query.where("#{table_query}.#{column_query} = #{@db.sep_val}#{@klass.db.esc(value)}#{@db.sep_val}")
-      elsif (match = key.to_s.match(/\A(.+?)_cont\Z/))
-        column_name = match[1]
-
         BazaModels::Ransacker::RelationshipScanner.new(
-          column_name: column_name,
+          column_name: match[1],
+          mode: :eq,
+          ransacker: self,
+          value: value
+        )
+      elsif (match = key.to_s.match(/\A(.+?)_cont\Z/))
+        BazaModels::Ransacker::RelationshipScanner.new(
+          column_name: match[1],
           mode: :cont,
           ransacker: self,
           value: value
