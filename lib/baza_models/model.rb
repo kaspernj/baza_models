@@ -54,7 +54,7 @@ class BazaModels::Model
   end
 
   def initialize(data = {}, args = {})
-    self.class.init_model unless self.class.model_initialized?
+    self.class.init_model
 
     reset_errors
     @changes = {}
@@ -135,6 +135,8 @@ class BazaModels::Model
   end
 
   def self.init_model
+    return if @model_initialized
+
     @table = db.tables[table_name]
 
     @__blank_attributes ||= {}
@@ -211,6 +213,7 @@ class BazaModels::Model
   end
 
   def self.column_names
+    init_model
     @column_names ||= __blank_attributes.keys.map(&:to_s)
   end
 
