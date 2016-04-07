@@ -169,10 +169,10 @@ class BazaModels::Query
       args.each do |key, value|
         if value.is_a?(Hash)
           value.each do |hash_key, hash_value|
-            @wheres << "`#{key}`.`#{key_convert(hash_key, hash_value)}` = #{@db.sqlval(value_convert(hash_value))}"
+            @wheres << "`#{key}`.`#{key_convert(hash_key, hash_value)}` #{value_with_mode(value_convert(hash_value))}"
           end
         else
-          @wheres << "`#{@model.table_name}`.`#{key_convert(key, value)}` = #{@db.sqlval(value_convert(value))}"
+          @wheres << "`#{@model.table_name}`.`#{key_convert(key, value)}` #{value_with_mode(value_convert(value))}"
         end
       end
     end
@@ -289,84 +289,7 @@ class BazaModels::Query
   end
 
   def to_sql
-    sql = "SELECT "
-
-    if @selects.empty?
-      sql << "`#{@model.table_name}`.*"
-    else
-      sql << @selects.join(", ")
-    end
-
-    sql << " FROM `#{@model.table_name}`"
-
-    unless @joins.empty?
-      @joins.each do |join|
-        sql << " #{join}"
-      end
-    end
-
-    unless @wheres.empty?
-      sql << " WHERE "
-
-      first = true
-      @wheres.each do |where|
-        if first == true
-          first = false
-        else
-          sql << " AND "
-        end
-
-        sql << where
-      end
-    end
-
-    unless @groups.empty?
-      sql << " GROUP BY "
-
-      first = true
-      @groups.each do |group|
-        if first
-          first = false
-        else
-          sql << ", "
-        end
-
-        sql << group
-      end
-    end
-
-    unless @orders.empty?
-      sql << " ORDER BY "
-
-      first = true
-      @orders.each do |order|
-        if first
-          first = false
-        else
-          sql << ", "
-        end
-
-        if @reverse_order
-          if order =~ /\s+desc/i
-            order = order.gsub(/\s+desc/i, " ASC")
-          elsif order =~ /\s+asc/i
-            order = order.gsub(/\s+asc/i, " DESC")
-          else
-            order = "#{order} DESC"
-          end
-        end
-
-        sql << order
-      end
-    end
-
-    if @limit && @offset
-      sql << " LIMIT #{@offset.to_i}, #{@limit.to_i}"
-    elsif @limit
-      sql << " LIMIT #{@limit.to_i}"
-    end
-
-    sql.strip
+    BazaModels::Query::SqlGenerator.new(query: self).to_sql
   end
 
   def destroy_all
@@ -489,5 +412,27 @@ private
   def value_convert(value)
     return value.id if value.is_a?(BazaModels::Model)
     value
+  end
+
+  def value_with_mode(value)
+    if value.is_a?(Array)
+      sql = "IN ("
+
+      first = true
+      value.each do |val_i|
+        if first
+          first = false
+        else
+          sql << ", " unless first
+        end
+
+        sql << @db.sqlval(val_i)
+      end
+
+      sql << ")"
+      sql
+    else
+      "= #{@db.sqlval(value)}"
+    end
   end
 end
