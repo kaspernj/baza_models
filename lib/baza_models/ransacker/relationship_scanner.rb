@@ -92,9 +92,17 @@ private
     table_query = "#{@db.sep_table}#{@db.escape_table(@klass.table_name)}#{@db.sep_table}"
 
     if @mode == :cont
-      @ransacker.query = @ransacker.query.where("#{table_query}.#{column_query} LIKE #{@db.sep_val}%#{@klass.db.esc(@value)}%#{@db.sep_val}")
+      @ransacker.query = @ransacker
+        .query
+        .where("#{table_query}.#{column_query} LIKE #{@db.sep_val}%#{@klass.db.esc(@value)}%#{@db.sep_val}")
     elsif @mode == :eq
-      @ransacker.query = @ransacker.query.where("#{table_query}.#{column_query} = #{@db.sep_val}#{@klass.db.esc(@value)}#{@db.sep_val}")
+      @ransacker.query = @ransacker
+        .query
+        .where("#{table_query}.#{column_query} = #{@db.sep_val}#{@klass.db.esc(@value)}#{@db.sep_val}")
+    elsif @mode == :sort
+      @ransacker.query = @ransacker
+        .query
+        .order("#{table_query}.#{column_query} #{@value}")
     else
       raise "Unknown mode: #{@mode}"
     end

@@ -21,7 +21,14 @@ describe BazaModels::Query do
     query = User.ransack(s: "email asc")
 
     expect(query.result.to_a).to eq [another_user, user]
-    expect(query.result.to_sql).to eq "SELECT `users`.* FROM `users` ORDER BY `email` asc"
+    expect(query.result.to_sql).to eq "SELECT `users`.* FROM `users` ORDER BY `users`.`email` asc"
+  end
+
+  it "sorts by sub column" do
+    query = Person.ransack(s: "user_email asc")
+
+    expect(query.result.to_a).to eq [another_person, person]
+    expect(query.result.to_sql).to include "`users`.`email` asc"
   end
 
   it "works with sub models" do
