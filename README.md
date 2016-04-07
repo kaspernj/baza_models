@@ -81,6 +81,11 @@ User.last
 User.order(:id).reverse_order
 ```
 
+### Ransack
+```ruby
+Person.ransack(user_organization_name_cont: "test").result.to_a #=> [user]
+```
+
 
 ## Setting and saving attributes
 
