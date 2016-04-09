@@ -91,18 +91,20 @@ describe BazaModels::Query do
     end
   end
 
-  it "#any? #empty? #none? #count #length" do
+  it "#any? #empty? #none? #count #length #size" do
     expect(User.any?).to eq false
     expect(User.empty?).to eq true
     expect(User.none?).to eq true
     expect(User.count).to eq 0
     expect(User.length).to eq 0
+    expect(User.size).to eq 0
     user.save!
     expect(User.any?).to eq true
     expect(User.empty?).to eq false
     expect(User.none?).to eq false
     expect(User.count).to eq 1
     expect(User.length).to eq 1
+    expect(User.size).to eq 1
   end
 
   it "#find" do

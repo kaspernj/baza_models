@@ -64,6 +64,11 @@ class BazaModels::Query
     end
   end
 
+  def size
+    # TODO: This should also take counter caching into account
+    length
+  end
+
   def new(attributes)
     raise "No previous model" unless @_previous_model
     raise "No relation" unless @_relation
