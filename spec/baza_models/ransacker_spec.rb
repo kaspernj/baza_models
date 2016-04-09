@@ -40,4 +40,8 @@ describe BazaModels::Query do
     query = Person.ransack(user_organization_name_cont: "Test")
     expect(query.result.to_a).to eq [person]
   end
+
+  it "ignores unknown parameters and doesn't raise exceptions" do
+    Person.ransack(custom_something: "Test").result
+  end
 end
