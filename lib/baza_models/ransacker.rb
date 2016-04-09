@@ -31,8 +31,6 @@ private
         match = value.to_s.match(/\A([A-z_\d]+)\s+(asc|desc)\Z/)
         raise "Couldn't sort-match: #{value}" unless match
         sort_by(column_name: match[1], sort_mode: match[2])
-      else
-        raise "Unknown modifier: #{key}"
       end
     end
   end
