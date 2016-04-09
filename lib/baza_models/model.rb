@@ -44,7 +44,7 @@ class BazaModels::Model
   end
 
   QUERY_METHODS = [
-    :all, :any?, :each, :empty?, :none?, :count, :find, :first, :find_first, :last, :length, :select, :includes,
+    :all, :any?, :each, :empty?, :none?, :count, :find, :first, :find_first, :last, :length, :size, :select, :includes,
     :joins, :group, :where, :order, :limit, :to_a, :accessible_by, :ransack
   ].freeze
   QUERY_METHODS.each do |query_method|
