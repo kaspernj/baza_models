@@ -5,8 +5,8 @@ describe BazaModels::Query do
 
   let!(:organization) { Organization.create!(id: 1, name: "Test organization") }
   let!(:person) { Person.create!(id: 1, user: user) }
-  let!(:user) { User.create!(id: 1, organization: organization, email: "test@example.com") }
-  let!(:another_user) { User.create!(id: 2, organization: nil, email: "another_user@example.com") }
+  let!(:user) { User.create!(id: 1, organization: organization, email: "test@example.com", created_at: "2015-06-17 10:00") }
+  let!(:another_user) { User.create!(id: 2, organization: nil, email: "another_user@example.com", created_at: "2015-08-20 6:00") }
   let!(:another_person) { Person.create!(id: 2, user: another_user) }
 
   it "eq" do
@@ -54,6 +54,13 @@ describe BazaModels::Query do
 
     it "excludes the right models" do
       expect(User.ransack(id_gteq: 2).result.to_a).to eq [another_user]
+    end
+  end
+
+  describe "since" do
+    it "finds the right users" do
+      query = User.ransack(created_at_since: "2015-08-20").result
+      expect(query.to_a).to eq [another_user]
     end
   end
 

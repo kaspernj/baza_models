@@ -40,7 +40,7 @@ module BazaModels::Model::Manipulation
     end
 
     fire_callbacks(:before_create)
-    self.created_at = Time.now if has_attribute?(:created_at) && !created_at?
+    self.created_at ||= Time.now if has_attribute?(:created_at)
 
     @data[:id] = db.insert(table_name, @changes, return_id: true)
 

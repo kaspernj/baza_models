@@ -23,6 +23,8 @@ private
     @add_filters_to_query_executed = true
     return unless @params
 
+    ransackable_scopes = @klass.ransackable_scopes.map(&:to_s) if @klass.respond_to?(:ransackable_scopes)
+
     @params.each do |key, value|
       if (match = key.to_s.match(/\A(.+?)_(cont|eq|lt|lteq|gt|gteq)\Z/))
         filter(match[1], value, match[2])
@@ -30,6 +32,8 @@ private
         match = value.to_s.match(/\A([A-z_\d]+)\s+(asc|desc)\Z/)
         raise "Couldn't sort-match: #{value}" unless match
         sort_by(column_name: match[1], sort_mode: match[2])
+      elsif ransackable_scopes && ransackable_scopes.include?(key.to_s)
+        @query = @query.__send__(key, value)
       end
     end
   end

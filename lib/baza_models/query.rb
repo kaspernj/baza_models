@@ -146,15 +146,22 @@ class BazaModels::Query
     clone(includes: @includes + names)
   end
 
-  def where(args = nil)
+  def where(*args)
+    first_arg = args.first
     new_wheres = @wheres.dup
 
-    if args.is_a?(String)
-      new_wheres << "(#{args})"
-    elsif args.is_a?(Array)
-      str = args.shift
+    if first_arg.is_a?(String)
+      new_where = "(#{args.shift})"
 
       args.each do |arg|
+        new_where.sub!("?", @db.sqlval(arg))
+      end
+
+      new_wheres << new_where
+    elsif first_arg.is_a?(Array)
+      str = first_arg.shift
+
+      first_arg.each do |arg|
         if arg.is_a?(Symbol)
           arg = "`#{@model.table_name}`.`#{@db.escape_column(arg)}`"
         elsif arg.is_a?(FalseClass)
@@ -169,10 +176,10 @@ class BazaModels::Query
       end
 
       new_wheres << "(#{str})"
-    elsif args == nil
+    elsif first_arg == nil
       return Not.new(query: self)
     else
-      args.each do |key, value|
+      first_arg.each do |key, value|
         if value.is_a?(Hash)
           value.each do |hash_key, hash_value|
             new_wheres << "`#{key}`.`#{key_convert(hash_key, hash_value)}` #{value_with_mode(value_convert(hash_value))}"
@@ -421,5 +428,15 @@ private
     else
       "= #{@db.sqlval(value)}"
     end
+  end
+
+  def method_missing(method_name, *args, &blk)
+    return super unless @model
+
+    scopes = @model.instance_variable_get(:@scopes)
+    return super if !scopes || !scopes.key?(method_name)
+
+    block = scopes.fetch(method_name).fetch(:blk)
+    instance_exec(*args, &block)
   end
 end
