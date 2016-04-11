@@ -8,6 +8,7 @@ class BazaModels::Ransacker
     @klass = args.fetch(:class)
     @db = @klass.db
     @params = args.fetch(:params)
+    @_registered_params = @params # Support for SimpleFormRansack
     @query = args.fetch(:query)
   end
 

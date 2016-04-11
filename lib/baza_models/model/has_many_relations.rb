@@ -41,8 +41,8 @@ module BazaModels::Model::HasManyRelations
       define_method(relation_name) do
         class_instance = StringCases.constantize(relation.fetch(:class_name))
         query = class_instance.where(relation.fetch(:foreign_key) => id)
-        query._previous_model = self
-        query._relation = relation
+        query.previous_model = self
+        query.relation = relation
 
         all_args.each do |arg|
           query = query.instance_exec(&arg) if arg.is_a?(Proc)

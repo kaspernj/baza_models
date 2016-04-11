@@ -151,6 +151,51 @@ describe "BazaModels::Model" do
     expect(count).to eq 1
   end
 
+  it "#attribute_names" do
+    expect(User.attribute_names).to eq %w(id organization_id email email_confirmation created_at updated_at admin)
+  end
+
+  it "#columns" do
+    id_column = User.columns.find { |column| column.name == "id" }
+
+    expect(id_column.name).to eq "id"
+    expect(id_column.type).to eq :integer
+  end
+
+  it "#columns_hash" do
+    columns_hash = User.columns_hash
+
+    id_column = columns_hash["id"]
+
+    expect(id_column.type).to eq :integer
+    expect(id_column.name).to eq "id"
+    expect(id_column.null).to eq true
+    expect(id_column.sql_type).to eq "int"
+
+    email_column = columns_hash["email"]
+
+    expect(email_column.type).to eq :string
+    expect(email_column.name).to eq "email"
+    expect(email_column.sql_type).to eq "varchar(255)"
+
+    admin_column = columns_hash["admin"]
+
+    expect(admin_column.type).to eq :boolean
+    expect(admin_column.name).to eq "admin"
+    expect(admin_column.sql_type).to eq "tinyint"
+  end
+
+  it "#reflections" do
+    reflections = User.reflections
+
+    person_reflection = reflections.values.find { |reflection| reflection.name == :person }
+    expect(person_reflection.name).to eq :person
+    expect(person_reflection.class_name).to eq "Person"
+    expect(person_reflection.foreign_key).to eq "user_id"
+    expect(person_reflection.klass).to eq Person
+    expect(person_reflection.collection?).to eq false
+  end
+
   it "doesnt care if initialized data has keys as strings" do
     user = User.new("email" => "test@example.com")
     expect(user.email).to eq "test@example.com"

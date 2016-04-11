@@ -41,6 +41,11 @@ describe BazaModels::Query do
     expect(query.result.to_a).to eq [person]
   end
 
+  it "ignores empty contains" do
+    query = Person.ransack(user_organization_name_cont: "")
+    expect(query.result.to_sql).to eq "SELECT `persons`.* FROM `persons`"
+  end
+
   it "ignores unknown parameters and doesn't raise exceptions" do
     Person.ransack(custom_something: "Test").result
   end

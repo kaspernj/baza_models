@@ -32,7 +32,8 @@ module DatabaseHelper
             {name: :email, type: :varchar},
             {name: :email_confirmation, type: :varchar},
             {name: :created_at, type: :datetime},
-            {name: :updated_at, type: :datetime}
+            {name: :updated_at, type: :datetime},
+            {name: :admin, type: :tinyint}
           ],
           indexes: [:organization_id, :email])
 
@@ -74,6 +75,8 @@ module DatabaseHelper
             {name: :name, type: :varchar}
           ]
         )
+
+        User.init_model(force: true)
       end
 
       after do

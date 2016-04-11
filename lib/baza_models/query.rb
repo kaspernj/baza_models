@@ -3,7 +3,9 @@ require "array_enumerator"
 class BazaModels::Query
   AutoAutoloader.autoload_sub_classes(self, __FILE__)
 
-  attr_accessor :_previous_model, :_relation
+  include BazaModels::Query::Pagination
+
+  attr_accessor :previous_model, :relation
 
   def initialize(args)
     @args = args
@@ -17,7 +19,11 @@ class BazaModels::Query
     @includes = args[:includes] || []
     @joins = args[:joins] || []
     @groups = args[:groups] || []
+    @offset = args[:offset]
     @orders = args[:orders] || []
+    @page = args[:page]
+    @per = args[:per]
+    @previous_model = args[:previous_model]
     @limit = args[:limit]
 
     @joins_tracker = {}
@@ -29,9 +35,9 @@ class BazaModels::Query
 
   def any?
     if @db.query(clone.select(:id).limit(1).to_sql).fetch
-      return true
+      true
     else
-      return false
+      false
     end
   end
 
@@ -44,21 +50,21 @@ class BazaModels::Query
   end
 
   def count
-    if @_previous_model && @_previous_model.new_record?
-      return autoloaded_cache_or_create.length
+    if @previous_model && @previous_model.new_record?
+      autoloaded_cache_or_create.length
     else
-      query = clone
-
-      query.instance_variable_set(:@selects, [])
-      query = clone.select("COUNT(*) AS count")
+      query = clone(selects: [])
+        .select("COUNT(*) AS count")
+        .limit(nil)
+        .offset(nil)
 
       @db.query(query.to_sql).fetch.fetch(:count)
     end
   end
 
   def length
-    if @_previous_model && !any_wheres_other_than_relation? && @_previous_model.autoloads[@_relation.fetch(:relation_name)]
-      @_previous_model.autoloads[@_relation.fetch(:relation_name)].length
+    if @previous_model && !any_wheres_other_than_relation? && @previous_model.autoloads[@relation.fetch(:relation_name)]
+      @previous_model.autoloads[@relation.fetch(:relation_name)].length
     else
       count
     end
@@ -70,10 +76,10 @@ class BazaModels::Query
   end
 
   def new(attributes)
-    raise "No previous model" unless @_previous_model
-    raise "No relation" unless @_relation
+    raise "No previous model" unless @previous_model
+    raise "No relation" unless @relation
 
-    new_sub_model = @model.new(@_relation.fetch(:foreign_key) => @_previous_model.id)
+    new_sub_model = @model.new(@relation.fetch(:foreign_key) => @previous_model.id)
     new_sub_model.assign_attributes(attributes)
     autoloaded_cache_or_create << new_sub_model
 
@@ -121,35 +127,30 @@ class BazaModels::Query
   def select(select = nil, &blk)
     if !select && blk
       to_enum.select(&blk)
+    elsif select.is_a?(Symbol)
+      clone(selects: @selects + ["`#{@model.table_name}`.`#{select}`"])
     else
-      if select.is_a?(Symbol)
-        @selects << "`#{@model.table_name}`.`#{select}`"
-      else
-        @selects << select
-      end
-
-      self
+      clone(selects: @selects + [select])
     end
   end
 
   def offset(offset)
-    @offset = offset
-    self
+    clone(offset: offset)
   end
 
   def limit(limit)
-    @limit = limit
-    self
+    clone(limit: limit)
   end
 
-  def includes(name)
-    @includes << name
-    self
+  def includes(*names)
+    clone(includes: @includes + names)
   end
 
   def where(args = nil)
+    new_wheres = @wheres.dup
+
     if args.is_a?(String)
-      @wheres << "(#{args})"
+      new_wheres << "(#{args})"
     elsif args.is_a?(Array)
       str = args.shift
 
@@ -167,22 +168,22 @@ class BazaModels::Query
         str.sub!("?", arg)
       end
 
-      @wheres << "(#{str})"
+      new_wheres << "(#{str})"
     elsif args == nil
       return Not.new(query: self)
     else
       args.each do |key, value|
         if value.is_a?(Hash)
           value.each do |hash_key, hash_value|
-            @wheres << "`#{key}`.`#{key_convert(hash_key, hash_value)}` #{value_with_mode(value_convert(hash_value))}"
+            new_wheres << "`#{key}`.`#{key_convert(hash_key, hash_value)}` #{value_with_mode(value_convert(hash_value))}"
           end
         else
-          @wheres << "`#{@model.table_name}`.`#{key_convert(key, value)}` #{value_with_mode(value_convert(value))}"
+          new_wheres << "`#{@model.table_name}`.`#{key_convert(key, value)}` #{value_with_mode(value_convert(value))}"
         end
       end
     end
 
-    self
+    clone(wheres: new_wheres)
   end
 
   def joins(*arguments)
@@ -199,26 +200,22 @@ class BazaModels::Query
 
   def group(name)
     if name.is_a?(Symbol)
-      @groups << "`#{@model.table_name}`.`#{name}`"
+      clone(groups: @groups + ["`#{@model.table_name}`.`#{name}`"])
     elsif name.is_a?(String)
-      @groups << name
+      clone(groups: @groups + [name])
     else
       raise "Didn't know how to group by that argument: #{name}"
     end
-
-    self
   end
 
   def order(name)
     if name.is_a?(Symbol)
-      @orders << "`#{@model.table_name}`.`#{name}`"
+      clone(orders: @orders + ["`#{@model.table_name}`.`#{name}`"])
     elsif name.is_a?(String)
-      @orders << name
+      clone(orders: @orders + [name])
     else
       raise "Didn't know how to order by that argument: #{name}"
     end
-
-    self
   end
 
   def reverse_order
@@ -310,11 +307,11 @@ class BazaModels::Query
   end
 
   def <<(model)
-    raise "No previous model set" unless @_previous_model
-    raise "No relation" unless @_relation
+    raise "No previous model set" unless @previous_model
+    raise "No relation" unless @relation
 
     if model.persisted?
-      model.update_attributes!(@_relation.fetch(:foreign_key) => @_previous_model.id)
+      model.update_attributes!(@relation.fetch(:foreign_key) => @previous_model.id)
     else
       autoloaded_cache_or_create << model
     end
@@ -336,25 +333,6 @@ class BazaModels::Query
     "'#{@db.esc(value)}'"
   end
 
-  def page(some_page)
-    some_page ||= 1
-    offset = (some_page.to_i - 1) * per
-
-    clone.offset(offset).limit(30)
-  end
-
-  def per
-    @per ||= 30
-  end
-
-  def total_pages
-    pages_count = (count.to_f / @per.to_f)
-    pages_count = 1 if pages_count.nan? || pages_count == Float::INFINITY
-    pages_count = pages_count.to_i
-    pages_count = 1 if pages_count == 0
-    pages_count
-  end
-
   def ransack(params)
     BazaModels::Ransacker.new(class: @model, params: params, query: self)
   end
@@ -366,12 +344,12 @@ private
   end
 
   def autoloaded_cache_or_create
-    @_previous_model.autoloads[@_relation.fetch(:relation_name)] ||= []
+    @previous_model.autoloads[@relation.fetch(:relation_name)] ||= []
     autoloaded_cache
   end
 
   def autoloaded_cache
-    @_previous_model.autoloads.fetch(@_relation.fetch(:relation_name))
+    @previous_model.autoloads.fetch(@relation.fetch(:relation_name))
   end
 
   def any_mods?
@@ -379,8 +357,8 @@ private
   end
 
   def any_wheres_other_than_relation?
-    if @_previous_model && @_relation && @wheres.length == 1
-      looks_like = "`#{@_relation.fetch(:table_name)}`.`#{@_relation.fetch(:foreign_key)}` = #{@_previous_model.id}"
+    if @previous_model && @relation && @wheres.length == 1
+      looks_like = "`#{@relation.fetch(:table_name)}`.`#{@relation.fetch(:foreign_key)}` = #{@previous_model.id}"
 
       return false if @wheres.first == looks_like
     end
@@ -389,24 +367,28 @@ private
   end
 
   def autoloaded_on_previous_model?
-    if @_previous_model && @_relation
-      return true if @_previous_model.autoloads.include?(@_relation.fetch(:relation_name))
+    if @previous_model && @relation
+      return true if @previous_model.autoloads.include?(@relation.fetch(:relation_name))
     end
 
     false
   end
 
-  def clone
-    BazaModels::Query.new(
+  def clone(args = {})
+    BazaModels::Query.new({
       model: @model,
-      selects: @selects.dup,
-      wheres: @wheres.dup,
+      selects: @selects,
+      wheres: @wheres,
       joins: @joins.dup,
-      includes: @includes.dup,
-      groups: @groups.dup,
-      orders: @orders.dup,
+      includes: @includes,
+      groups: @groups,
+      offset: @offset,
+      orders: @orders,
+      page: @page,
+      per: @per,
+      previous_model: @previous_model,
       limit: @limit
-    )
+    }.merge(args))
   end
 
   def key_convert(key, value)

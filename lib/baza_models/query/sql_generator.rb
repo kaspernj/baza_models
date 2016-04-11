@@ -3,7 +3,7 @@ class BazaModels::Query::SqlGenerator
     @query = args.fetch(:query)
 
     instance_variables = [
-      :selects, :joins, :wheres, :groups, :orders, :limit, :offset,
+      :selects, :joins, :wheres, :groups, :orders, :per, :limit, :offset,
       :model, :table_name, :reverse_order
     ]
     instance_variables.each do |instance_variable|

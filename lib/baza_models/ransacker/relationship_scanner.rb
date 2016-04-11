@@ -85,21 +85,28 @@ private
     hash
   end
 
-  def add_filter_to_query(args)
+  def add_join_parts
     @ransacker.query = @ransacker.query.joins(join_parts_as_hash) if @join_parts.any?
+  end
 
+  def add_filter_to_query(args)
     column_query = "#{@db.sep_col}#{@db.escape_column(args.fetch(:column_name))}#{@db.sep_col}"
     table_query = "#{@db.sep_table}#{@db.escape_table(@klass.table_name)}#{@db.sep_table}"
 
     if @mode == :cont
+      return if @value.empty?
+      add_join_parts
+
       @ransacker.query = @ransacker
         .query
         .where("#{table_query}.#{column_query} LIKE #{@db.sep_val}%#{@klass.db.esc(@value)}%#{@db.sep_val}")
     elsif @mode == :eq
+      add_join_parts
       @ransacker.query = @ransacker
         .query
         .where("#{table_query}.#{column_query} = #{@db.sep_val}#{@klass.db.esc(@value)}#{@db.sep_val}")
     elsif @mode == :sort
+      add_join_parts
       @ransacker.query = @ransacker
         .query
         .order("#{table_query}.#{column_query} #{@value}")
