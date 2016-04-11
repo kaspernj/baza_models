@@ -17,6 +17,46 @@ describe BazaModels::Query do
     expect(User.ransack(email_cont: "test").result.to_a).to eq [user]
   end
 
+  describe "lt" do
+    it "finds the right models" do
+      expect(User.ransack(id_lt: 3).result.to_a).to eq [user, another_user]
+    end
+
+    it "excludes the right models" do
+      expect(User.ransack(id_lt: 2).result.to_a).to eq [user]
+    end
+  end
+
+  describe "lteq" do
+    it "finds the right models" do
+      expect(User.ransack(id_lteq: 2).result.to_a).to eq [user, another_user]
+    end
+
+    it "excludes the right models" do
+      expect(User.ransack(id_lteq: 1).result.to_a).to eq [user]
+    end
+  end
+
+  describe "gt" do
+    it "finds the right models" do
+      expect(User.ransack(id_gt: 0).result.to_a).to eq [user, another_user]
+    end
+
+    it "excludes the right models" do
+      expect(User.ransack(id_gt: 1).result.to_a).to eq [another_user]
+    end
+  end
+
+  describe "gteq" do
+    it "finds the right models" do
+      expect(User.ransack(id_gteq: 1).result.to_a).to eq [user, another_user]
+    end
+
+    it "excludes the right models" do
+      expect(User.ransack(id_gteq: 2).result.to_a).to eq [another_user]
+    end
+  end
+
   it "s" do
     query = User.ransack(s: "email asc")
 

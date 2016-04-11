@@ -24,10 +24,8 @@ private
     return unless @params
 
     @params.each do |key, value|
-      if (match = key.to_s.match(/\A(.+?)_eq\Z/))
-        filter_eq(match[1], value)
-      elsif (match = key.to_s.match(/\A(.+?)_cont\Z/))
-        filter_cont(match[1], value)
+      if (match = key.to_s.match(/\A(.+?)_(cont|eq|lt|lteq|gt|gteq)\Z/))
+        filter(match[1], value, match[2])
       elsif key.to_s == "s"
         match = value.to_s.match(/\A([A-z_\d]+)\s+(asc|desc)\Z/)
         raise "Couldn't sort-match: #{value}" unless match
@@ -36,19 +34,10 @@ private
     end
   end
 
-  def filter_eq(column_name, value)
+  def filter(column_name, value, mode)
     BazaModels::Ransacker::RelationshipScanner.new(
       column_name: column_name,
-      mode: :eq,
-      ransacker: self,
-      value: value
-    )
-  end
-
-  def filter_cont(column_name, value)
-    BazaModels::Ransacker::RelationshipScanner.new(
-      column_name: column_name,
-      mode: :cont,
+      mode: mode.to_sym,
       ransacker: self,
       value: value
     )
