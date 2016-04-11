@@ -27,6 +27,16 @@ describe "BazaModels::Model" do
     expect(user.to_param).to eq user.id.to_s
   end
 
+  it "#destroy_all" do
+    5.times do |n|
+      User.create! email: "user#{n}@example.com"
+    end
+
+    expect(User.count).to eq 5
+    User.destroy_all
+    expect(User.count).to eq 0
+  end
+
   it "#email=" do
     user.email = "newemail@example.com"
     expect(user.email).to eq "newemail@example.com"
