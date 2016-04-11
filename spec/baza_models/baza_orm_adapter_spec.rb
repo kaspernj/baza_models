@@ -47,6 +47,6 @@ describe BazaModels::Query do
   end
 
   it "#column_names" do
-    expect(User.to_adapter.column_names).to eq %w(id organization_id email email_confirmation created_at updated_at)
+    expect(User.to_adapter.column_names).to eq %w(id organization_id email email_confirmation created_at updated_at admin)
   end
 end

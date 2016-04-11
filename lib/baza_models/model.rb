@@ -91,6 +91,11 @@ class BazaModels::Model
 
   attr_writer :db
 
+  def self.attribute_names
+    init_model
+    @table.columns.map(&:name).map(&:clone)
+  end
+
   def self.db
     @db = nil if @db && @db.closed?
     return @db if @db
@@ -105,6 +110,33 @@ class BazaModels::Model
 
   def self.transaction(&blk)
     @db.transaction(&blk)
+  end
+
+  def self.columns
+    init_model
+    @table.columns.map do |column|
+      BazaModels::Model::ActiveRecordColumnAdapater.new(column)
+    end
+  end
+
+  def self.columns_hash
+    init_model
+    result = {}
+
+    @table.columns do |column|
+      result[column.name] = BazaModels::Model::ActiveRecordColumnAdapater.new(column)
+    end
+
+    result
+  end
+
+  def self.reflections
+    result = {}
+    relationships.each_value do |relationship|
+      result[relationship.fetch(:relation_name).to_s] = BazaModels::Model::Reflection.new(relationship)
+    end
+
+    result
   end
 
   class << self
@@ -134,15 +166,15 @@ class BazaModels::Model
     self
   end
 
-  def self.init_model
-    return if @model_initialized
+  def self.init_model(args = {})
+    return if @model_initialized && !args[:force]
 
     @table = db.tables[table_name]
 
     @__blank_attributes ||= {}
 
     @table.columns do |column|
-      init_attribute_from_column(column)
+      init_attribute_from_column(column) unless @model_initialized
       @__blank_attributes[column.name.to_sym] = nil
     end
 

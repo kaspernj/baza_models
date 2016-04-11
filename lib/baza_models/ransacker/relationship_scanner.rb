@@ -85,26 +85,42 @@ private
     hash
   end
 
-  def add_filter_to_query(args)
+  def add_join_parts
     @ransacker.query = @ransacker.query.joins(join_parts_as_hash) if @join_parts.any?
+  end
 
-    column_query = "#{@db.sep_col}#{@db.escape_column(args.fetch(:column_name))}#{@db.sep_col}"
-    table_query = "#{@db.sep_table}#{@db.escape_table(@klass.table_name)}#{@db.sep_table}"
+  def add_filter_to_query(args)
+    @column_query = "#{@db.sep_col}#{@db.escape_column(args.fetch(:column_name))}#{@db.sep_col}"
+    @table_query = "#{@db.sep_table}#{@db.escape_table(@klass.table_name)}#{@db.sep_table}"
 
-    if @mode == :cont
+    case @mode
+    when :cont
+      return if @value.empty?
+      add_query_with_symbol("LIKE", "%#{@klass.db.esc(@value)}%")
+    when :eq
+      add_query_with_symbol("=")
+    when :lt
+      add_query_with_symbol("<")
+    when :lteq
+      add_query_with_symbol("<=")
+    when :gt
+      add_query_with_symbol(">")
+    when :gteq
+      add_query_with_symbol(">=")
+    when :sort
+      add_join_parts
       @ransacker.query = @ransacker
         .query
-        .where("#{table_query}.#{column_query} LIKE #{@db.sep_val}%#{@klass.db.esc(@value)}%#{@db.sep_val}")
-    elsif @mode == :eq
-      @ransacker.query = @ransacker
-        .query
-        .where("#{table_query}.#{column_query} = #{@db.sep_val}#{@klass.db.esc(@value)}#{@db.sep_val}")
-    elsif @mode == :sort
-      @ransacker.query = @ransacker
-        .query
-        .order("#{table_query}.#{column_query} #{@value}")
+        .order("#{@table_query}.#{@column_query} #{@value}")
     else
       raise "Unknown mode: #{@mode}"
     end
+  end
+
+  def add_query_with_symbol(symbol, value = @value)
+    add_join_parts
+    @ransacker.query = @ransacker
+      .query
+      .where("#{@table_query}.#{@column_query} #{symbol} #{@klass.db.sqlval(value)}")
   end
 end

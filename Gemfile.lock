@@ -19,11 +19,13 @@ GEM
     ast (2.2.0)
     auto_autoloader (0.0.4)
       string-cases
-    baza (0.0.20)
+    baza (0.0.21)
       array_enumerator (~> 0.0.10)
+      auto_autoloader (~> 0.0.1)
       datet (~> 0.0.25)
       event_handler (~> 0.0.0)
-      string-cases (~> 0.0.1)
+      simple_delegate (~> 0.0.2)
+      string-cases (~> 0.0.4)
       wref (~> 0.0.8)
     builder (3.2.2)
     codeclimate-test-reporter (0.4.7)
@@ -108,6 +110,7 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 0.3)
     ruby-progressbar (1.7.5)
+    simple_delegate (0.0.2)
     simplecov (0.10.0)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -129,7 +132,7 @@ PLATFORMS
 DEPENDENCIES
   array_enumerator (>= 0.0.10)
   auto_autoloader (>= 0.0.1)
-  baza (~> 0.0.20)
+  baza (~> 0.0.21)
   best_practice_project!
   bundler (~> 1.0)
   codeclimate-test-reporter
@@ -141,6 +144,7 @@ DEPENDENCIES
   rdoc (~> 3.12)
   rspec (~> 3.3.0)
   rubocop (= 0.37.0)
+  simple_delegate (>= 0.0.2)
   sqlite3
   string-cases (>= 0.0.3)
 

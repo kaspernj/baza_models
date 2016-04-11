@@ -8,6 +8,7 @@ class BazaModels::Ransacker
     @klass = args.fetch(:class)
     @db = @klass.db
     @params = args.fetch(:params)
+    @_registered_params = @params # Support for SimpleFormRansack
     @query = args.fetch(:query)
   end
 
@@ -22,32 +23,25 @@ private
     @add_filters_to_query_executed = true
     return unless @params
 
+    ransackable_scopes = @klass.ransackable_scopes.map(&:to_s) if @klass.respond_to?(:ransackable_scopes)
+
     @params.each do |key, value|
-      if (match = key.to_s.match(/\A(.+?)_eq\Z/))
-        filter_eq(match[1], value)
-      elsif (match = key.to_s.match(/\A(.+?)_cont\Z/))
-        filter_cont(match[1], value)
+      if (match = key.to_s.match(/\A(.+?)_(cont|eq|lt|lteq|gt|gteq)\Z/))
+        filter(match[1], value, match[2])
       elsif key.to_s == "s"
         match = value.to_s.match(/\A([A-z_\d]+)\s+(asc|desc)\Z/)
         raise "Couldn't sort-match: #{value}" unless match
         sort_by(column_name: match[1], sort_mode: match[2])
+      elsif ransackable_scopes && ransackable_scopes.include?(key.to_s)
+        @query = @query.__send__(key, value)
       end
     end
   end
 
-  def filter_eq(column_name, value)
+  def filter(column_name, value, mode)
     BazaModels::Ransacker::RelationshipScanner.new(
       column_name: column_name,
-      mode: :eq,
-      ransacker: self,
-      value: value
-    )
-  end
-
-  def filter_cont(column_name, value)
-    BazaModels::Ransacker::RelationshipScanner.new(
-      column_name: column_name,
-      mode: :cont,
+      mode: mode.to_sym,
       ransacker: self,
       value: value
     )

@@ -14,6 +14,7 @@ class User < BazaModels::Model
   validates_confirmation_of :email, if: :validate_confirmation
 
   scope :admin_roles_scope, -> { joins(:roles).where(roles: {role: "administrator"}) }
+  scope :created_at_since, ->(date) { where("users.created_at >= ?", date) }
 
   before_save do
     self.before_save_block_called ||= 0
@@ -24,6 +25,10 @@ class User < BazaModels::Model
   BazaModels::Model::CALLBACK_TYPES.each do |callback_type|
     attr_reader "#{callback_type}_called"
     __send__(callback_type, :add_callback, callback_type)
+  end
+
+  def self.ransackable_scopes(_auth_object = nil)
+    %i(created_at_since)
   end
 
 private
