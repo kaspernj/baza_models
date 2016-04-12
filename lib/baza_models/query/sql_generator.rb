@@ -2,10 +2,7 @@ class BazaModels::Query::SqlGenerator
   def initialize(args)
     @query = args.fetch(:query)
 
-    instance_variables = [
-      :selects, :joins, :wheres, :groups, :orders, :per, :limit, :offset,
-      :model, :table_name, :reverse_order
-    ]
+    instance_variables = [:db, :selects, :joins, :wheres, :groups, :orders, :per, :limit, :offset, :model, :table_name, :reverse_order]
     instance_variables.each do |instance_variable|
       value = @query.instance_variable_get(:"@#{instance_variable}")
       instance_variable_set(:"@#{instance_variable}", value)
@@ -16,12 +13,12 @@ class BazaModels::Query::SqlGenerator
     sql = "SELECT "
 
     if @selects.empty?
-      sql << "`#{@model.table_name}`.*"
+      sql << "#{@db.sep_table}#{@model.table_name}#{@db.sep_table}.*"
     else
       sql << @selects.join(", ")
     end
 
-    sql << " FROM `#{@model.table_name}`"
+    sql << " FROM #{@db.sep_table}#{@model.table_name}#{@db.sep_table}"
 
     unless @joins.empty?
       @joins.each do |join|

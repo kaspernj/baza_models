@@ -44,8 +44,8 @@ class BazaModels::Model
   end
 
   QUERY_METHODS = [
-    :all, :any?, :destroy_all, :each, :empty?, :none?, :count, :find, :first, :find_first, :last, :length, :size, :select, :includes,
-    :joins, :group, :where, :order, :limit, :to_a, :accessible_by, :ransack
+    :average, :all, :any?, :destroy_all, :each, :empty?, :ids, :maximum, :minimum, :none?, :count, :find, :first, :find_first, :last, :length,
+    :size, :select, :includes, :joins, :group, :where, :order, :pluck, :sum, :limit, :to_a, :accessible_by, :ransack
   ].freeze
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|

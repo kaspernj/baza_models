@@ -7,6 +7,17 @@ describe BazaModels::Query do
   let(:role_user) { Role.new(user: user, role: "user") }
   let(:role_admin) { Role.new(user: user, role: "administrator") }
 
+  context "#average" do
+    it "calculates the average" do
+      5.times do |n|
+        User.create! id: n + 1, email: "user#{n}@example.com"
+      end
+
+      expect(User.average(:id)).to eq 3.0
+      expect(User.where("id >= 4").average(:id)).to eq 4.5
+    end
+  end
+
   context "#where" do
     before do
       user.save!
@@ -35,6 +46,17 @@ describe BazaModels::Query do
 
       expect(query.to_a).to eq [user]
       expect(query.to_sql).to eq "SELECT `users`.* FROM `users` WHERE `users`.`email` IN ('test@example.com')"
+    end
+  end
+
+  context "#ids" do
+    it "returns the ids of the models" do
+      5.times do |n|
+        User.create! id: n + 1, email: "user#{n}@example.com"
+      end
+
+      expect(User.ids).to eq [1, 2, 3, 4, 5]
+      expect(User.where("id >= 3").ids).to eq [3, 4, 5]
     end
   end
 
@@ -133,10 +155,46 @@ describe BazaModels::Query do
     expect(Role.last).to eq role_admin
   end
 
+  describe "#maximum" do
+    it "returns the maximum" do
+      5.times do |n|
+        User.create! id: n + 1, email: "user#{n}@example.com"
+      end
+
+      expect(User.maximum(:id)).to eq 5
+      expect(User.where("id < 4").maximum(:id)).to eq 3
+    end
+  end
+
+  describe "#minimum" do
+    it "returns the minimum" do
+      5.times do |n|
+        User.create! id: n + 1, email: "user#{n}@example.com"
+      end
+
+      expect(User.minimum(:id)).to eq 1
+      expect(User.where("id >= 3").minimum(:id)).to eq 3
+    end
+  end
+
   describe "#order" do
     it "converts symbols to escaped strings" do
       sql = Role.order(:role).to_sql
       expect(sql).to end_with "ORDER BY `roles`.`role`"
+    end
+  end
+
+  describe "#pluck" do
+    it "returns the given columns in an array" do
+      5.times do |n|
+        User.create! id: n + 1, email: "user#{n + 1}@example.com"
+      end
+
+      expect(User.pluck(:id, :email)).to eq [
+        [1, "user1@example.com"], [2, "user2@example.com"], [3, "user3@example.com"], [4, "user4@example.com"], [5, "user5@example.com"]
+      ]
+      expect(User.where("id >= 4").pluck(:id, :email)).to eq [[4, "user4@example.com"], [5, "user5@example.com"]]
+      expect(User.pluck(:id)).to eq [1, 2, 3, 4, 5]
     end
   end
 
@@ -159,6 +217,17 @@ describe BazaModels::Query do
     it "reverses symbols" do
       sql = Role.order(:role).reverse_order.to_sql
       expect(sql).to end_with " DESC"
+    end
+  end
+
+  describe "#sum" do
+    it "returns the sum" do
+      5.times do |n|
+        User.create! id: n + 1, email: "user#{n}@example.com"
+      end
+
+      expect(User.sum(:id)).to eq 15.0
+      expect(User.where("id >= 3").sum(:id)).to eq 12.0
     end
   end
 
