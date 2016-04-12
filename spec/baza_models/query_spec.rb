@@ -190,7 +190,9 @@ describe BazaModels::Query do
         User.create! id: n + 1, email: "user#{n + 1}@example.com"
       end
 
-      expect(User.pluck(:id, :email)).to eq [[1, "user1@example.com"], [2, "user2@example.com"], [3, "user3@example.com"], [4, "user4@example.com"], [5, "user5@example.com"]]
+      expect(User.pluck(:id, :email)).to eq [
+        [1, "user1@example.com"], [2, "user2@example.com"], [3, "user3@example.com"], [4, "user4@example.com"], [5, "user5@example.com"]
+      ]
       expect(User.where("id >= 4").pluck(:id, :email)).to eq [[4, "user4@example.com"], [5, "user5@example.com"]]
       expect(User.pluck(:id)).to eq [1, 2, 3, 4, 5]
     end
