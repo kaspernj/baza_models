@@ -41,8 +41,27 @@ class BazaModels::Query
     end
   end
 
+  def average(column_name)
+    query = select("AVG(#{table_sql}.#{column_sql(column_name)}) AS average")
+    @db.query(query.to_sql).fetch.fetch(:average).to_f
+  end
+
   def empty?
     !any?
+  end
+
+  def ids
+    pluck(:id)
+  end
+
+  def maximum(column_name)
+    query = select("MAX(#{table_sql}.#{column_sql(column_name)}) AS maximum")
+    @db.query(query.to_sql).fetch.fetch(:maximum).to_f
+  end
+
+  def minimum(column_name)
+    query = select("MIN(#{table_sql}.#{column_sql(column_name)}) AS minimum")
+    @db.query(query.to_sql).fetch.fetch(:minimum).to_f
   end
 
   def none?
@@ -73,6 +92,26 @@ class BazaModels::Query
   def size
     # TODO: This should also take counter caching into account
     length
+  end
+
+  def pluck(*column_names)
+    results = @db.query(select(column_names).to_sql).to_a
+    results.map do |result|
+      if column_names.length == 1
+        result.fetch(column_names.first)
+      else
+        new_result = []
+        column_names.each do |column_name|
+          new_result << result.fetch(column_name)
+        end
+        new_result
+      end
+    end
+  end
+
+  def sum(column_name)
+    query = select("SUM(#{table_sql}.#{column_sql(column_name)}) AS sum")
+    @db.query(query.to_sql).fetch.fetch(:sum).to_f
   end
 
   def new(attributes)
@@ -428,6 +467,14 @@ private
     else
       "= #{@db.sqlval(value)}"
     end
+  end
+
+  def table_sql
+    @table_sql ||= "#{@db.sep_table}#{@db.escape_table(@model.table_name)}#{@db.sep_table}"
+  end
+
+  def column_sql(column_name)
+    "#{@db.sep_col}#{@db.escape_column(column_name)}#{@db.sep_col}"
   end
 
   def method_missing(method_name, *args, &blk)
