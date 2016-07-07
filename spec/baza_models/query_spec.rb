@@ -220,6 +220,17 @@ describe BazaModels::Query do
     end
   end
 
+  describe "#select" do
+    it "selects extra columns" do
+      user.save!
+      role_user.save!
+
+      role = Role.joins(:user).select("roles.*, users.email AS user_email").first
+
+      expect(role.user_email).to eq "test@example.com"
+    end
+  end
+
   describe "#sum" do
     it "returns the sum" do
       5.times do |n|
