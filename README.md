@@ -79,6 +79,7 @@ User.to_enum
 User.first
 User.last
 User.order(:id).reverse_order
+Role.joins(:user).select("roles.*, users.email AS user_email").first.user_email #=> "test@example.com"
 ```
 
 ### Ransack
