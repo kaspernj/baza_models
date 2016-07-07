@@ -44,8 +44,8 @@ class BazaModels::Model
   end
 
   QUERY_METHODS = [
-    :average, :all, :any?, :destroy_all, :each, :empty?, :ids, :maximum, :minimum, :none?, :count, :find, :first, :find_first, :last, :length,
-    :size, :select, :includes, :joins, :group, :where, :order, :pluck, :sum, :limit, :to_a, :accessible_by, :ransack
+    :average, :all, :any?, :destroy_all, :each, :empty?, :ids, :maximum, :minimum, :none?, :count, :find, :first, :find_first, :last,
+    :length, :size, :select, :includes, :joins, :group, :where, :order, :pluck, :preloads, :sum, :limit, :to_a, :accessible_by, :ransack
   ].freeze
   QUERY_METHODS.each do |query_method|
     (class << self; self; end).__send__(:define_method, query_method) do |*args, &blk|
@@ -365,8 +365,6 @@ protected
         if respond_to?(set_method_name)
           __send__(set_method_name, attribute_value)
           next
-        else
-          raise "Unknown attribute: #{attribute_name}"
         end
       end
 
@@ -374,5 +372,10 @@ protected
     end
 
     new_attributes
+  end
+
+  def method_missing(method_name, *args, &blk)
+    return @data.fetch(method_name) if @data.key?(method_name)
+    super
   end
 end
