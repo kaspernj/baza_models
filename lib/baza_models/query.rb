@@ -379,8 +379,8 @@ class BazaModels::Query
     "'#{@db.esc(value)}'"
   end
 
-  def ransack(params)
-    BazaModels::Ransacker.new(class: @model, params: params, query: self)
+  def ransack(params, args = {})
+    BazaModels::Ransacker.new(class: @model, params: params, query: self, args: args)
   end
 
 private
