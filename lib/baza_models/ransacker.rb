@@ -5,16 +5,22 @@ class BazaModels::Ransacker
   attr_reader :db, :klass
 
   def initialize(args)
+    @args = args.fetch(:args)
     @klass = args.fetch(:class)
     @db = @klass.db
     @params = args.fetch(:params)
     @_registered_params = @params # Support for SimpleFormRansack
     @query = args.fetch(:query)
+    @search_key = @args[:search_key] || :q
   end
 
   def result
     add_filters_to_query unless @add_filters_to_query_executed
     @query
+  end
+
+  def context
+    BazaModels::Ransacker::Context.new(search_key: @search_key)
   end
 
 private
