@@ -28,13 +28,10 @@ GEM
       string-cases (~> 0.0.4)
       wref (~> 0.0.8)
     builder (3.2.2)
-    codeclimate-test-reporter (0.4.7)
-      simplecov (>= 0.7.1, < 1.0.0)
     datet (0.0.25)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
-    docile (1.1.5)
     event_handler (0.0.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
@@ -111,11 +108,6 @@ GEM
       unicode-display_width (~> 0.3)
     ruby-progressbar (1.7.5)
     simple_delegate (0.0.2)
-    simplecov (0.10.0)
-      docile (~> 1.1.0)
-      json (~> 1.8)
-      simplecov-html (~> 0.10.0)
-    simplecov-html (0.10.0)
     sqlite3 (1.3.10)
     string-cases (0.0.4)
     thread_safe (0.3.5)
@@ -135,7 +127,6 @@ DEPENDENCIES
   baza (~> 0.0.21)
   best_practice_project!
   bundler (~> 1.0)
-  codeclimate-test-reporter
   factory_girl
   html_gen (>= 0.0.12)
   jdbc-sqlite3
@@ -149,4 +140,4 @@ DEPENDENCIES
   string-cases (>= 0.0.3)
 
 BUNDLED WITH
-   1.11.2
+   1.13.7
