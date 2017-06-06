@@ -7,6 +7,10 @@ describe BazaModels::ClassTranslation do
     expect(User.model_name.human).to eq "User"
   end
 
+  it "#name" do
+    expect(User.model_name.name).to eq "User"
+  end
+
   it "#param_key" do
     expect(User.model_name.param_key).to eq "user"
   end

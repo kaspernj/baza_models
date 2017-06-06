@@ -39,6 +39,10 @@ class BazaModels::ClassTranslation
     @klass.name.split("::").last
   end
 
+  def name
+    @klass.name
+  end
+
   def param_key
     @param_key ||= class_name_snake
   end

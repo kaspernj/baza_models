@@ -24,5 +24,3 @@ group :development do
   gem "rubocop", "0.37.0", require: false
   gem "orm_adapter", require: false
 end
-
-gem "codeclimate-test-reporter", group: :test, require: nil
