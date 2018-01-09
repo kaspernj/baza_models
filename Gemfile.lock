@@ -63,8 +63,8 @@ GEM
       rake
       rdoc
       semver2
-    json (1.8.3)
-    json (1.8.3-java)
+    json (1.8.6)
+    json (1.8.6-java)
     jwt (1.5.6)
     mime-types (2.99.3)
     mini_portile2 (2.2.0)
@@ -147,4 +147,4 @@ DEPENDENCIES
   string-cases (>= 0.0.3)
 
 BUNDLED WITH
-   1.13.7
+   1.16.1
