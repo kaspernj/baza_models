@@ -19,7 +19,7 @@ GEM
     ast (2.2.0)
     auto_autoloader (0.0.4)
       string-cases
-    baza (0.0.21)
+    baza (0.0.31)
       array_enumerator (~> 0.0.10)
       auto_autoloader (~> 0.0.1)
       datet (~> 0.0.25)
@@ -131,7 +131,7 @@ PLATFORMS
 DEPENDENCIES
   array_enumerator (>= 0.0.10)
   auto_autoloader (>= 0.0.1)
-  baza (~> 0.0.21)
+  baza (~> 0.0.31)
   best_practice_project!
   bundler (~> 1.0)
   factory_girl

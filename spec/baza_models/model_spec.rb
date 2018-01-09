@@ -211,6 +211,13 @@ describe "BazaModels::Model" do
     expect(user.email).to eq "test@example.com"
   end
 
+  describe "#to_a" do
+    it "should not respond to it, because it will fuck up Array(ModelClass)" do
+      expect { User.to_a }.to raise_error(NoMethodError)
+      expect { User.to_ary }.to raise_error(NoMethodError)
+    end
+  end
+
   describe "#attribute_before_last_save" do
     it "returns the value as it was before the save" do
       user.save!

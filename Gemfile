@@ -5,7 +5,7 @@ source "http://rubygems.org"
 
 gem "array_enumerator", ">= 0.0.10"
 gem "auto_autoloader", ">= 0.0.1"
-gem "baza", "~> 0.0.21"
+gem "baza", "~> 0.0.31"
 gem "html_gen", ">= 0.0.12", require: false
 gem "simple_delegate", ">= 0.0.2"
 gem "string-cases", ">= 0.0.3"
