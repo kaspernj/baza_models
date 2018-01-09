@@ -384,7 +384,7 @@ protected
   end
 
   def attribute_before_last_save(attribute_name)
-    @before_last_save.fetch(attribute_name) if @before_last_save.key?(attribute_name)
+    return @before_last_save.fetch(attribute_name) if @before_last_save.key?(attribute_name)
     @data.fetch(attribute_name)
   end
 

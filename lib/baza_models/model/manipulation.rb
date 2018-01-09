@@ -10,9 +10,11 @@ module BazaModels::Model::Manipulation
       self.updated_at = Time.now if changed? && has_attribute?(:updated_at)
 
       if new_record
+        @before_last_save = @data
         status = create
       else
         fire_callbacks(:before_update)
+        @before_last_save = @data
         db.update(table_name, @changes, id: id) if changed?
         fire_callbacks(:after_update)
         status = true
@@ -22,7 +24,6 @@ module BazaModels::Model::Manipulation
 
       @changes = {}
       @new_record = false
-      @before_last_save = data
 
       reload
 
@@ -82,6 +83,10 @@ module BazaModels::Model::Manipulation
   end
 
   def update_attributes!(attributes)
+    update!(attributes)
+  end
+
+  def update!(attributes)
     raise BazaModels::Errors::InvalidRecord, @errors.full_messages.join(". ") unless update_attributes(attributes)
   end
 
