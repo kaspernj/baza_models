@@ -22,6 +22,10 @@ module BazaModels::Model::Manipulation
 
       @changes = {}
       @new_record = false
+      @before_last_save = data
+
+      binding.pry
+
       reload
 
       fire_callbacks(:after_save)
