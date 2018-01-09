@@ -210,4 +210,22 @@ describe "BazaModels::Model" do
     user = User.new("email" => "test@example.com")
     expect(user.email).to eq "test@example.com"
   end
+
+  describe "#attribute_before_last_save" do
+    it "returns the value as it was before the save" do
+      user.save!
+
+      user.update!(email: "test2@example.com")
+
+      expect(user.email_before_last_save).to eq "test@example.com"
+    end
+  end
+
+  describe "#will_save_change_to_attribute?" do
+    it "returns true if the attribute will change" do
+      user.save!
+      user.email = "test2@example.com"
+      expect(user.will_save_change_to_email?).to eq true
+    end
+  end
 end

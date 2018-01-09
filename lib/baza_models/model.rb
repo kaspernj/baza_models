@@ -57,6 +57,7 @@ class BazaModels::Model
     self.class.init_model
 
     reset_errors
+    @before_last_save = {}
     @changes = {}
 
     if args[:init]
@@ -315,6 +316,14 @@ protected
         false
       end
     end
+
+    define_method("will_save_change_to_#{column_name}?") do
+      will_save_change_to_attribute?(column_name)
+    end
+
+    define_method("#{column_name}_before_last_save") do
+      attribute_before_last_save(column_name)
+    end
   end
 
   def reset_errors
@@ -333,7 +342,7 @@ protected
         pass_args = callback_data.fetch(:args)
         pass_args = [] if method_obj.arity == 0
 
-        __send__(callback_data[:method_name], *pass_args)
+        __send__(callback_data.fetch(:method_name), *pass_args)
       else
         raise "Didn't know how to perform callbacks for #{name}"
       end
@@ -372,6 +381,16 @@ protected
     end
 
     new_attributes
+  end
+
+  def attribute_before_last_save(attribute_name)
+    return @before_last_save.fetch(attribute_name) if @before_last_save.key?(attribute_name)
+    @data.fetch(attribute_name)
+  end
+
+  def will_save_change_to_attribute?(attribute_name)
+    return true if @changes.key?(attribute_name) && @changes[attribute_name] != data[attribute_name]
+    false
   end
 
   def method_missing(method_name, *args, &blk)
