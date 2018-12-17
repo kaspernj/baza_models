@@ -193,7 +193,7 @@ class BazaModels::Query
       new_where = "(#{args.shift})"
 
       args.each do |arg|
-        new_where.sub!("?", @db.sqlval(arg))
+        new_where.sub!("?", @db.quote_value(arg))
       end
 
       new_wheres << new_where
@@ -208,7 +208,7 @@ class BazaModels::Query
         elsif arg.is_a?(TrueClass)
           arg = "1"
         else
-          arg = @db.sqlval(arg)
+          arg = @db.quote_value(arg)
         end
 
         str.sub!("?", arg)
@@ -459,13 +459,13 @@ private
           sql << ", " unless first
         end
 
-        sql << @db.sqlval(val_i)
+        sql << @db.quote_value(val_i)
       end
 
       sql << ")"
       sql
     else
-      "= #{@db.sqlval(value)}"
+      "= #{@db.quote_value(value)}"
     end
   end
 
