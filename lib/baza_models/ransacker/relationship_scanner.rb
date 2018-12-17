@@ -121,6 +121,6 @@ private
     add_join_parts
     @ransacker.query = @ransacker
       .query
-      .where("#{@table_query}.#{@column_query} #{symbol} #{@klass.db.sqlval(value)}")
+      .where("#{@table_query}.#{@column_query} #{symbol} #{@klass.db.quote_value(value)}")
   end
 end

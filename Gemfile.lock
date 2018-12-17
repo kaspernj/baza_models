@@ -5,6 +5,19 @@ GIT
     best_practice_project (0.0.9)
       auto_autoloader
 
+GIT
+  remote: https://github.com/kaspernj/baza.git
+  revision: 18f3235a9a57319fceceea191df578de95bd46a7
+  specs:
+    baza (0.0.36)
+      array_enumerator (~> 0.0.10)
+      auto_autoloader (~> 0.0.5)
+      datet (~> 0.0.25)
+      event_handler (~> 0.0.0)
+      simple_delegate (~> 0.0.2)
+      string-cases (~> 0.0.4)
+      wref (~> 0.0.8)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -17,16 +30,8 @@ GEM
     addressable (2.4.0)
     array_enumerator (0.0.10)
     ast (2.2.0)
-    auto_autoloader (0.0.4)
+    auto_autoloader (0.0.5)
       string-cases
-    baza (0.0.31)
-      array_enumerator (~> 0.0.10)
-      auto_autoloader (~> 0.0.1)
-      datet (~> 0.0.25)
-      event_handler (~> 0.0.0)
-      simple_delegate (~> 0.0.2)
-      string-cases (~> 0.0.4)
-      wref (~> 0.0.8)
     builder (3.2.3)
     datet (0.0.25)
     descendants_tracker (0.0.4)
@@ -131,7 +136,7 @@ PLATFORMS
 DEPENDENCIES
   array_enumerator (>= 0.0.10)
   auto_autoloader (>= 0.0.1)
-  baza (~> 0.0.31)
+  baza!
   best_practice_project!
   bundler (~> 1.0)
   factory_girl
@@ -147,4 +152,4 @@ DEPENDENCIES
   string-cases (>= 0.0.3)
 
 BUNDLED WITH
-   1.16.1
+   1.16.2
