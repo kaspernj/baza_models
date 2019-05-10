@@ -1,10 +1,8 @@
 module BazaModels::Helpers::RansackerHelper
-  PERMITTED_PARAMS = [:authenticity_token, :commit, :page, :utf8, q: {}].freeze
-
   def bm_paginate_content(collection)
     require "html_gen"
 
-    new_params = params.dup.permit(*PERMITTED_PARAMS)
+    new_params = params.dup.permit!
     current_page = collection.page
     total_pages = collection.total_pages
 
@@ -44,7 +42,7 @@ module BazaModels::Helpers::RansackerHelper
 
     label = ransacker.klass.human_attribute_name(attribute) if label.to_s.strip.empty?
 
-    new_params = params.clone.permit(*PERMITTED_PARAMS)
+    new_params = params.clone
     new_params[:q] ||= {}
 
     sort_asc = "#{attribute} asc"
@@ -54,9 +52,8 @@ module BazaModels::Helpers::RansackerHelper
     else
       new_params[:q][:s] = sort_asc
     end
-    new_params[:q] = new_params[:q].permit(:s)
 
-    href = url_for(new_params)
+    href = url_for(new_params.permit!)
 
     element = HtmlGen::Element.new(:a, str: label, attr: {href: href})
     element.html
