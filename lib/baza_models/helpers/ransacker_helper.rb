@@ -2,7 +2,7 @@ module BazaModels::Helpers::RansackerHelper
   def bm_paginate_content(collection)
     require "html_gen"
 
-    new_params = params.dup
+    new_params = params.dup.permit!
     current_page = collection.page
     total_pages = collection.total_pages
 
@@ -53,7 +53,7 @@ module BazaModels::Helpers::RansackerHelper
       new_params[:q][:s] = sort_asc
     end
 
-    href = url_for(new_params)
+    href = url_for(new_params.permit!)
 
     element = HtmlGen::Element.new(:a, str: label, attr: {href: href})
     element.html
