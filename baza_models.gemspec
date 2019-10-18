@@ -72,7 +72,7 @@ Gem::Specification.new do |s|
     "spec/baza_models/autoloader_spec.rb",
     "spec/baza_models/baza_orm_adapter_spec.rb",
     "spec/baza_models/class_translation_spec.rb",
-    "spec/baza_models/factory_bot_spec.rb",
+    "spec/baza_models/factory_girl_spec.rb",
     "spec/baza_models/model/belongs_to_relations_spec.rb",
     "spec/baza_models/model/custom_validations_spec.rb",
     "spec/baza_models/model/delgation_spec.rb",
@@ -165,3 +165,4 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<sqlite3>.freeze, [">= 0"])
   end
 end
+
