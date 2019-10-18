@@ -15,7 +15,7 @@ group :development, :test do
   gem "bundler"
   gem "factory_girl"
   gem "jdbc-sqlite3", platform: :jruby
-  gem "jeweler"
+  gem "juwelier"
   gem "orm_adapter", require: false
   gem "rdoc"
   gem "rspec"
