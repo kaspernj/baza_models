@@ -3,22 +3,22 @@ source "http://rubygems.org"
 # Example:
 #   gem "activesupport", ">= 2.3.5"
 
-gem "array_enumerator", ">= 0.0.10"
-gem "auto_autoloader", ">= 0.0.1"
+gem "array_enumerator"
+gem "auto_autoloader"
 gem "baza", git: "https://github.com/kaspernj/baza.git"
-gem "html_gen", ">= 0.0.12", require: false
-gem "simple_delegate", ">= 0.0.2"
-gem "string-cases", ">= 0.0.3"
+gem "html_gen", require: false
+gem "simple_delegate"
+gem "string-cases"
 
 group :development, :test do
   gem "best_practice_project", require: false, github: "kaspernj/best_practice_project"
-  gem "bundler", "~> 1.0"
+  gem "bundler"
   gem "factory_girl"
   gem "jdbc-sqlite3", platform: :jruby
-  gem "jeweler", "2.3.6"
+  gem "jeweler"
   gem "orm_adapter", require: false
-  gem "rdoc", "~> 3.12"
-  gem "rspec", "3.6.0"
-  gem "rubocop", "0.37.0", require: false
+  gem "rdoc"
+  gem "rspec"
+  gem "rubocop", require: false
   gem "sqlite3", platform: :ruby
 end
