@@ -72,7 +72,7 @@ Gem::Specification.new do |s|
     "spec/baza_models/autoloader_spec.rb",
     "spec/baza_models/baza_orm_adapter_spec.rb",
     "spec/baza_models/class_translation_spec.rb",
-    "spec/baza_models/factory_girl_spec.rb",
+    "spec/baza_models/factory_bot_spec.rb",
     "spec/baza_models/model/belongs_to_relations_spec.rb",
     "spec/baza_models/model/custom_validations_spec.rb",
     "spec/baza_models/model/delgation_spec.rb",
@@ -120,7 +120,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<string-cases>.freeze, [">= 0"])
       s.add_development_dependency(%q<best_practice_project>.freeze, [">= 0"])
       s.add_development_dependency(%q<bundler>.freeze, [">= 0"])
-      s.add_development_dependency(%q<factory_girl>.freeze, [">= 0"])
+      s.add_development_dependency(%q<factory_bot>.freeze, [">= 0"])
       s.add_development_dependency(%q<jdbc-sqlite3>.freeze, [">= 0"])
       s.add_development_dependency(%q<juwelier>.freeze, [">= 0"])
       s.add_development_dependency(%q<orm_adapter>.freeze, [">= 0"])
@@ -137,7 +137,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<string-cases>.freeze, [">= 0"])
       s.add_dependency(%q<best_practice_project>.freeze, [">= 0"])
       s.add_dependency(%q<bundler>.freeze, [">= 0"])
-      s.add_dependency(%q<factory_girl>.freeze, [">= 0"])
+      s.add_dependency(%q<factory_bot>.freeze, [">= 0"])
       s.add_dependency(%q<jdbc-sqlite3>.freeze, [">= 0"])
       s.add_dependency(%q<juwelier>.freeze, [">= 0"])
       s.add_dependency(%q<orm_adapter>.freeze, [">= 0"])
@@ -155,7 +155,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<string-cases>.freeze, [">= 0"])
     s.add_dependency(%q<best_practice_project>.freeze, [">= 0"])
     s.add_dependency(%q<bundler>.freeze, [">= 0"])
-    s.add_dependency(%q<factory_girl>.freeze, [">= 0"])
+    s.add_dependency(%q<factory_bot>.freeze, [">= 0"])
     s.add_dependency(%q<jdbc-sqlite3>.freeze, [">= 0"])
     s.add_dependency(%q<juwelier>.freeze, [">= 0"])
     s.add_dependency(%q<orm_adapter>.freeze, [">= 0"])

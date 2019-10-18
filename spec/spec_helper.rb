@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require "rspec"
 require "baza_models"
-require "factory_girl"
+require "factory_bot"
 
 Dir.foreach("spec/test_classes") do |file|
   require "test_classes/#{file}" if file.end_with?(".rb")
@@ -18,5 +18,5 @@ end
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 end

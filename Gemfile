@@ -13,7 +13,7 @@ gem "string-cases"
 group :development, :test do
   gem "best_practice_project", require: false, github: "kaspernj/best_practice_project"
   gem "bundler"
-  gem "factory_girl"
+  gem "factory_bot"
   gem "jdbc-sqlite3", platform: :jruby
   gem "juwelier"
   gem "orm_adapter", require: false
