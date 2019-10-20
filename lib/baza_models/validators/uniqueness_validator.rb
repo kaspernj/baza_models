@@ -2,10 +2,8 @@ class BazaModels::Validators::UniquenessValidator < BazaModels::Validators::Base
   def validate(model, value)
     query_same = model.class.where(attribute_name => value)
 
-    if scope
-      scope.each do |scope_part|
-        query_same = query_same.where(scope_part => model.__send__(scope_part))
-      end
+    scope&.each do |scope_part|
+      query_same = query_same.where(scope_part => model.__send__(scope_part))
     end
 
     model.errors.add(attribute_name, "isn't unique") if query_same.any?

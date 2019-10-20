@@ -36,6 +36,7 @@ private
 
     relationship_pair = @model.relationships.detect { |key, _value| key == argument }
     raise "Could not find a relationship on #{@model.name} by that name: #{argument}" unless relationship_pair
+
     relationship = relationship_pair[1]
 
     table_name = relationship.fetch(:table_name)
@@ -60,6 +61,7 @@ private
 
       relationship_pair = @model.relationships.detect { |relationship_name, _relationship| relationship_name == key }
       raise "Could not find a relationship on #{@model.name} by that name: #{value}" unless relationship_pair
+
       relationship = relationship_pair[1]
 
       BazaModels::Query::Inspector.new(

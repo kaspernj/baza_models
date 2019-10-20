@@ -3,13 +3,54 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
+  TargetRubyVersion: 2.5
   Exclude:
     - db/schema.rb
     - spec/dummy/db/schema.rb
+    - baza_models.gemspec
 
-# https://github.com/AtomLinter/linter-rubocop/issues/2
-Style/FileName:
+require:
+  - rubocop-performance
+  - rubocop-rspec
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Layout/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/AlignArguments:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+Layout/EmptyLines:
   Enabled: false
+
+Layout/EmptyLinesAroundArguments:
+  Enabled: false
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
+# Metrics/AbcSize:
+#   Max: 25
+
+Metrics/BlockLength:
+  Enabled: false
+
+# Metrics/ClassLength:
+# $  Max: 250
 
 # Metrics/CyclomaticComplexity:
 #   Max: 10
@@ -20,21 +61,38 @@ Metrics/LineLength:
 # Metrics/MethodLength:
 #   Max: 50
 
-# Metrics/AbcSize:
-#   Max: 25
+# Metrics/PerceivedComplexity:
+#   Max: 10
 
-# Metrics/ClassLength:
-#   Max: 250
-
-# .find_each is not the same as .each
-Rails/FindEach:
+RSpec/AnyInstance:
   Enabled: false
 
-Style/AccessModifierIndentation:
-  EnforcedStyle: outdent
+RSpec/ContextWording:
+  Enabled: false
 
-Style/AlignParameters:
-  EnforcedStyle: with_fixed_indentation
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
@@ -45,18 +103,24 @@ Style/ConditionalAssignment:
 Style/Documentation:
   Enabled: false
 
-Style/EmptyLines:
+Style/FrozenStringLiteralComment:
   Enabled: false
 
 # Will report offences for many places that are much more readable without using a guard clause
 Style/GuardClause:
   Enabled: false
 
-Style/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
+Style/Lambda:
+  Enabled: false
 
-Style/MultilineOperationIndentation:
-  EnforcedStyle: indented
+Style/LambdaCall:
+  Enabled: false
+
+Style/MultipleComparison:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
@@ -70,16 +134,12 @@ Style/NilComparison:
 Style/SignalException:
   EnforcedStyle: only_raise
 
-Style/MultilineOperationIndentation:
-  EnforcedStyle: indented
-
-Style/SpaceInsideHashLiteralBraces:
-  EnforcedStyle: no_space
+Style/SymbolArray:
+  Enabled: false
 
 Style/TrivialAccessors:
   ExactNameMatch: true
   Enabled: true
 
-# Disabled on purpose: https://github.com/bbatsov/rubocop/issues/1758
-Style/ClosingParenthesisIndentation:
+Style/WordArray:
   Enabled: false

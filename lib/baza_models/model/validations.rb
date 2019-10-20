@@ -22,6 +22,7 @@ module BazaModels::Model::Validations
 
       validators[attribute_name].each do |validator|
         next unless validator.fire?(self)
+
         validator.validate(self, attribute_value)
       end
     end

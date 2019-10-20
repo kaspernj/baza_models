@@ -53,7 +53,8 @@ module DatabaseHelper
         {name: :updated_at, type: :datetime},
         {name: :admin, type: :tinyint}
       ],
-      indexes: [:organization_id, :email])
+      indexes: [:organization_id, :email]
+    )
 
     @db.tables.create(
       :user_passports,
@@ -64,7 +65,8 @@ module DatabaseHelper
       ],
       indexes: [
         :user_id
-      ])
+      ]
+    )
 
     @db.tables.create(
       :persons,
@@ -72,7 +74,8 @@ module DatabaseHelper
         {name: :id, type: :int, primarykey: true, autoincr: true},
         {name: :user_id, type: :int}
       ],
-      indexes: [:user_id])
+      indexes: [:user_id]
+    )
 
     @db.tables.create(
       :roles,

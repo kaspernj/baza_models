@@ -125,6 +125,7 @@ private
       orig_model = @models.detect { |array_model| array_model.id == orig_model_id }
 
       raise "Already autoloaded?" if orig_model.autoloads.key?(autoload_name)
+
       orig_model.autoloads[autoload_name] = model
 
       result.fetch(:models) << model

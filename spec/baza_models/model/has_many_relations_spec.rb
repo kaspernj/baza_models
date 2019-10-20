@@ -45,7 +45,7 @@ describe BazaModels::Model::HasManyRelations do
     end
   end
 
-  context "#<<" do
+  describe "#<<" do
     it "adds models to persisted parent" do
       organization.save!
       organization.users << User.create!(email: "test@example.com")
