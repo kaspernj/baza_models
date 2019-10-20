@@ -75,17 +75,21 @@ module BazaModels::Model::Manipulation
     end
   end
 
-  def update_attributes(attributes)
+  def update(attributes)
     assign_attributes(attributes)
     save
   end
 
-  def update_attributes!(attributes)
-    update!(attributes)
-  end
-
   def update!(attributes)
     raise BazaModels::Errors::InvalidRecord, @errors.full_messages.join(". ") unless update_attributes(attributes)
+  end
+
+  def update_attributes(attributes)
+    update(attributes)
+  end
+
+  def update_attributes!(attributes)
+    update!(attributes)
   end
 
   def assign_attributes(attributes)
