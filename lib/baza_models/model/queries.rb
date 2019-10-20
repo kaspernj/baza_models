@@ -7,6 +7,7 @@ module BazaModels::Model::Queries
     def find(id)
       row = db.select(table_name, {id: id}, limit: 1).fetch
       raise BazaModels::Errors::RecordNotFound, "Record not found by ID: #{id}" unless row
+
       new(row, init: true)
     end
 
@@ -23,6 +24,7 @@ module BazaModels::Model::Queries
     def find_or_initialize_by(data)
       model = find_by(data)
       return model if model
+
       new(data)
     end
 

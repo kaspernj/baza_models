@@ -69,7 +69,8 @@ class BazaModels::Query
   end
 
   def count
-    if @previous_model && @previous_model.new_record?
+    if
+@previous_model&.new_record?
       autoloaded_cache_or_create.length
     else
       query = clone(selects: [])
@@ -376,6 +377,7 @@ class BazaModels::Query
 
   def sanitize_sql(value)
     return value if value.is_a?(Array) || value.is_a?(Integer) || value.is_a?(Integer)
+
     "'#{@db.esc(value)}'"
   end
 
@@ -439,11 +441,13 @@ private
 
   def key_convert(key, value)
     return "#{key}_id" if value.is_a?(BazaModels::Model)
+
     key
   end
 
   def value_convert(value)
     return value.id if value.is_a?(BazaModels::Model)
+
     value
   end
 

@@ -7,7 +7,7 @@ describe BazaModels::Query do
   let(:role_user) { Role.new(user: user, role: "user") }
   let(:role_admin) { Role.new(user: user, role: "administrator") }
 
-  context "#average" do
+  describe "#average" do
     it "calculates the average" do
       5.times do |n|
         User.create! id: n + 1, email: "user#{n}@example.com"
@@ -18,7 +18,7 @@ describe BazaModels::Query do
     end
   end
 
-  context "#where" do
+  describe "#where" do
     before do
       user.save!
     end
@@ -49,7 +49,7 @@ describe BazaModels::Query do
     end
   end
 
-  context "#ids" do
+  describe "#ids" do
     it "returns the ids of the models" do
       5.times do |n|
         User.create! id: n + 1, email: "user#{n}@example.com"
@@ -60,7 +60,7 @@ describe BazaModels::Query do
     end
   end
 
-  context "#joins" do
+  describe "#joins" do
     before do
       user.save!
       role_admin.save!
@@ -94,7 +94,7 @@ describe BazaModels::Query do
     end
   end
 
-  context "#group, #order" do
+  describe "#group, #order" do
     before do
       user
       role_user
@@ -109,7 +109,7 @@ describe BazaModels::Query do
       roles = Role.group(:role).order(:role).to_a
 
       expect(roles.length).to eq 2
-      expect(roles.map(&:role)).to eq %w(administrator user)
+      expect(roles.map(&:role)).to eq %w[administrator user]
     end
   end
 

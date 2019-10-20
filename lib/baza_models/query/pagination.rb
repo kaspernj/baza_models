@@ -1,10 +1,8 @@
 module BazaModels::Query::Pagination
   def current_page
-    if @page
-      @page
-    else
-      raise "Page has not been set"
-    end
+    raise "Page has not been set" unless @page
+
+    @page
   end
 
   def out_of_bounds?
@@ -44,11 +42,11 @@ module BazaModels::Query::Pagination
   end
 
   def total_pages
-    pages_count = (count.to_f / per.to_f)
+    pages_count = (count.to_f / per)
 
     pages_count = 1 if pages_count.nan? || pages_count == Float::INFINITY
     pages_count = pages_count.ceil
-    pages_count = 1 if pages_count == 0
+    pages_count = 1 if pages_count.zero?
     pages_count
   end
 end

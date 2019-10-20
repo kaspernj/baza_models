@@ -9,6 +9,7 @@ module BazaModels::Model::Scopes
       name = name.to_sym
 
       raise "Such a scope already exists" if @scopes.key?(name)
+
       @scopes[name] = {blk: blk}
 
       (class << self; self; end).__send__(:define_method, name) do

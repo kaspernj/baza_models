@@ -37,8 +37,10 @@ private
       elsif key.to_s == "s"
         match = value.to_s.match(/\A([A-z_\d]+)\s+(asc|desc)\Z/)
         raise "Couldn't sort-match: #{value}" unless match
+
         sort_by(column_name: match[1], sort_mode: match[2])
-      elsif ransackable_scopes && ransackable_scopes.include?(key.to_s)
+      elsif
+ransackable_scopes&.include?(key.to_s)
         @query = @query.__send__(key, value)
       end
     end

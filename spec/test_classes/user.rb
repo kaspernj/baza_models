@@ -28,7 +28,7 @@ class User < BazaModels::Model
   end
 
   def self.ransackable_scopes(_auth_object = nil)
-    %i(created_at_since)
+    %i[created_at_since]
   end
 
 private
