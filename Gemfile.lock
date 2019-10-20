@@ -122,6 +122,10 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-performance (1.5.0)
+      rubocop (>= 0.71.0)
+    rubocop-rspec (1.36.0)
+      rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
     semver2 (3.4.2)
     simple_delegate (0.0.2)
@@ -153,6 +157,8 @@ DEPENDENCIES
   rdoc
   rspec
   rubocop
+  rubocop-performance
+  rubocop-rspec
   simple_delegate
   sqlite3
   string-cases

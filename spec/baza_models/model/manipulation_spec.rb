@@ -10,17 +10,17 @@ describe BazaModels::Model::Manipulation do
   it "#created_at" do
     expect(user.created_at).to eq nil
     user.save!
-    expect(user.created_at).to_not eq nil
+    expect(user.created_at).not_to eq nil
   end
 
   it "#updated_at" do
     expect(user.updated_at).to eq nil
     user.save!
-    expect(user.updated_at).to_not eq nil
+    expect(user.updated_at).not_to eq nil
     old_updated_at = user.updated_at
     sleep 1
     user.email = "test2@example.com"
     user.save!
-    expect(user.updated_at).to_not eq old_updated_at
+    expect(user.updated_at).not_to eq old_updated_at
   end
 end

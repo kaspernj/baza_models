@@ -29,6 +29,7 @@ private
 
     loop do
       break if @name_parts.empty?
+
       name_part = @name_parts.shift
       current_name << name_part
 
@@ -71,6 +72,7 @@ private
 
     loop do
       break if join_parts.empty?
+
       join_part = join_parts.shift
 
       if join_parts.length == 1
@@ -96,6 +98,7 @@ private
     case @mode
     when :cont
       return if @value.empty?
+
       add_query_with_symbol("LIKE", "%#{@klass.db.esc(@value)}%")
     when :eq
       add_query_with_symbol("=")

@@ -68,9 +68,9 @@ class BazaModels::Query::SqlGenerator
         end
 
         if @reverse_order
-          if order =~ /\s+desc/i
+          if /\s+desc/i.match?(order)
             order = order.gsub(/\s+desc/i, " ASC")
-          elsif order =~ /\s+asc/i
+          elsif /\s+asc/i.match?(order)
             order = order.gsub(/\s+asc/i, " DESC")
           else
             order = "#{order} DESC"

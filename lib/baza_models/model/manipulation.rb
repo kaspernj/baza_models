@@ -30,9 +30,9 @@ module BazaModels::Model::Manipulation
       fire_callbacks(:after_save)
       fire_callbacks(:after_create) if new_record
 
-      return true
+      true
     else
-      return false
+      false
     end
   end
 
@@ -47,14 +47,12 @@ module BazaModels::Model::Manipulation
 
     @data[:id] = db.insert(table_name, @changes, return_id: true)
 
-    if @autoloads
-      @autoloads.each do |relation_name, collection|
-        relation = self.class.relationships.fetch(relation_name)
+    @autoloads&.each do |relation_name, collection|
+      relation = self.class.relationships.fetch(relation_name)
 
-        collection.each do |model|
-          model.assign_attributes(relation.fetch(:foreign_key) => id)
-          model.create! if model.new_record?
-        end
+      collection.each do |model|
+        model.assign_attributes(relation.fetch(:foreign_key) => id)
+        model.create! if model.new_record?
       end
     end
 
@@ -63,7 +61,7 @@ module BazaModels::Model::Manipulation
 
   def create!
     if create
-      return true
+      true
     else
       raise BazaModels::Errors::InvalidRecord, errors.full_messages.join(". ")
     end
@@ -71,7 +69,7 @@ module BazaModels::Model::Manipulation
 
   def save!(args = {})
     if save(args)
-      return true
+      true
     else
       raise BazaModels::Errors::InvalidRecord, errors.full_messages.join(". ")
     end
@@ -97,7 +95,7 @@ module BazaModels::Model::Manipulation
   def destroy
     if new_record?
       errors.add(:base, "cannot destroy new record")
-      return false
+      false
     else
       fire_callbacks(:before_destroy)
 
@@ -108,7 +106,7 @@ module BazaModels::Model::Manipulation
 
       db.delete(table_name, id: id)
       fire_callbacks(:after_destroy)
-      return true
+      true
     end
   end
 

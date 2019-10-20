@@ -75,9 +75,7 @@ class BazaModels::Model
     end
   end
 
-  # rubocop:disable Style/TrivialAccessors
   def new_record?
-    # rubocop:enable Style/TrivialAccessors
     @new_record
   end
 
@@ -87,6 +85,7 @@ class BazaModels::Model
 
   def db
     return @db if @db
+
     @db ||= self.class.db
   end
 
@@ -98,10 +97,13 @@ class BazaModels::Model
   end
 
   def self.db
-    @db = nil if @db && @db.closed?
+    @db = nil if
+@db&.closed?
     return @db if @db
+
     @db ||= BazaModels.primary_db
     raise "No Baza database has been configured" unless @db
+
     @db
   end
 
@@ -187,7 +189,7 @@ class BazaModels::Model
   end
 
   def to_param
-    id.to_s if id
+    id&.to_s
   end
 
   def to_key
@@ -201,6 +203,7 @@ class BazaModels::Model
   def reload
     @data = db.single(table_name, {id: id}, limit: 1)
     raise BazaModels::Errors::RecordNotFound unless @data
+
     @changes = {}
     self
   end
@@ -260,6 +263,7 @@ class BazaModels::Model
 
   def read_attribute(attribute_name)
     return @changes.fetch(attribute_name) if @changes.key?(attribute_name)
+
     @data.fetch(attribute_name)
   end
 
@@ -271,6 +275,7 @@ class BazaModels::Model
     changed = false
     @changes.each do |key, value|
       next if @data.fetch(key) == value
+
       changed = true
       break
     end
@@ -283,10 +288,7 @@ protected
   class << self
     attr_reader :__blank_attributes
   end
-
-  # rubocop:disable Style/TrivialAccessors
   def self.model_initialized?
-    # rubocop:enable Style/TrivialAccessors
     @model_initialized
   end
 
@@ -359,12 +361,11 @@ protected
     attributes.each do |attribute_name, attribute_value|
       belongs_to_relations = self.class.instance_variable_get(:@belongs_to_relations)
 
-      if belongs_to_relations
-        belongs_to_relations.each do |relation|
-          if attribute_name.to_s == relation[:relation_name].to_s
-            attribute_name = :"#{attribute_name}_id"
-            attribute_value = attribute_value.id if attribute_value
-          end
+
+      belongs_to_relations&.each do |relation|
+        if attribute_name.to_s == relation[:relation_name].to_s
+          attribute_name = :"#{attribute_name}_id"
+          attribute_value = attribute_value.id if attribute_value
         end
       end
 
@@ -385,16 +386,19 @@ protected
 
   def attribute_before_last_save(attribute_name)
     return @before_last_save.fetch(attribute_name) if @before_last_save.key?(attribute_name)
+
     @data.fetch(attribute_name)
   end
 
   def will_save_change_to_attribute?(attribute_name)
     return true if @changes.key?(attribute_name) && @changes[attribute_name] != data[attribute_name]
+
     false
   end
 
   def method_missing(method_name, *args, &blk)
     return @data.fetch(method_name) if @data.key?(method_name)
+
     super
   end
 end

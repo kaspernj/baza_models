@@ -22,8 +22,8 @@ describe "BazaModels::Model" do
     expect(user.id).to eq nil
     expect(user.to_param).to eq nil
     user.save!
-    expect(user.id).to_not eq nil
-    expect(user.to_param).to_not eq nil
+    expect(user.id).not_to eq nil
+    expect(user.to_param).not_to eq nil
     expect(user.to_param).to eq user.id.to_s
   end
 
@@ -162,7 +162,7 @@ describe "BazaModels::Model" do
   end
 
   it "#attribute_names" do
-    expect(User.attribute_names).to eq %w(id organization_id email email_confirmation created_at updated_at admin)
+    expect(User.attribute_names).to eq %w[id organization_id email email_confirmation created_at updated_at admin]
   end
 
   it "#columns" do
@@ -212,7 +212,7 @@ describe "BazaModels::Model" do
   end
 
   describe "#to_a" do
-    it "should not respond to it, because it will fuck up Array(ModelClass)" do
+    it "does not respond to it, because it will fuck up Array(ModelClass)" do
       expect { User.to_a }.to raise_error(NoMethodError)
       expect { User.to_ary }.to raise_error(NoMethodError)
     end

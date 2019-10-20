@@ -18,9 +18,7 @@ class BazaModels::Errors
       errors.each do |error|
         message = ""
 
-        unless attribute_name == :base
-          message << "#{StringCases.snake_to_camel(attribute_name)} "
-        end
+        message << "#{StringCases.snake_to_camel(attribute_name)} " unless attribute_name == :base
 
         message << error
         messages << message
