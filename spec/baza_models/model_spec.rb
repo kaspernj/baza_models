@@ -62,9 +62,27 @@ describe "BazaModels::Model" do
     end
   end
 
+  it "#update" do
+    user.save!
+    expect(user.update(email: "newemail@example.com")).to eq true
+    expect(user.email).to eq "newemail@example.com"
+  end
+
+  it "#update!" do
+    user.save!
+    user.update!(email: "newemail@example.com")
+    expect(user.email).to eq "newemail@example.com"
+  end
+
   it "#update_attributes" do
     user.save!
     expect(user.update_attributes(email: "newemail@example.com")).to eq true
+    expect(user.email).to eq "newemail@example.com"
+  end
+
+  it "#update_attributes!" do
+    user.save!
+    user.update_attributes!(email: "newemail@example.com")
     expect(user.email).to eq "newemail@example.com"
   end
 
