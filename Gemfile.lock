@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/kaspernj/best_practice_project.git
-  revision: 6b7c98214fe5b39ae8e6e5d43e2443fa5ad96a99
-  specs:
-    best_practice_project (0.0.11)
-      auto_autoloader (>= 0.0.5)
-
-GIT
   remote: https://github.com/kaspernj/baza.git
   revision: 80d80887be75f86767b9b89d659e4a299620cfed
   specs:
@@ -33,6 +26,8 @@ GEM
     ast (2.4.0)
     auto_autoloader (0.0.5)
       string-cases
+    best_practice_project (0.0.11)
+      auto_autoloader (>= 0.0.5)
     builder (3.2.3)
     concurrent-ruby (1.1.5)
     datet (0.0.25)
@@ -147,7 +142,7 @@ DEPENDENCIES
   array_enumerator
   auto_autoloader
   baza!
-  best_practice_project!
+  best_practice_project
   bundler
   factory_bot
   html_gen
