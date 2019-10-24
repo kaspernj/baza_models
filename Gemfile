@@ -11,7 +11,7 @@ gem "simple_delegate"
 gem "string-cases"
 
 group :development, :test do
-  gem "best_practice_project", require: false, github: "kaspernj/best_practice_project"
+  gem "best_practice_project", require: false
   gem "bundler"
   gem "factory_bot"
   gem "jdbc-sqlite3", platform: :jruby
