@@ -236,15 +236,15 @@ class BazaModels::Model
     return false unless self.class == other.class
 
     if new_record? && other.new_record?
-      return merged_data == other.__send__(:merged_data)
+      merged_data == other.__send__(:merged_data)
     else
-      return id == other.id
+      id == other.id
     end
   end
 
-  # rubocop:disable Style/PredicateName
+  # rubocop:disable Naming/PredicateName
   def has_attribute?(name)
-    # rubocop:enable Style/PredicateName
+    # rubocop:enable Naming/PredicateName
     self.class.column_names.include?(name.to_s)
   end
 
