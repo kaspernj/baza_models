@@ -4,9 +4,9 @@ module BazaModels::Model::HasOneRelations
   end
 
   module ClassMethods
-    # rubocop:disable Style/PredicateName
+    # rubocop:disable Naming/PredicateName
     def has_one(relation_name, *all_args)
-      # rubocop:enable Style/PredicateName
+      # rubocop:enable Naming/PredicateName
 
       args = all_args.pop
 

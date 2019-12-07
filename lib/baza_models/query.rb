@@ -284,7 +284,7 @@ class BazaModels::Query
     end
 
     if @includes.empty?
-      return array_enum
+      array_enum
     else
       array = array_enum.to_a
 
@@ -297,7 +297,7 @@ class BazaModels::Query
         autoloader.autoload
       end
 
-      return array
+      array
     end
   end
 
