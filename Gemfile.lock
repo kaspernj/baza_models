@@ -124,7 +124,7 @@ GEM
     ruby-progressbar (1.10.1)
     semver2 (3.4.2)
     simple_delegate (0.0.2)
-    sqlite3 (1.4.1)
+    sqlite3 (1.4.2)
     string-cases (0.0.4)
     thread_safe (0.3.6)
     thread_safe (0.3.6-java)
