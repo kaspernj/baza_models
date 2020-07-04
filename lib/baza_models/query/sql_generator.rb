@@ -9,7 +9,7 @@ class BazaModels::Query::SqlGenerator
     end
   end
 
-  def to_sql
+  def to_sql # rubocop:disable Metrics/CyclomaticComplexity
     sql = "SELECT "
 
     if @selects.empty?
