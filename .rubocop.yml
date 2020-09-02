@@ -3,11 +3,12 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 2.5
   Exclude:
     - db/schema.rb
     - spec/dummy/db/schema.rb
     - baza_models.gemspec
+  NewCops: enable
+  TargetRubyVersion: 2.5
 
 require:
   - rubocop-performance
@@ -110,6 +111,9 @@ RSpec/NamedSubject:
   Enabled: false
 
 RSpec/NestedGroups:
+  Enabled: false
+
+Style/CaseLikeIf:
   Enabled: false
 
 Style/ClassAndModuleChildren:
