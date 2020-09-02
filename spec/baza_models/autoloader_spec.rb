@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe BazaModels::Autoloader do
+describe BazaModels::Autoloader do # rubocop:disable RSpec/MultipleMemoizedHelpers
   include DatabaseHelper
 
   let!(:organization) { Organization.create! }
