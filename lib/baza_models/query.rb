@@ -301,10 +301,8 @@ class BazaModels::Query
     end
   end
 
-  def each
-    to_enum.each do |model|
-      yield model
-    end
+  def each(&blk)
+    to_enum.each(&blk)
   end
 
   def find_each
@@ -415,9 +413,7 @@ private
   end
 
   def autoloaded_on_previous_model?
-    if @previous_model && @relation
-      return true if @previous_model.autoloads.include?(@relation.fetch(:relation_name))
-    end
+    return true if @previous_model && @relation && @previous_model.autoloads.include?(@relation.fetch(:relation_name))
 
     false
   end
