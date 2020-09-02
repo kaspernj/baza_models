@@ -16,6 +16,7 @@ class BazaModels::Model
 
   attr_accessor :data, :db
   attr_reader :changes, :errors
+  attr_writer :db, :table_name
 
   # Define all callback methods.
   CALLBACK_TYPES = [
@@ -89,8 +90,6 @@ class BazaModels::Model
     @db ||= self.class.db
   end
 
-  attr_writer :db
-
   def self.attribute_names
     init_model
     @table.columns.map(&:name).map(&:clone)
@@ -145,8 +144,6 @@ class BazaModels::Model
   class << self
     attr_writer :db, :table_name
   end
-
-  attr_writer :table_name
 
   def autoloads
     @autoloads ||= {}
