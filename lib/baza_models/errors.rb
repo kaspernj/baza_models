@@ -1,5 +1,6 @@
 class BazaModels::Errors
   class InvalidRecord < RuntimeError; end
+
   class RecordNotFound < RuntimeError; end
 
   def initialize
