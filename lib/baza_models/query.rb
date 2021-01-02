@@ -464,6 +464,8 @@ private
 
       sql << ")"
       sql
+    elsif value == nil
+      "IS NULL"
     else
       "= #{@db.quote_value(value)}"
     end

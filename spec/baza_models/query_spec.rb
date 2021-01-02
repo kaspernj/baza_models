@@ -29,6 +29,14 @@ describe BazaModels::Query do
       expect(query.to_a).to eq [user]
     end
 
+    it "supports hashes with nils" do
+      user.update!(email_confirmation: nil)
+
+      query = User.where(users: {email_confirmation: nil})
+      expect(query.to_sql).to eq "SELECT `users`.* FROM `users` WHERE `users`.`email_confirmation` IS NULL"
+      expect(query.to_a).to eq [user]
+    end
+
     it "supports strings" do
       query = User.where("email = 'test@example.com'")
       expect(query.to_sql).to eq "SELECT `users`.* FROM `users` WHERE (email = 'test@example.com')"
