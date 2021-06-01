@@ -309,11 +309,7 @@ protected
     end
 
     define_method("#{column_name}_changed?") do
-      if @changes.key?(column_name) && @changes.fetch(column_name) != @data.fetch(column_name)
-        true
-      else
-        false
-      end
+      @changes.key?(column_name) && @changes.fetch(column_name) != @data.fetch(column_name)
     end
 
     define_method("will_save_change_to_#{column_name}?") do
