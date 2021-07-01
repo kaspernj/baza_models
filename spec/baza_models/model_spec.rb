@@ -170,13 +170,15 @@ describe "BazaModels::Model" do
 
   it "#each" do
     user.save!
+    found = []
     count = 0
     User.each do |user|
-      expect(user).to eq user
+      found << user
       count += 1
     end
 
     expect(count).to eq 1
+    expect(found).to eq [user]
   end
 
   it "#attribute_names" do
