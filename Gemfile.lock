@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/kaspernj/baza.git
-  revision: 67f9172f4c618ad092173269fd25dff41d3a646a
+  revision: 780f6bfcf7f1775251a2179c363afb43e0546d9b
   specs:
-    baza (0.0.37)
+    baza (0.0.38)
       array_enumerator (~> 0.0.10)
       auto_autoloader (~> 0.0.5)
       datet (~> 0.0.25)
