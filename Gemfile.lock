@@ -52,7 +52,7 @@ GEM
       string-cases
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
-    jar-dependencies (0.4.0)
+    jar-dependencies (0.4.1)
     jdbc-sqlite3 (3.28.0)
     juwelier (2.4.9)
       builder
@@ -89,8 +89,9 @@ GEM
     parallel (1.21.0)
     parser (3.0.3.2)
       ast (~> 2.4.1)
-    psych (3.1.0)
-    psych (3.1.0-java)
+    psych (4.0.3)
+      stringio
+    psych (4.0.3-java)
       jar-dependencies (>= 0.1.7)
     public_suffix (4.0.6)
     racc (1.5.2)
@@ -98,7 +99,8 @@ GEM
     rack (2.2.3)
     rainbow (3.0.0)
     rake (13.0.0)
-    rdoc (6.3.3)
+    rdoc (6.4.0)
+      psych (>= 4.0.0)
     regexp_parser (2.2.0)
     rexml (3.2.5)
     rspec (3.10.0)
@@ -135,6 +137,7 @@ GEM
     simple_delegate (0.0.4)
     sqlite3 (1.4.2)
     string-cases (0.0.4)
+    stringio (3.0.1)
     thread_safe (0.3.6)
     thread_safe (0.3.6-java)
     tzinfo (2.0.4)
