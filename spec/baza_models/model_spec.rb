@@ -14,16 +14,16 @@ describe "BazaModels::Model" do
 
     it "returns nil for attributes that hasn't been set" do
       user = User.new
-      expect(user.email).to eq nil
+      expect(user.email).to be_nil
     end
   end
 
   it "#id #to_param" do
-    expect(user.id).to eq nil
-    expect(user.to_param).to eq nil
+    expect(user.id).to be_nil
+    expect(user.to_param).to be_nil
     user.save!
-    expect(user.id).not_to eq nil
-    expect(user.to_param).not_to eq nil
+    expect(user.id).not_to be_nil
+    expect(user.to_param).not_to be_nil
     expect(user.to_param).to eq user.id.to_s
   end
 
@@ -55,16 +55,16 @@ describe "BazaModels::Model" do
 
   describe "#save" do
     it "inserts a new record when new" do
-      expect(user.new_record?).to eq true
+      expect(user.new_record?).to be true
       user.save!
       expect(user.id).to eq 1
-      expect(user.new_record?).to eq false
+      expect(user.new_record?).to be false
     end
   end
 
   it "#update" do
     user.save!
-    expect(user.update(email: "newemail@example.com")).to eq true
+    expect(user.update(email: "newemail@example.com")).to be true
     expect(user.email).to eq "newemail@example.com"
   end
 
@@ -76,7 +76,7 @@ describe "BazaModels::Model" do
 
   it "#update_attributes" do
     user.save!
-    expect(user.update_attributes(email: "newemail@example.com")).to eq true
+    expect(user.update_attributes(email: "newemail@example.com")).to be true
     expect(user.email).to eq "newemail@example.com"
   end
 
@@ -87,15 +87,15 @@ describe "BazaModels::Model" do
   end
 
   it "#before_save, #after_save" do
-    expect(user.before_save_called).to eq nil
-    expect(user.after_save_called).to eq nil
-    expect(user.before_update_called).to eq nil
-    expect(user.after_update_called).to eq nil
+    expect(user.before_save_called).to be_nil
+    expect(user.after_save_called).to be_nil
+    expect(user.before_update_called).to be_nil
+    expect(user.after_update_called).to be_nil
     user.save!
     expect(user.before_save_called).to eq 1
     expect(user.after_save_called).to eq 1
-    expect(user.before_update_called).to eq nil
-    expect(user.after_update_called).to eq nil
+    expect(user.before_update_called).to be_nil
+    expect(user.after_update_called).to be_nil
     user.save!
     expect(user.before_save_called).to eq 2
     expect(user.after_save_called).to eq 2
@@ -104,8 +104,8 @@ describe "BazaModels::Model" do
   end
 
   it "#before_create, #after_create" do
-    expect(user.before_create_called).to eq nil
-    expect(user.after_create_called).to eq nil
+    expect(user.before_create_called).to be_nil
+    expect(user.after_create_called).to be_nil
     user.save!
     expect(user.before_create_called).to eq 1
     expect(user.after_create_called).to eq 1
@@ -116,8 +116,8 @@ describe "BazaModels::Model" do
 
   it "#before_destroy, #after_destroy" do
     user.save!
-    expect(user.before_destroy_called).to eq nil
-    expect(user.after_destroy_called).to eq nil
+    expect(user.before_destroy_called).to be_nil
+    expect(user.after_destroy_called).to be_nil
     user.destroy!
     expect(user.before_destroy_called).to eq 1
     expect(user.after_destroy_called).to eq 1
@@ -132,11 +132,11 @@ describe "BazaModels::Model" do
 
     user_found = User.find(user.id)
     expect(user_found.instance_variable_get(:@after_find_called)).to eq 1
-    expect(user.instance_variable_get(:@after_find_called)).to eq nil
+    expect(user.instance_variable_get(:@after_find_called)).to be_nil
   end
 
   it "can use callbacks as blocks" do
-    expect(user.before_save_block_called).to eq nil
+    expect(user.before_save_block_called).to be_nil
     user.save!
     expect(user.before_save_block_called).to eq 1
     user.save!
@@ -153,19 +153,19 @@ describe "BazaModels::Model" do
   end
 
   it "#to_key" do
-    expect(user.to_key).to eq nil
+    expect(user.to_key).to be_nil
     user.save!
     expect(user.to_key).to eq [1]
   end
 
   it "#changed?" do
-    expect(user.changed?).to eq true
+    expect(user.changed?).to be true
     user.save!
-    expect(user.changed?).to eq false
+    expect(user.changed?).to be false
     user.email = "new@example.com"
-    expect(user.changed?).to eq true
+    expect(user.changed?).to be true
     user.save!
-    expect(user.changed?).to eq false
+    expect(user.changed?).to be false
   end
 
   it "#each" do
@@ -199,7 +199,7 @@ describe "BazaModels::Model" do
 
     expect(id_column.type).to eq :integer
     expect(id_column.name).to eq "id"
-    expect(id_column.null).to eq true
+    expect(id_column.null).to be true
     expect(id_column.sql_type).to eq "int"
 
     email_column = columns_hash["email"]
@@ -223,7 +223,7 @@ describe "BazaModels::Model" do
     expect(person_reflection.class_name).to eq "Person"
     expect(person_reflection.foreign_key).to eq "user_id"
     expect(person_reflection.klass).to eq Person
-    expect(person_reflection.collection?).to eq false
+    expect(person_reflection.collection?).to be false
   end
 
   it "doesnt care if initialized data has keys as strings" do
@@ -252,7 +252,7 @@ describe "BazaModels::Model" do
     it "returns true if the attribute will change" do
       user.save!
       user.email = "test2@example.com"
-      expect(user.will_save_change_to_email?).to eq true
+      expect(user.will_save_change_to_email?).to be true
     end
   end
 end

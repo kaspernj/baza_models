@@ -15,9 +15,9 @@ describe BazaModels::Autoloader do # rubocop:disable RSpec/MultipleMemoizedHelpe
     user_from_query = query.detect { |user| user.email == "test@example.com" }
 
     expect(user_from_query.autoloads.fetch(:roles)).to eq [role_admin]
-    expect(user_from_query.roles.__send__(:any_mods?)).to eq false
-    expect(user_from_query.roles.__send__(:any_wheres_other_than_relation?)).to eq false
-    expect(user_from_query.roles.__send__(:autoloaded_on_previous_model?)).to eq true
+    expect(user_from_query.roles.__send__(:any_mods?)).to be false
+    expect(user_from_query.roles.__send__(:any_wheres_other_than_relation?)).to be false
+    expect(user_from_query.roles.__send__(:autoloaded_on_previous_model?)).to be true
     expect(user_from_query.roles.to_enum).to eq [role_admin]
   end
 
