@@ -7,7 +7,7 @@ describe BazaModels::Validators::ConfirmationValidator do
     user = User.new(email: "invalid@example.com")
     user.validate_confirmation = true
 
-    expect(user.valid?).to eq false
+    expect(user.valid?).to be false
     expect(user.errors.full_messages).to eq ["Email hasn't been confirmed"]
   end
 
@@ -15,7 +15,7 @@ describe BazaModels::Validators::ConfirmationValidator do
     user = User.new(email: "valid@example.com", email_confirmation: "unvaid@example.com")
     user.validate_confirmation = true
 
-    expect(user.valid?).to eq false
+    expect(user.valid?).to be false
     expect(user.errors.full_messages).to eq ["Email was not the same as the confirmation"]
   end
 
@@ -23,6 +23,6 @@ describe BazaModels::Validators::ConfirmationValidator do
     user = User.new(email: "valid@example.com", email_confirmation: "valid@example.com")
     user.validate_confirmation = true
 
-    expect(user.valid?).to eq true
+    expect(user.valid?).to be true
   end
 end

@@ -12,20 +12,20 @@ describe BazaModels::Query::Pagination do
   describe "#out_of_bounds?" do
     it "returns the right values under the right conditions" do
       collection = User.all.page(5)
-      expect(collection.out_of_bounds?).to eq true
+      expect(collection.out_of_bounds?).to be true
 
       collection = User.all.page(4)
-      expect(collection.out_of_bounds?).to eq false
+      expect(collection.out_of_bounds?).to be false
     end
   end
 
   describe "#paginated?" do
     it "returns the right values under the right conditions" do
       collection = User.all
-      expect(collection.paginated?).to eq false
+      expect(collection.paginated?).to be false
 
       collection = collection.page(3)
-      expect(collection.paginated?).to eq true
+      expect(collection.paginated?).to be true
     end
   end
 

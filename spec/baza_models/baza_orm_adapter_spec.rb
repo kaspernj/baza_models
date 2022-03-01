@@ -9,7 +9,7 @@ describe BazaModels::Query do
     user.save!
     expect(User.to_adapter.get([1])).to eq user
     expect(User.to_adapter.get(1)).to eq user
-    expect(User.to_adapter.get(5)).to eq nil
+    expect(User.to_adapter.get(5)).to be_nil
   end
 
   it "#get!" do
@@ -30,7 +30,7 @@ describe BazaModels::Query do
     user.save!
 
     expect do
-      expect(User.to_adapter.destroy(user)).to eq true
+      expect(User.to_adapter.destroy(user)).to be true
     end.to change(User, :count).by(-1)
 
     expect { user.reload }.to raise_error(BazaModels::Errors::RecordNotFound)

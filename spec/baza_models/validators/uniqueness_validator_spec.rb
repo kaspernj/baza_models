@@ -11,7 +11,7 @@ describe BazaModels::Validators::UniquenessValidator do
     user2 = User.new(email: "test@example.com", organization_id: 1)
     user2.validate_uniqueness = true
 
-    expect(user2.valid?).to eq false
+    expect(user2.valid?).to be false
     expect(user2.errors.full_messages).to eq ["Email isn't unique"]
   end
 
@@ -19,6 +19,6 @@ describe BazaModels::Validators::UniquenessValidator do
     user2 = User.new(email: "test@example.com", organization_id: 2)
     user2.validate_uniqueness = true
 
-    expect(user2.valid?).to eq true
+    expect(user2.valid?).to be true
   end
 end

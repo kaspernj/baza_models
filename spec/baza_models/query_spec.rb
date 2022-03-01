@@ -122,16 +122,16 @@ describe BazaModels::Query do
   end
 
   it "#any? #empty? #none? #count #length #size" do
-    expect(User.any?).to eq false
-    expect(User.empty?).to eq true
-    expect(User.none?).to eq true
+    expect(User.any?).to be false
+    expect(User.empty?).to be true
+    expect(User.none?).to be true
     expect(User.count).to eq 0
     expect(User.length).to eq 0
     expect(User.size).to eq 0
     user.save!
-    expect(User.any?).to eq true
-    expect(User.empty?).to eq false
-    expect(User.none?).to eq false
+    expect(User.any?).to be true
+    expect(User.empty?).to be false
+    expect(User.none?).to be false
     expect(User.count).to eq 1
     expect(User.length).to eq 1
     expect(User.size).to eq 1
@@ -256,7 +256,7 @@ describe BazaModels::Query do
     expect(user.roles.count).to eq 0
 
     role = user.roles.new(role: "admin")
-    expect(role.new_record?).to eq true
+    expect(role.new_record?).to be true
     expect(user.roles.length).to eq 1
     expect(user.roles.count).to eq 0
 
