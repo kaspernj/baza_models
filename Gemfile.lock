@@ -1,15 +1,15 @@
 GIT
   remote: https://github.com/kaspernj/baza.git
-  revision: f920ee0fa965f32f9c1ca5b06dc0f0c5b0cbed9b
+  revision: 96f1004f6f6b672fc03d981d54a84f39f9b5be3c
   specs:
     baza (0.0.38)
-      array_enumerator (~> 0.0.10)
-      auto_autoloader (~> 0.0.5)
-      datet (~> 0.0.25)
-      event_handler (~> 0.0.0)
-      simple_delegate (~> 0.0.2)
-      string-cases (~> 0.0.4)
-      wref (~> 0.0.8)
+      array_enumerator (>= 0.0.10)
+      auto_autoloader (>= 0.0.5)
+      datet (>= 0.0.25)
+      event_handler
+      simple_delegate (>= 0.0.2)
+      string-cases (>= 0.0.4)
+      wref (>= 0.0.8)
 
 GEM
   remote: http://rubygems.org/
