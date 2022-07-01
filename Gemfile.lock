@@ -54,6 +54,8 @@ GEM
       concurrent-ruby (~> 1.0)
     jar-dependencies (0.4.1)
     jdbc-sqlite3 (3.28.0)
+    json (2.6.2)
+    json (2.6.2-java)
     juwelier (2.4.9)
       builder
       bundler
@@ -117,7 +119,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-support (3.11.0)
-    rubocop (1.30.0)
+    rubocop (1.31.1)
+      json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
