@@ -22,6 +22,9 @@ Lint/IneffectiveAccessModifier:
   Exclude:
     - 'lib/baza_models/model.rb'
 
+Lint/NonAtomicFileOperation:
+  Enabled: false
+
 # Offense count: 6
 Metrics/AbcSize:
   Max: 45
@@ -56,6 +59,9 @@ Naming/MemoizedInstanceVariableName:
 RSpec/EmptyExampleGroup:
   Exclude:
     - 'spec/baza_models_spec.rb'
+
+RSpec/NoExpectationExample:
+  Enabled: false
 
 # Offense count: 4
 # Configuration parameters: CustomTransform, IgnoreMethods.
