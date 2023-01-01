@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "factory_bot", ">= 0"
   s.add_development_dependency "jdbc-sqlite3", ">= 0"
   s.add_development_dependency "orm_adapter", ">= 0"
+  s.add_development_dependency "rake"
   s.add_development_dependency "rdoc", ">= 0"
   s.add_development_dependency "rspec", ">= 0"
   s.add_development_dependency "rubocop", ">= 0"
