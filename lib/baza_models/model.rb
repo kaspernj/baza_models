@@ -297,7 +297,7 @@ protected
     end
 
     define_method("#{column_name}_was") do
-      return @data.fetch(column_name)
+      @data.fetch(column_name)
     end
 
     define_method("#{column_name}=") do |new_value|
