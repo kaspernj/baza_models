@@ -88,6 +88,8 @@ GEM
     rubocop-performance (1.15.2)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
+    rubocop-rake (0.6.0)
+      rubocop (~> 1.0)
     rubocop-rspec (2.16.0)
       rubocop (~> 1.33)
     ruby-progressbar (1.11.0)
@@ -116,6 +118,7 @@ DEPENDENCIES
   rspec
   rubocop
   rubocop-performance
+  rubocop-rake
   rubocop-rspec
   sqlite3 (= 1.4.4)
 

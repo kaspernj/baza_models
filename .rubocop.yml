@@ -12,6 +12,7 @@ AllCops:
 
 require:
   - rubocop-performance
+  - rubocop-rake
   - rubocop-rspec
 
 Layout/AccessModifierIndentation:
