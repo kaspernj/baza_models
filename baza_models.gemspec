@@ -18,21 +18,21 @@ Gem::Specification.new do |s|
   s.rubygems_version = "3.1.6".freeze
   s.summary = "ActiveRecord like models for the Baza database framework".freeze
 
-  s.add_runtime_dependency(%q<array_enumerator>.freeze, [">= 0"])
-  s.add_runtime_dependency(%q<auto_autoloader>.freeze, [">= 0"])
-  s.add_runtime_dependency(%q<baza>.freeze, [">= 0"])
-  s.add_runtime_dependency(%q<html_gen>.freeze, [">= 0"])
-  s.add_runtime_dependency(%q<simple_delegate>.freeze, [">= 0"])
-  s.add_runtime_dependency(%q<string-cases>.freeze, [">= 0"])
-  s.add_development_dependency(%q<best_practice_project>.freeze, [">= 0"])
-  s.add_development_dependency(%q<bundler>.freeze, [">= 0"])
-  s.add_development_dependency(%q<factory_bot>.freeze, [">= 0"])
-  s.add_development_dependency(%q<jdbc-sqlite3>.freeze, [">= 0"])
-  s.add_development_dependency(%q<orm_adapter>.freeze, [">= 0"])
-  s.add_development_dependency(%q<rdoc>.freeze, [">= 0"])
-  s.add_development_dependency(%q<rspec>.freeze, [">= 0"])
-  s.add_development_dependency(%q<rubocop>.freeze, [">= 0"])
-  s.add_development_dependency(%q<rubocop-performance>.freeze, [">= 0"])
-  s.add_development_dependency(%q<rubocop-rspec>.freeze, [">= 0"])
-  s.add_development_dependency(%q<sqlite3>.freeze, [">= 0"])
+  s.add_runtime_dependency "array_enumerator", ">= 0"
+  s.add_runtime_dependency "auto_autoloader", ">= 0"
+  s.add_runtime_dependency "baza", ">= 0"
+  s.add_runtime_dependency "html_gen", ">= 0"
+  s.add_runtime_dependency "simple_delegate", ">= 0"
+  s.add_runtime_dependency "string-cases", ">= 0"
+  s.add_development_dependency "best_practice_project", ">= 0"
+  s.add_development_dependency "bundler", ">= 0"
+  s.add_development_dependency "factory_bot", ">= 0"
+  s.add_development_dependency "jdbc-sqlite3", ">= 0"
+  s.add_development_dependency "orm_adapter", ">= 0"
+  s.add_development_dependency "rdoc", ">= 0"
+  s.add_development_dependency "rspec", ">= 0"
+  s.add_development_dependency "rubocop", ">= 0"
+  s.add_development_dependency "rubocop-performance", ">= 0"
+  s.add_development_dependency "rubocop-rspec", ">= 0"
+  s.add_development_dependency "sqlite3", "1.4.4"
 end

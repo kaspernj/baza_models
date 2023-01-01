@@ -1,92 +1,51 @@
-GIT
-  remote: https://github.com/kaspernj/baza.git
-  revision: a8bef62fbba4cf7199a847ef2141e96d27769f6e
+PATH
+  remote: .
   specs:
-    baza (0.0.38)
-      array_enumerator (>= 0.0.10)
-      auto_autoloader (>= 0.0.5)
-      datet (>= 0.0.25)
-      event_handler
-      simple_delegate (>= 0.0.2)
-      string-cases (>= 0.0.4)
-      wref (>= 0.0.8)
+    baza_models (0.0.15)
+      array_enumerator
+      auto_autoloader
+      baza
+      html_gen
+      simple_delegate
+      string-cases
 
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (7.0.2.3)
+    activesupport (7.0.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
     array_enumerator (0.0.10)
     ast (2.4.2)
     auto_autoloader (0.0.5)
       string-cases
+    baza (0.0.38)
+      array_enumerator (~> 0.0.10)
+      auto_autoloader (~> 0.0.5)
+      datet (~> 0.0.25)
+      event_handler (~> 0.0.0)
+      simple_delegate (~> 0.0.2)
+      string-cases (~> 0.0.4)
+      wref (~> 0.0.8)
     best_practice_project (0.0.12)
       auto_autoloader (>= 0.0.5)
-    builder (3.2.3)
     concurrent-ruby (1.1.10)
     datet (0.0.25)
-    descendants_tracker (0.0.4)
-      thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.5.0)
     event_handler (0.0.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
-    faraday (0.17.0)
-      multipart-post (>= 1.2, < 3)
-    git (1.11.0)
-      rchardet (~> 1.8)
-    github_api (0.18.2)
-      addressable (~> 2.4)
-      descendants_tracker (~> 0.0.4)
-      faraday (~> 0.8)
-      hashie (~> 3.5, >= 3.5.2)
-      oauth2 (~> 1.0)
-    hashie (3.6.0)
-    highline (2.0.3)
     html_gen (0.0.16)
       string-cases
-    i18n (1.10.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     jar-dependencies (0.4.1)
-    jdbc-sqlite3 (3.28.0)
-    json (2.6.2)
-    json (2.6.2-java)
-    juwelier (2.4.9)
-      builder
-      bundler
-      git
-      github_api
-      highline
-      kamelcase (~> 0)
-      nokogiri
-      psych
-      rake
-      rdoc
-      semver2
-    jwt (2.2.1)
-    kamelcase (0.0.2)
-      semver2 (~> 3)
-    mini_portile2 (2.8.0)
-    minitest (5.15.0)
-    multi_json (1.14.1)
-    multi_xml (0.6.0)
-    multipart-post (2.1.1)
-    nokogiri (1.13.10)
-      mini_portile2 (~> 2.8.0)
-      racc (~> 1.4)
-    nokogiri (1.13.10-java)
-      racc (~> 1.4)
-    oauth2 (1.4.2)
-      faraday (>= 0.8, < 2.0)
-      jwt (>= 1.0, < 3.0)
-      multi_json (~> 1.3)
-      multi_xml (~> 0.5)
-      rack (>= 1.2, < 3)
+    jdbc-sqlite3 (3.32.3.3)
+    json (2.6.3)
+    json (2.6.3-java)
+    minitest (5.17.0)
     orm_adapter (0.5.0)
     parallel (1.22.1)
     parser (3.1.3.0)
@@ -95,13 +54,7 @@ GEM
       stringio
     psych (5.0.1-java)
       jar-dependencies (>= 0.1.7)
-    public_suffix (4.0.6)
-    racc (1.6.1)
-    racc (1.6.1-java)
-    rack (2.2.3.1)
     rainbow (3.1.1)
-    rake (13.0.0)
-    rchardet (1.8.0)
     rdoc (6.5.0)
       psych (>= 4.0.0)
     regexp_parser (2.6.1)
@@ -112,14 +65,14 @@ GEM
       rspec-mocks (~> 3.12.0)
     rspec-core (3.12.0)
       rspec-support (~> 3.12.0)
-    rspec-expectations (3.12.0)
+    rspec-expectations (3.12.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
-    rspec-mocks (3.12.0)
+    rspec-mocks (3.12.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.0)
-    rubocop (1.39.0)
+    rubocop (1.41.1)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
@@ -129,23 +82,19 @@ GEM
       rubocop-ast (>= 1.23.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.24.0)
+    rubocop-ast (1.24.1)
       parser (>= 3.1.1.0)
-    rubocop-performance (1.15.1)
+    rubocop-performance (1.15.2)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rspec (2.15.0)
+    rubocop-rspec (2.16.0)
       rubocop (~> 1.33)
     ruby-progressbar (1.11.0)
-    semver2 (3.4.2)
     simple_delegate (0.0.4)
-    sqlite3 (1.5.4)
-      mini_portile2 (~> 2.8.0)
+    sqlite3 (1.4.4)
     string-cases (0.0.4)
     stringio (3.0.4)
-    thread_safe (0.3.6)
-    thread_safe (0.3.6-java)
-    tzinfo (2.0.4)
+    tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.3.0)
     wref (0.0.8)
@@ -155,24 +104,18 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  array_enumerator
-  auto_autoloader
-  baza!
+  baza_models!
   best_practice_project
   bundler
   factory_bot
-  html_gen
   jdbc-sqlite3
-  juwelier
   orm_adapter
   rdoc
   rspec
   rubocop
   rubocop-performance
   rubocop-rspec
-  simple_delegate
-  sqlite3
-  string-cases
+  sqlite3 (= 1.4.4)
 
 BUNDLED WITH
    2.2.28
