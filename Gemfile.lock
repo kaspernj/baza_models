@@ -12,7 +12,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (7.0.4.1)
+    activesupport (7.0.4.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -31,7 +31,7 @@ GEM
       wref (~> 0.0.8)
     best_practice_project (0.0.12)
       auto_autoloader (>= 0.0.5)
-    concurrent-ruby (1.1.10)
+    concurrent-ruby (1.2.2)
     datet (0.0.25)
     diff-lcs (1.5.0)
     event_handler (0.0.0)
@@ -45,7 +45,7 @@ GEM
     jdbc-sqlite3 (3.32.3.3)
     json (2.6.3)
     json (2.6.3-java)
-    minitest (5.17.0)
+    minitest (5.18.0)
     orm_adapter (0.5.0)
     parallel (1.22.1)
     parser (3.2.1.0)
@@ -100,7 +100,7 @@ GEM
     sqlite3 (1.4.4)
     string-cases (0.0.4)
     stringio (3.0.4)
-    tzinfo (2.0.5)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
     wref (0.0.8)
