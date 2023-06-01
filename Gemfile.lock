@@ -45,7 +45,7 @@ GEM
     jdbc-sqlite3 (3.32.3.3)
     json (2.6.3)
     json (2.6.3-java)
-    mini_portile2 (2.8.1)
+    mini_portile2 (2.8.2)
     minitest (5.18.0)
     orm_adapter (0.5.0)
     parallel (1.23.0)
@@ -101,7 +101,7 @@ GEM
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
     simple_delegate (0.0.4)
-    sqlite3 (1.6.2)
+    sqlite3 (1.6.3)
       mini_portile2 (~> 2.8.0)
     string-cases (0.0.4)
     stringio (3.0.4)
@@ -128,7 +128,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rake
   rubocop-rspec
-  sqlite3 (= 1.6.2)
+  sqlite3 (= 1.6.3)
 
 BUNDLED WITH
    2.2.28
