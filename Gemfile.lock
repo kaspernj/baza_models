@@ -42,7 +42,7 @@ GEM
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     jar-dependencies (0.4.1)
-    jdbc-sqlite3 (3.32.3.3)
+    jdbc-sqlite3 (3.42.0.0)
     json (2.6.3)
     json (2.6.3-java)
     mini_portile2 (2.8.1)
