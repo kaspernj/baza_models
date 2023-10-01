@@ -12,7 +12,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (7.0.7.2)
+    activesupport (7.0.8)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -36,7 +36,7 @@ GEM
     datet (0.0.25)
     diff-lcs (1.5.0)
     event_handler (0.0.0)
-    factory_bot (6.2.1)
+    factory_bot (6.3.0)
       activesupport (>= 5.0.0)
     html_gen (0.0.16)
       string-cases
@@ -48,7 +48,7 @@ GEM
     json (2.6.3-java)
     language_server-protocol (3.17.0.3)
     mini_portile2 (2.8.1)
-    minitest (5.19.0)
+    minitest (5.20.0)
     orm_adapter (0.5.0)
     parallel (1.23.0)
     parser (3.2.2.3)
