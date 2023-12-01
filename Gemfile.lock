@@ -106,7 +106,7 @@ GEM
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
     simple_delegate (0.0.4)
-    sqlite3 (1.6.7)
+    sqlite3 (1.6.9)
       mini_portile2 (~> 2.8.0)
     string-cases (0.0.4)
     stringio (3.0.4)
@@ -133,7 +133,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rake
   rubocop-rspec
-  sqlite3 (= 1.6.7)
+  sqlite3 (= 1.6.9)
 
 BUNDLED WITH
    2.2.28
