@@ -12,6 +12,7 @@ AllCops:
 
 require:
   - rubocop-performance
+  - rubocop-rake
   - rubocop-rspec
 
 Layout/AccessModifierIndentation:
@@ -99,6 +100,9 @@ RSpec/DescribedClass:
   Enabled: false
 
 RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/FactoryBot/ConsistentParenthesesStyle:
   Enabled: false
 
 RSpec/LetSetup:

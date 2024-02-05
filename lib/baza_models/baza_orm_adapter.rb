@@ -1,6 +1,6 @@
 require "orm_adapter"
 
-class BazaModels::BazaOrmAdapter < ::OrmAdapter::Base
+class BazaModels::BazaOrmAdapter < OrmAdapter::Base
   def initialize(args)
     @klass = args.fetch(:class)
   end
