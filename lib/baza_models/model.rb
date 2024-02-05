@@ -96,8 +96,7 @@ class BazaModels::Model
   end
 
   def self.db
-    @db = nil if
-@db&.closed?
+    @db = nil if @db&.closed?
     return @db if @db
 
     @db ||= BazaModels.primary_db
