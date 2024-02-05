@@ -39,7 +39,7 @@ module BazaModels::Model::BelongsToRelations
         end
       end
 
-      define_method("#{relation_name}=") do |new_model|
+      define_method(:"#{relation_name}=") do |new_model|
         @changes[relation.fetch(:foreign_key)] = new_model.id
         autoloads.delete(relation_name)
       end
