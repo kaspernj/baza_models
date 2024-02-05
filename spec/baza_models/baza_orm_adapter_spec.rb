@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe BazaModels::Query do
+describe BazaModels::BazaOrmAdapter do
   include DatabaseHelper
 
   let(:user) { User.new(email: "test@example.com") }

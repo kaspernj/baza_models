@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe BazaModels::Query do
+describe BazaModels::Ransacker do
   include DatabaseHelper
 
   let!(:organization) { Organization.create!(id: 1, name: "Test organization") }
