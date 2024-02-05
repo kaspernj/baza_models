@@ -2,16 +2,32 @@ rvm: true
 builds:
   build_1:
     environment:
-      RUBY_VERSION: 2.7.5
-    name: Ruby 2.7.5
+      BUNDLE_GEMFILE: /home/build/project/gemfiles/ruby_2.gemfile
+      RUBY_VERSION: 2.7.8
+    name: Ruby 2.7.8
     script:
-      - bundle exec rspec
+      - bundle exec appraisal "ruby 2" rspec
   build_2:
     environment:
+      BUNDLE_GEMFILE: /home/build/project/gemfiles/ruby_3.gemfile
       RUBY_VERSION: 3.0.3
     name: Ruby 3.0.3
     script:
-      - bundle exec rspec
+      - bundle exec appraisal "ruby 3" rspec
+  build_2:
+    environment:
+      BUNDLE_GEMFILE: /home/build/project/gemfiles/ruby_3.gemfile
+      RUBY_VERSION: 3.1.4
+    name: Ruby 3.1.4
+    script:
+      - bundle exec appraisal "ruby 3" rspec
+  build_2:
+    environment:
+      BUNDLE_GEMFILE: /home/build/project/gemfiles/ruby_3.gemfile
+      RUBY_VERSION: 3.2.3
+    name: Ruby 3.2.3
+    script:
+      - bundle exec appraisal "ruby 3" rspec
   build_3:
     name: Linters
     script:
