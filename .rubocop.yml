@@ -4,9 +4,11 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
   Exclude:
-    - db/schema.rb
-    - spec/dummy/db/schema.rb
     - baza_models.gemspec
+    - db/schema.rb
+    - gemfiles/ruby_2.gemfile
+    - gemfiles/ruby_3.gemfile
+    - spec/dummy/db/schema.rb
   NewCops: enable
   TargetRubyVersion: 2.5
 
@@ -14,6 +16,9 @@ require:
   - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
+
+FactoryBot/ConsistentParenthesesStyle:
+  Enabled: false
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
@@ -100,9 +105,6 @@ RSpec/DescribedClass:
   Enabled: false
 
 RSpec/ExampleLength:
-  Enabled: false
-
-RSpec/FactoryBot/ConsistentParenthesesStyle:
   Enabled: false
 
 RSpec/LetSetup:
