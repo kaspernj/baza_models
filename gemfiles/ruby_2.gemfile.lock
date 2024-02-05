@@ -43,7 +43,7 @@ GEM
     drb (2.2.0)
       ruby2_keywords
     event_handler (0.0.0)
-    factory_bot (6.4.6)
+    factory_bot (6.4.5)
       activesupport (>= 5.0.0)
     html_gen (0.0.16)
       string-cases
@@ -130,7 +130,7 @@ DEPENDENCIES
   baza!
   best_practice_project
   bundler
-  factory_bot
+  factory_bot (= 6.4.5)
   html_gen
   jdbc-sqlite3
   orm_adapter

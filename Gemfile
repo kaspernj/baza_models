@@ -14,7 +14,6 @@ group :development, :test do
   gem "appraisal", require: false
   gem "best_practice_project", require: false
   gem "bundler"
-  gem "factory_bot"
   gem "jdbc-sqlite3", platform: :jruby
   gem "orm_adapter", require: false
   gem "rdoc"

@@ -130,7 +130,7 @@ DEPENDENCIES
   baza!
   best_practice_project
   bundler
-  factory_bot
+  factory_bot (= 6.4.6)
   html_gen
   jdbc-sqlite3
   orm_adapter
