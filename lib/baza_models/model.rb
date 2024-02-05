@@ -92,7 +92,7 @@ class BazaModels::Model
 
   def self.attribute_names
     init_model
-    @table.columns.map(&:name).map(&:clone)
+    @table.columns.map { |column| column.name.clone }
   end
 
   def self.db
@@ -296,27 +296,27 @@ protected
       read_attribute(column_name)
     end
 
-    define_method("#{column_name}_was") do
+    define_method(:"#{column_name}_was") do
       @data.fetch(column_name)
     end
 
-    define_method("#{column_name}=") do |new_value|
+    define_method(:"#{column_name}=") do |new_value|
       write_attribute(column_name, new_value)
     end
 
-    define_method("#{column_name}?") do
+    define_method(:"#{column_name}?") do
       !@data.fetch(column_name).to_s.strip.empty?
     end
 
-    define_method("#{column_name}_changed?") do
+    define_method(:"#{column_name}_changed?") do
       @changes.key?(column_name) && @changes.fetch(column_name) != @data.fetch(column_name)
     end
 
-    define_method("will_save_change_to_#{column_name}?") do
+    define_method(:"will_save_change_to_#{column_name}?") do
       will_save_change_to_attribute?(column_name)
     end
 
-    define_method("#{column_name}_before_last_save") do
+    define_method(:"#{column_name}_before_last_save") do
       attribute_before_last_save(column_name)
     end
   end

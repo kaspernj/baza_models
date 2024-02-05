@@ -23,7 +23,7 @@ class User < BazaModels::Model
 
   # Used to test callbacks.
   BazaModels::Model::CALLBACK_TYPES.each do |callback_type|
-    attr_reader "#{callback_type}_called"
+    attr_reader :"#{callback_type}_called"
 
     __send__(callback_type, :add_callback, callback_type)
   end
