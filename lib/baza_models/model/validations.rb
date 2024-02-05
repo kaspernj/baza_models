@@ -46,7 +46,7 @@ module BazaModels::Model::Validations
       }
 
       attribute_names.each do |attribute_name|
-        args.each do |validator_name, _validator_args|
+        args.each_key do |validator_name|
           validator_camel_name = StringCases.snake_to_camel(validator_name)
           class_name = "#{validator_camel_name}Validator"
 
