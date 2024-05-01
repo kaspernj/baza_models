@@ -101,11 +101,9 @@ class BazaModels::Query
       if column_names.length == 1
         result.fetch(column_names.first)
       else
-        new_result = []
-        column_names.each do |column_name|
-          new_result << result.fetch(column_name)
+        column_names.map do |column_name|
+          result.fetch(column_name)
         end
-        new_result
       end
     end
   end
