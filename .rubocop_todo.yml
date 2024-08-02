@@ -63,15 +63,6 @@ RSpec/EmptyExampleGroup:
 RSpec/NoExpectationExample:
   Enabled: false
 
-# Offense count: 4
-# Configuration parameters: CustomTransform, IgnoreMethods.
-RSpec/FilePath:
-  Exclude:
-    - 'spec/baza_models/baza_orm_adapter_spec.rb'
-    - 'spec/baza_models/model/delgation_spec.rb'
-    - 'spec/baza_models/model/translate_functionality_spec.rb'
-    - 'spec/baza_models/ransacker_spec.rb'
-
 # Offense count: 2
 Style/MissingRespondToMissing:
   Exclude:
