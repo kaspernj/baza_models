@@ -13,6 +13,7 @@ AllCops:
   TargetRubyVersion: 2.5
 
 require:
+  - rubocop-factory_bot
   - rubocop-performance
   - rubocop-rake
   - rubocop-rspec

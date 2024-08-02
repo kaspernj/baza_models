@@ -19,6 +19,7 @@ group :development, :test do
   gem "rdoc"
   gem "rspec"
   gem "rubocop", require: false
+  gem "rubocop-factory_bot", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rake", require: false
   gem "rubocop-rspec", require: false
