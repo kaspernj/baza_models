@@ -24,12 +24,14 @@ GEM
       string-cases
     best_practice_project (0.0.12)
       auto_autoloader (>= 0.0.5)
+    date (3.4.1)
+    date (3.4.1-java)
     datet (0.0.25)
     diff-lcs (1.5.1)
     event_handler (0.0.0)
     html_gen (0.0.16)
       string-cases
-    jar-dependencies (0.4.1)
+    jar-dependencies (0.5.1)
     jdbc-sqlite3 (3.42.0.0)
     json (2.7.5)
     json (2.7.5-java)
@@ -39,15 +41,17 @@ GEM
     parser (3.3.5.1)
       ast (~> 2.4.1)
       racc
-    psych (5.2.0)
+    psych (5.2.2)
+      date
       stringio
-    psych (5.2.0-java)
+    psych (5.2.2-java)
+      date
       jar-dependencies (>= 0.1.7)
     racc (1.8.1)
     racc (1.8.1-java)
     rainbow (3.1.1)
     rake (13.1.0)
-    rdoc (6.8.1)
+    rdoc (6.10.0)
       psych (>= 4.0.0)
     ref (2.0.0)
     regexp_parser (2.9.2)
