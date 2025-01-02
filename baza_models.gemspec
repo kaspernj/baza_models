@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "html_gen", ">= 0"
   s.add_runtime_dependency "simple_delegate", ">= 0"
   s.add_runtime_dependency "string-cases", ">= 0"
+  s.add_runtime_dependency "wref", ">= 0.0.11"
 end
