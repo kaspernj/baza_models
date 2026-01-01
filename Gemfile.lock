@@ -24,12 +24,12 @@ GEM
       string-cases
     best_practice_project (0.0.12)
       auto_autoloader (>= 0.0.5)
-    date (3.5.0)
-    date (3.5.0-java)
+    date (3.5.1)
+    date (3.5.1-java)
     datet (0.0.25)
     diff-lcs (1.6.2)
-    erb (6.0.0)
-    erb (6.0.0-java)
+    erb (6.0.1)
+    erb (6.0.1-java)
     event_handler (0.0.0)
     html_gen (0.0.16)
       string-cases
@@ -45,17 +45,17 @@ GEM
       ast (~> 2.4.1)
       racc
     prism (1.6.0)
-    psych (5.2.6)
+    psych (5.3.1)
       date
       stringio
-    psych (5.2.6-java)
+    psych (5.3.1-java)
       date
       jar-dependencies (>= 0.1.7)
     racc (1.8.1)
     racc (1.8.1-java)
     rainbow (3.1.1)
     rake (13.1.0)
-    rdoc (6.16.1)
+    rdoc (7.0.3)
       erb
       psych (>= 4.0.0)
       tsort
@@ -104,7 +104,7 @@ GEM
     ruby-progressbar (1.13.0)
     simple_delegate (0.0.4)
     string-cases (0.0.4)
-    stringio (3.1.8)
+    stringio (3.2.0)
     thor (1.4.0)
     tsort (0.2.0)
     unicode-display_width (3.2.0)
