@@ -14,6 +14,8 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
+    addressable (2.8.9)
+      public_suffix (>= 2.0.2, < 8.0)
     appraisal (2.5.0)
       bundler
       rake
@@ -24,6 +26,8 @@ GEM
       string-cases
     best_practice_project (0.0.12)
       auto_autoloader (>= 0.0.5)
+    bigdecimal (4.0.1)
+    bigdecimal (4.0.1-java)
     date (3.5.0)
     date (3.5.0-java)
     datet (0.0.25)
@@ -35,22 +39,28 @@ GEM
       string-cases
     jar-dependencies (0.5.5)
     jdbc-sqlite3 (3.42.0.0)
-    json (2.17.1.2)
-    json (2.17.1.2-java)
+    json (2.19.2)
+    json (2.19.2-java)
+    json-schema (6.2.0)
+      addressable (~> 2.8)
+      bigdecimal (>= 3.1, < 5)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
+    mcp (0.8.0)
+      json-schema (>= 4.1)
     orm_adapter (0.5.0)
     parallel (1.27.0)
-    parser (3.3.10.0)
+    parser (3.3.10.2)
       ast (~> 2.4.1)
       racc
-    prism (1.6.0)
+    prism (1.9.0)
     psych (5.2.6)
       date
       stringio
     psych (5.2.6-java)
       date
       jar-dependencies (>= 0.1.7)
+    public_suffix (7.0.5)
     racc (1.8.1)
     racc (1.8.1-java)
     rainbow (3.1.1)
@@ -74,20 +84,21 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.6)
-    rubocop (1.75.4)
+    rubocop (1.85.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
+      mcp (~> 0.6)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.44.0, < 2.0)
+      rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.48.0)
+    rubocop-ast (1.49.1)
       parser (>= 3.3.7.2)
-      prism (~> 1.4)
+      prism (~> 1.7)
     rubocop-factory_bot (2.28.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
@@ -109,7 +120,7 @@ GEM
     tsort (0.2.0)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
-    unicode-emoji (4.1.0)
+    unicode-emoji (4.2.0)
     wref (0.0.11)
       ref
 
