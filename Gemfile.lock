@@ -28,8 +28,8 @@ GEM
     date (3.5.0-java)
     datet (0.0.25)
     diff-lcs (1.6.2)
-    erb (6.0.0)
-    erb (6.0.0-java)
+    erb (6.0.1.1)
+    erb (6.0.1.1-java)
     event_handler (0.0.0)
     html_gen (0.0.16)
       string-cases
