@@ -1,12 +1,14 @@
-rvm: true
-
 builds:
   ruby_2_7:
     name: Ruby 2.7.8
     paths:
+      # Source and specs are shared by the supported Ruby matrix, so changes
+      # there must exercise every runtime. Version-only dependency changes can
+      # still skip the other Ruby lanes via the gemfile-specific paths below.
       - lib/**
       - spec/**
-      - gemfiles/**
+      - gemfiles/ruby_2.gemfile
+      - gemfiles/ruby_2.gemfile.lock
       - Gemfile
       - Gemfile.lock
       - baza_models.gemspec
@@ -15,7 +17,6 @@ builds:
       - VERSION
       - .ruby-version
       - .github/**
-      - peak_flow.yml
       - tensorbuzz.yml
       - "!README.md"
       - "!LICENSE.txt"
@@ -30,7 +31,8 @@ builds:
     paths:
       - lib/**
       - spec/**
-      - gemfiles/**
+      - gemfiles/ruby_3.gemfile
+      - gemfiles/ruby_3.gemfile.lock
       - Gemfile
       - Gemfile.lock
       - baza_models.gemspec
@@ -39,7 +41,6 @@ builds:
       - VERSION
       - .ruby-version
       - .github/**
-      - peak_flow.yml
       - tensorbuzz.yml
       - "!README.md"
       - "!LICENSE.txt"
@@ -54,7 +55,8 @@ builds:
     paths:
       - lib/**
       - spec/**
-      - gemfiles/**
+      - gemfiles/ruby_3.gemfile
+      - gemfiles/ruby_3.gemfile.lock
       - Gemfile
       - Gemfile.lock
       - baza_models.gemspec
@@ -63,7 +65,6 @@ builds:
       - VERSION
       - .ruby-version
       - .github/**
-      - peak_flow.yml
       - tensorbuzz.yml
       - "!README.md"
       - "!LICENSE.txt"
@@ -78,7 +79,8 @@ builds:
     paths:
       - lib/**
       - spec/**
-      - gemfiles/**
+      - gemfiles/ruby_3.gemfile
+      - gemfiles/ruby_3.gemfile.lock
       - Gemfile
       - Gemfile.lock
       - baza_models.gemspec
@@ -87,7 +89,6 @@ builds:
       - VERSION
       - .ruby-version
       - .github/**
-      - peak_flow.yml
       - tensorbuzz.yml
       - "!README.md"
       - "!LICENSE.txt"
@@ -112,7 +113,6 @@ builds:
       - .rubocop.yml
       - .rubocop_todo.yml
       - .github/**
-      - peak_flow.yml
       - tensorbuzz.yml
       - "!README.md"
       - "!LICENSE.txt"
