@@ -1,5 +1,4 @@
-before_install:
-  - bundle install
+rvm: true
 
 builds:
   ruby_2_7:
