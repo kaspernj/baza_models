@@ -1,3 +1,5 @@
+rvm: true
+
 builds:
   ruby_2_7:
     name: Ruby 2.7.8
@@ -15,7 +17,6 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
-      - .ruby-version
       - .github/**
       - tensorbuzz.yml
       - "!README.md"
@@ -39,7 +40,6 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
-      - .ruby-version
       - .github/**
       - tensorbuzz.yml
       - "!README.md"
@@ -63,7 +63,6 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
-      - .ruby-version
       - .github/**
       - tensorbuzz.yml
       - "!README.md"
@@ -87,7 +86,6 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
-      - .ruby-version
       - .github/**
       - tensorbuzz.yml
       - "!README.md"
@@ -109,7 +107,8 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
-      - .ruby-version
+      - gemfiles/ruby_2.gemfile.lock
+      - gemfiles/ruby_3.gemfile.lock
       - .rubocop.yml
       - .rubocop_todo.yml
       - .github/**
