@@ -17,6 +17,7 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
+      - .ruby-version
       - .github/**
       - tensorbuzz.yml
       - "!README.md"
@@ -40,6 +41,7 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
+      - .ruby-version
       - .github/**
       - tensorbuzz.yml
       - "!README.md"
@@ -63,6 +65,7 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
+      - .ruby-version
       - .github/**
       - tensorbuzz.yml
       - "!README.md"
@@ -86,6 +89,7 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
+      - .ruby-version
       - .github/**
       - tensorbuzz.yml
       - "!README.md"
@@ -107,6 +111,7 @@ builds:
       - Rakefile
       - Appraisals
       - VERSION
+      - .ruby-version
       - gemfiles/ruby_2.gemfile.lock
       - gemfiles/ruby_3.gemfile.lock
       - .rubocop.yml
