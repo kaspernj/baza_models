@@ -24,3 +24,5 @@ group :development, :test do
   gem "rubocop-rake", require: false
   gem "rubocop-rspec", require: false
 end
+
+# TensorBuzz path-filter probe: Ruby 2.7.8 lane only.
